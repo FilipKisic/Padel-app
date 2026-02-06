@@ -8,10 +8,14 @@
 import SwiftUI
 
 @main
-struct PadelReferee_iOS_appApp: App {
+struct PadelRefereeiOS: App {
+  @StateObject private var router = Router()
+  
   var body: some Scene {
     WindowGroup {
-      SessionsView()
+      MasterRouteView {
+        SessionsView()
+      }
     }
   }
 }

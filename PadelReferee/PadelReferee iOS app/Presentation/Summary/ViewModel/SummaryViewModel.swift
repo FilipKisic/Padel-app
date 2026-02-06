@@ -11,14 +11,14 @@ import Combine
 class SummaryViewModel: ObservableObject {
   @Published var state: SummaryState = .showing
   
-  let winner: Team
-  let elapsedTime: TimeInterval
-  let sets: [SetScore]
+  var winner: Team = .player
+  var elapsedTime: TimeInterval = 0
+  var sets: [SetScore] = []
   
-  init(winner: Team, elapsedTime: TimeInterval, sets: [SetScore]) {
-    self.winner = winner
-    self.elapsedTime = elapsedTime
-    self.sets = sets
+  func loadSession(_ session: SessionModel) {
+    self.winner = session.winner
+    self.elapsedTime = session.duration
+    self.sets = session.sets
   }
   
   var formattedElapsedTime: String {

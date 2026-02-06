@@ -8,14 +8,12 @@
 import SwiftUI
 
 struct SummaryView: View {
-  @StateObject private var viewModel: SummaryViewModel
-  let onFinish: () -> Void
+  // MARK: - PROPERTIES
+  @EnvironmentObject private var viewModel: SummaryViewModel
+  @EnvironmentObject private var router: Router
+  @EnvironmentObject private var appState: AppState
   
-  init(winner: Team, elapsedTime: TimeInterval, sets: [SetScore], onFinish: @escaping () -> Void) {
-    _viewModel = StateObject(wrappedValue: SummaryViewModel(winner: winner, elapsedTime: elapsedTime, sets: sets))
-    self.onFinish = onFinish
-  }
-  
+  // MARK: - BODY
   var body: some View {
     ZStack(alignment: .bottom) {
       LinearGradient(
@@ -92,7 +90,9 @@ struct SummaryView: View {
         Spacer()
         
         // Finish Button
-        Button(action: onFinish) {
+        Button(action: {
+          router.navigateToRoot()
+        }) {
           Text("Finish")
             .font(.headline)
             .foregroundColor(.white)
@@ -105,17 +105,15 @@ struct SummaryView: View {
         .padding(.bottom, 40)
       }
     }
+    .navigationBarBackButtonHidden(true)
+    .onAppear {
+      if let completedSession = appState.completedSession {
+        viewModel.loadSession(completedSession)
+      }
+    }
   }
 }
 
 #Preview {
-  SummaryView(
-    winner: .player,
-    elapsedTime: 5430,
-    sets: [
-      SetScore(playerGames: 6, opponentGames: 4, isTiebreak: false),
-      SetScore(playerGames: 7, opponentGames: 5, isTiebreak: false)
-    ],
-    onFinish: {}
-  )
+  SummaryView()
 }

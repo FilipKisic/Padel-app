@@ -10,7 +10,6 @@ import Combine
 
 class SessionsViewModel: ObservableObject {
   @Published var state: SessionsState = .empty
-  @Published var showNewSession: Bool = false
   
   private var sessions: [SessionModel] = []
   private let userDefaultsKey = "savedSessions"
@@ -29,10 +28,6 @@ class SessionsViewModel: ObservableObject {
     sessions.removeAll { $0.id == session.id }
     saveSessions()
     updateState()
-  }
-  
-  func startNewSession() {
-    showNewSession = true
   }
   
   private func loadSessions() {

@@ -19,10 +19,14 @@ class MatchViewModel: ObservableObject {
   private let gameService: MatchGameService
   private let timerService: TimerService
   
-  init(duration: TimeInterval, gameService: MatchGameService = MatchGameService(), timerService: TimerService = TimerService()) {
-    self.match = Match(durationMinutes: Int(duration / 60))
+  init(gameService: MatchGameService = MatchGameService(), timerService: TimerService = TimerService()) {
+    self.match = Match(durationMinutes: 90)
     self.gameService = gameService
     self.timerService = timerService
+  }
+  
+  func setDuration(_ duration: TimeInterval) {
+    self.match = Match(durationMinutes: Int(duration / 60))
   }
   
   func togglePlayPause() {

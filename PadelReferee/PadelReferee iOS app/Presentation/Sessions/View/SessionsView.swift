@@ -9,37 +9,40 @@ import SwiftUI
 
 struct SessionsView: View {
   // MARK: - PROPERTIES
-  @StateObject private var viewModel = SessionsViewModel()
+  @EnvironmentObject private var viewModel: SessionsViewModel
+  @EnvironmentObject private var router: Router
+  @EnvironmentObject private var appState: AppState
   
   // MARK: - BODY
   var body: some View {
-    NavigationStack {
-      ZStack(alignment: .bottom) {
-        switch viewModel.state {
-          case .empty:
-            EmptyStateView()
-          case .history(let sessions):
-            HistoryStateView(sessions: sessions, onDelete: { session in
-              viewModel.deleteSession(session)
-            })
-        }
-        
-        Button(action: {
-          viewModel.startNewSession()
-        }) {
-          Text("Start new session")
-            .font(.headline)
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color.accentColor)
-            .cornerRadius(12)
-        }
-        .padding()
+    ZStack(alignment: .bottom) {
+      switch viewModel.state {
+        case .empty:
+          EmptyStateView()
+        case .history(let sessions):
+          HistoryStateView(sessions: sessions, onDelete: { session in
+            viewModel.deleteSession(session)
+          })
       }
-      .navigationTitle("Sessions")
-      .sheet(isPresented: $viewModel.showNewSession) {
-        NewSessionView(viewModel: viewModel)
+      
+      Button(action: {
+        router.navigate(to: .newSession)
+      }) {
+        Text("Start new session")
+          .font(.headline)
+          .foregroundColor(.white)
+          .frame(maxWidth: .infinity)
+          .padding()
+          .background(Color.accentColor)
+          .cornerRadius(12)
+      }
+      .padding()
+    }
+    .navigationTitle("Sessions")
+    .onAppear {
+      if let completedSession = appState.completedSession {
+        viewModel.addSession(completedSession)
+        appState.reset()
       }
     }
   }

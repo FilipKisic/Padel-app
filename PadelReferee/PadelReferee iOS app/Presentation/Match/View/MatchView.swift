@@ -9,17 +9,11 @@ import SwiftUI
 
 struct MatchView: View {
   // MARK: - PROPERTIES
-  @StateObject private var viewModel: MatchViewModel
-  @Environment(\.dismiss) private var dismiss
-  let onFinish: (SessionModel) -> Void
+  @EnvironmentObject private var viewModel: MatchViewModel
+  @EnvironmentObject private var router: Router
+  @EnvironmentObject private var appState: AppState
   
-  
-  // MARK: - CONSTRUCTOR
-  init(duration: TimeInterval, onFinish: @escaping (SessionModel) -> Void) {
-    _viewModel = StateObject(wrappedValue: MatchViewModel(duration: duration))
-    self.onFinish = onFinish
-  }
-  
+  // MARK: - BODY
   var body: some View {
     GeometryReader { geometry in
       ZStack(alignment: .bottom) {
@@ -189,31 +183,28 @@ struct MatchView: View {
         }
       }
     }
+    .navigationBarBackButtonHidden(true)
     .alert("Cancel Match", isPresented: $viewModel.showCancelAlert) {
       Button("Cancel Match", role: .destructive) {
-        dismiss()
+        router.navigateToRoot()
       }
       Button("Continue Playing", role: .cancel) { }
     } message: {
       Text("Are you sure you want to cancel this match? All progress will be lost.")
     }
-    .fullScreenCover(isPresented: .constant(viewModel.state == .finished)) {
-      if let winner = viewModel.match.state.winner {
-        SummaryView(
+    .onAppear {
+      viewModel.setDuration(appState.matchDuration)
+    }
+    .onChange(of: viewModel.state) { newState in
+      if newState == .finished, let winner = viewModel.match.state.winner {
+        let session = SessionModel(
+          date: Date(),
+          duration: viewModel.elapsedTime,
           winner: winner,
-          elapsedTime: viewModel.elapsedTime,
-          sets: viewModel.match.state.sets,
-          onFinish: {
-            let session = SessionModel(
-              date: Date(),
-              duration: viewModel.elapsedTime,
-              winner: winner,
-              sets: viewModel.match.state.sets
-            )
-            onFinish(session)
-            dismiss()
-          }
+          sets: viewModel.match.state.sets
         )
+        appState.setCompletedSession(session)
+        router.navigate(to: .summary)
       }
     }
   }
@@ -299,5 +290,5 @@ struct RoundedCorner: Shape {
 }
 
 #Preview {
-  MatchView(duration: 5400) { _ in }
+  MatchView()
 }

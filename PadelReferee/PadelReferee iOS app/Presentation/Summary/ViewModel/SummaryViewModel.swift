@@ -15,7 +15,7 @@ class SummaryViewModel: ObservableObject {
   var elapsedTime: TimeInterval = 0
   var sets: [SetScore] = []
   
-  func loadSession(_ session: SessionModel) {
+  func loadSession(_ session: Session) {
     self.winner = session.winner
     self.elapsedTime = session.duration
     self.sets = session.sets

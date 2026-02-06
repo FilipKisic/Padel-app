@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SessionModel: Identifiable, Codable, Equatable {
+struct Session: Identifiable, Codable, Equatable {
   let id: UUID
   let date: Date
   let duration: TimeInterval

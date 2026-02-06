@@ -10,13 +10,13 @@ import Combine
 
 class AppState: ObservableObject {
   @Published var matchDuration: TimeInterval = 0
-  @Published var completedSession: SessionModel?
+  @Published var completedSession: Session?
   
   func setMatchDuration(_ duration: TimeInterval) {
     matchDuration = duration
   }
   
-  func setCompletedSession(_ session: SessionModel) {
+  func setCompletedSession(_ session: Session) {
     completedSession = session
   }
   

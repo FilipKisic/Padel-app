@@ -67,8 +67,8 @@ struct EmptyStateView: View {
 }
 
 struct HistoryStateView: View {
-  let sessions: [SessionModel]
-  let onDelete: (SessionModel) -> Void
+  let sessions: [Session]
+  let onDelete: (Session) -> Void
   
   var body: some View {
     ScrollView {
@@ -91,7 +91,7 @@ struct HistoryStateView: View {
 }
 
 struct SessionCard: View {
-  let session: SessionModel
+  let session: Session
   
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {

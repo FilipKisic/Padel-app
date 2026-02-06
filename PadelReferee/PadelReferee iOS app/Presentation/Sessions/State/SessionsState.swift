@@ -9,5 +9,5 @@ import Foundation
 
 enum SessionsState: Equatable {
   case empty
-  case history([SessionModel])
+  case history([Session])
 }

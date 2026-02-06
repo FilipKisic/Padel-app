@@ -8,6 +8,6 @@
 import Foundation
 
 struct HistoryEntry: Equatable {
-  let state: MatchState
+  let state: MatchConfig
   let remainingTime: TimeInterval
 }

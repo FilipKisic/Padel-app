@@ -32,11 +32,21 @@ class MatchGameService {
   
   // MARK: - Serve Position Logic
   func nextServePosition(from position: ServePosition) -> ServePosition {
-    ServePosition(rawValue: (position.rawValue + 1) % 4) ?? .topLeft
+    switch position {
+      case .topLeft: return .topRight
+      case .topRight: return .bottomLeft
+      case .bottomLeft: return .bottomRight
+      case .bottomRight: return .topLeft
+    }
   }
   
   func previousServePosition(from position: ServePosition) -> ServePosition {
-    ServePosition(rawValue: (position.rawValue + 3) % 4) ?? .bottomRight
+    switch position {
+      case .topLeft: return .bottomRight
+      case .topRight: return .topLeft
+      case .bottomLeft: return .topRight
+      case .bottomRight: return .bottomLeft
+    }
   }
   
   // MARK: - Set Score Logic
@@ -47,12 +57,13 @@ class MatchGameService {
     }
   }
   
+  //TODO: Test this method
   func isSetWon(setScore: SetScore, by team: Team) -> Bool {
     let playerScore = setScore.playerGames
     let opponentScore = setScore.opponentGames
     
+    // Tiebreak: first to 7, win by 2
     if setScore.isTiebreak {
-      // Tiebreak: first to 7, win by 2
       let maxScore = max(playerScore, opponentScore)
       let minScore = min(playerScore, opponentScore)
       if maxScore >= 7 && (maxScore - minScore) >= 2 {
@@ -64,57 +75,49 @@ class MatchGameService {
     // Normal set: first to 6, win by 2, or 7-5
     switch team {
       case .player:
-        if playerScore >= 6 && playerScore - opponentScore >= 2 {
-          return true
-        }
+        return playerScore >= 6 && playerScore - opponentScore >= 2
       case .opponent:
-        if opponentScore >= 6 && opponentScore - playerScore >= 2 {
-          return true
-        }
+        return opponentScore >= 6 && opponentScore - playerScore >= 2
     }
-    return false
   }
   
   func shouldStartTiebreak(setScore: SetScore) -> Bool {
     setScore.playerGames == 6 && setScore.opponentGames == 6
   }
   
-  // MARK: - Match State Logic
-  func setsWon(in state: MatchState, by team: Team) -> Int {
-    state.sets.filter { isSetWon(setScore: $0, by: team) }.count
+  // MARK: - Match Config Logic
+  func setsWon(in config: MatchConfig, by team: Team) -> Int {
+    config.sets.filter { isSetWon(setScore: $0, by: team) }.count
   }
   
   // MARK: - Scoring Logic
-  func scorePoint(state: inout MatchState, for team: Team) {
-    guard !state.isMatchOver else { return }
+  func scorePoint(config: inout MatchConfig, for team: Team) {
+    guard !config.isMatchOver else { return }
     
-    if state.isTiebreak {
-      scoreTiebreakPoint(state: &state, for: team)
+    if config.isTiebreak {
+      scoreTiebreakPoint(config: &config, for: team)
     } else {
-      scoreRegularPoint(state: &state, for: team)
+      scoreRegularPoint(config: &config, for: team)
     }
   }
   
-  private func scoreRegularPoint(state: inout MatchState, for team: Team) {
+  private func scoreRegularPoint(config: inout MatchConfig, for team: Team) {
     // Get current points
-    let scoringTeamPoint = team == .player ? state.playerPoint : state.opponentPoint
-    let otherTeamPoint = team == .player ? state.opponentPoint : state.playerPoint
+    let scoringTeamPoint = team == .player ? config.playerPoint : config.opponentPoint
+    let otherTeamPoint = team == .player ? config.opponentPoint : config.playerPoint
     
-    // Handle deuce scenarios
-    if state.isDeuce {
+    if config.isDeuce {
       if scoringTeamPoint == .advantage {
-        // Win game
-        winGame(state: &state, for: team)
+        winGame(state: &config, for: team)
       } else if otherTeamPoint == .advantage {
-        // Back to deuce
-        state.playerPoint = .forty
-        state.opponentPoint = .forty
+        config.playerPoint = .forty
+        config.opponentPoint = .forty
+        //TODO: Maybe set isDeuce to true again here
       } else {
-        // Give advantage
         if team == .player {
-          state.playerPoint = .advantage
+          config.playerPoint = .advantage
         } else {
-          state.opponentPoint = .advantage
+          config.opponentPoint = .advantage
         }
       }
       return
@@ -124,58 +127,56 @@ class MatchGameService {
     if scoringTeamPoint == .forty && otherTeamPoint == .forty {
       // Give advantage
       if team == .player {
-        state.playerPoint = .advantage
+        config.playerPoint = .advantage
       } else {
-        state.opponentPoint = .advantage
+        config.opponentPoint = .advantage
       }
-      state.isDeuce = true
+      config.isDeuce = true
       return
     }
     
     // Regular point progression
     if scoringTeamPoint == .forty {
-      // Win game
-      winGame(state: &state, for: team)
+      winGame(state: &config, for: team)
     } else if let nextPoint = nextPoint(from: scoringTeamPoint) {
       if team == .player {
-        state.playerPoint = nextPoint
+        config.playerPoint = nextPoint
       } else {
-        state.opponentPoint = nextPoint
+        config.opponentPoint = nextPoint
       }
       
       // Check if entering deuce
-      if state.playerPoint == .forty && state.opponentPoint == .forty {
-        state.isDeuce = true
+      if config.playerPoint == .forty && config.opponentPoint == .forty {
+        config.isDeuce = true
       }
     }
   }
   
-  private func scoreTiebreakPoint(state: inout MatchState, for team: Team) {
+  private func scoreTiebreakPoint(config: inout MatchConfig, for team: Team) {
     if team == .player {
-      state.playerTiebreakPoints += 1
+      config.playerTiebreakPoints += 1
     } else {
-      state.opponentTiebreakPoints += 1
+      config.opponentTiebreakPoints += 1
     }
     
     // Change serve every 2 points (after first point, then every 2)
-    let totalPoints = state.playerTiebreakPoints + state.opponentTiebreakPoints
+    let totalPoints = config.playerTiebreakPoints + config.opponentTiebreakPoints
     if totalPoints == 1 || (totalPoints > 1 && (totalPoints - 1) % 2 == 0) {
-      state.servePosition = nextServePosition(from: state.servePosition)
+      config.servePosition = nextServePosition(from: config.servePosition)
     }
     
     // Check if tiebreak is won (first to 7, win by 2)
-    let playerScore = state.playerTiebreakPoints
-    let opponentScore = state.opponentTiebreakPoints
+    let playerScore = config.playerTiebreakPoints
+    let opponentScore = config.opponentTiebreakPoints
     
     if playerScore >= 7 && playerScore - opponentScore >= 2 {
-      winGame(state: &state, for: .player)
+      winGame(state: &config, for: .player)
     } else if opponentScore >= 7 && opponentScore - playerScore >= 2 {
-      winGame(state: &state, for: .opponent)
+      winGame(state: &config, for: .opponent)
     }
   }
   
-  private func winGame(state: inout MatchState, for team: Team) {
-    // Add game to current set
+  private func winGame(state: inout MatchConfig, for team: Team) {
     addGame(to: &state.currentSet, for: team)
     
     // Reset points
@@ -194,13 +195,12 @@ class MatchGameService {
     if isSetWon(setScore: state.currentSet, by: team) {
       winSet(state: &state, for: team)
     } else if shouldStartTiebreak(setScore: state.currentSet) {
-      // Start tiebreak
       state.isTiebreak = true
       state.currentSet.isTiebreak = true
     }
   }
   
-  private func winSet(state: inout MatchState, for team: Team) {
+  private func winSet(state: inout MatchConfig, for team: Team) {
     state.isTiebreak = false
     
     // Check if match is won (best of 3)
@@ -210,14 +210,13 @@ class MatchGameService {
       state.isMatchOver = true
       state.winner = team
     } else {
-      // Start new set
       state.currentSetIndex += 1
       state.sets.append(SetScore())
     }
   }
   
   // MARK: - History Management
-  func saveHistory(history: inout [HistoryEntry], state: MatchState, remainingTime: TimeInterval) {
+  func saveHistory(history: inout [HistoryEntry], state: MatchConfig, remainingTime: TimeInterval) {
     let entry = HistoryEntry(state: state, remainingTime: remainingTime)
     history.append(entry)
     
@@ -227,7 +226,7 @@ class MatchGameService {
     }
   }
   
-  func undo(history: inout [HistoryEntry], state: inout MatchState, remainingTime: inout TimeInterval) {
+  func undo(history: inout [HistoryEntry], state: inout MatchConfig, remainingTime: inout TimeInterval) {
     guard let lastEntry = history.popLast() else { return }
     state = lastEntry.state
     remainingTime = lastEntry.remainingTime
@@ -238,14 +237,14 @@ class MatchGameService {
   }
   
   // MARK: - Display Helpers
-  func displayScore(for team: Team, in state: MatchState) -> String {
+  func displayScore(for team: Team, in state: MatchConfig) -> String {
     if state.isTiebreak {
       return team == .player ? "\(state.playerTiebreakPoints)" : "\(state.opponentTiebreakPoints)"
     }
     return team == .player ? state.playerPoint.rawValue : state.opponentPoint.rawValue
   }
   
-  func gamesInSet(_ setIndex: Int, for team: Team, in state: MatchState) -> Int {
+  func gamesInSet(_ setIndex: Int, for team: Team, in state: MatchConfig) -> Int {
     guard setIndex < state.sets.count else { return 0 }
     return team == .player ? state.sets[setIndex].playerGames : state.sets[setIndex].opponentGames
   }

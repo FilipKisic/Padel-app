@@ -197,7 +197,7 @@ struct MatchView: View {
     }
     .onChange(of: viewModel.state) { newState in
       if newState == .finished, let winner = viewModel.match.state.winner {
-        let session = SessionModel(
+        let session = Session(
           date: Date(),
           duration: viewModel.elapsedTime,
           winner: winner,

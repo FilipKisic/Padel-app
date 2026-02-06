@@ -11,20 +11,20 @@ import Combine
 class SessionsViewModel: ObservableObject {
   @Published var state: SessionsState = .empty
   
-  private var sessions: [SessionModel] = []
+  private var sessions: [Session] = []
   private let userDefaultsKey = "savedSessions"
   
   init() {
     loadSessions()
   }
   
-  func addSession(_ session: SessionModel) {
+  func addSession(_ session: Session) {
     sessions.insert(session, at: 0)
     saveSessions()
     updateState()
   }
   
-  func deleteSession(_ session: SessionModel) {
+  func deleteSession(_ session: Session) {
     sessions.removeAll { $0.id == session.id }
     saveSessions()
     updateState()
@@ -32,7 +32,7 @@ class SessionsViewModel: ObservableObject {
   
   private func loadSessions() {
     if let data = UserDefaults.standard.data(forKey: userDefaultsKey),
-       let decoded = try? JSONDecoder().decode([SessionModel].self, from: data) {
+       let decoded = try? JSONDecoder().decode([Session].self, from: data) {
       sessions = decoded
     }
     updateState()

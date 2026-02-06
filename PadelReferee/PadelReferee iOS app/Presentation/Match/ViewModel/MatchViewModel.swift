@@ -53,7 +53,7 @@ class MatchViewModel: ObservableObject {
   func scorePoint(for team: Team) {
     guard state == .playing else { return }
     gameService.saveHistory(history: &match.history, state: match.state, remainingTime: match.remainingTime)
-    gameService.scorePoint(state: &match.state, for: team)
+    gameService.scorePoint(config: &match.state, for: team)
     refresh()
     
     if match.state.isMatchOver {

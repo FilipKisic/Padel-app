@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MatchState: Equatable {
+struct MatchConfig: Equatable {
   var playerPoint: Point
   var opponentPoint: Point
   var playerTiebreakPoints: Int

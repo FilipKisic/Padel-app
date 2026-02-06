@@ -14,8 +14,8 @@ struct SessionView: View {
   
   // MARK: - BODY
   var body: some View {
-    VStack(spacing: 8) {
-      // Undo button row
+    VStack(spacing: 0) {
+      // MARK: - UNDO BUTTON
       HStack {
         Button(action: {
           viewModel.undo()
@@ -26,106 +26,94 @@ struct SessionView: View {
             .frame(width: 24, height: 24)
         }
         .buttonStyle(.plain)
-        .opacity(viewModel.canUndo ? 1.0 : 0.3)
+        .padding(5)
+        .background(.darkGray)
+        .clipShape(.circle)
+        .opacity(viewModel.canUndo ? 1.0 : 0.5)
         .disabled(!viewModel.canUndo)
+        .offset(x: -10, y: 7)
         
         Spacer()
-      }
+      } //: HSTACK
+      .padding(.horizontal, 24)
+      
+      // MARK: - OPPONENT
+      HStack {
+        Button(action: {
+          viewModel.scorePoint(for: .opponent)
+        }) {
+          Text(viewModel.opponentScore)
+            .font(.system(size: 58, weight: .medium, design: .rounded))
+            .foregroundColor(.green)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .buttonStyle(.plain)
+        
+        VStack {
+          Text("OPPONENT")
+            .font(.system(size: 12, weight: .medium))
+            .foregroundColor(.green)
+          
+          SetScoresView(
+            set1Games: viewModel.opponentGames(inSet: 0),
+            set2Games: viewModel.opponentGames(inSet: 1),
+            set3Games: viewModel.opponentGames(inSet: 2),
+            currentSetIndex: viewModel.currentSetIndex,
+            isPlayer: false
+          )
+        } //: VSTACK
+      } //: HSTACK
       .padding(.horizontal, 12)
       
-      Spacer()
+      // MARK: - SERVING
+      ServeIndicatorView(currentPosition: viewModel.currentServePosition)
+        .frame(height: 35)
       
-      // Main content
-      GeometryReader { geometry in
-        HStack(spacing: 8) {
-          // Left side - Scores
-          VStack(spacing: 2) {
-            // Opponent score (tappable)
-            Button(action: {
-              viewModel.scorePoint(for: .opponent)
-            }) {
-              Text(viewModel.opponentScore)
-                .font(.system(size: 44, weight: .bold, design: .rounded))
-                .foregroundColor(.green)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .buttonStyle(.plain)
-            
-            // Player score (tappable)
-            Button(action: {
-              viewModel.scorePoint(for: .player)
-            }) {
-              Text(viewModel.playerScore)
-                .font(.system(size: 44, weight: .bold, design: .rounded))
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .buttonStyle(.plain)
-          }
-          .frame(width: geometry.size.width * 0.35)
-          
-          // Right side - Serve indicator and set scores
-          VStack(spacing: 4) {
-            // Opponent label and set scores
-            HStack(spacing: 0) {
-              Text("OPPONENT")
-                .font(.system(size: 8, weight: .medium))
-                .foregroundColor(.gray)
-              Spacer()
-            }
-            
-            // Opponent set scores
-            SetScoresView(
-              set1Games: viewModel.opponentGames(inSet: 0),
-              set2Games: viewModel.opponentGames(inSet: 1),
-              set3Games: viewModel.opponentGames(inSet: 2),
-              currentSetIndex: viewModel.currentSetIndex
-            )
-            
-            // Serve indicator (4 quadrants)
-            ServeIndicatorView(currentPosition: viewModel.currentServePosition)
-              .frame(height: 30)
-            
-            // Player set scores
-            SetScoresView(
-              set1Games: viewModel.playerGames(inSet: 0),
-              set2Games: viewModel.playerGames(inSet: 1),
-              set3Games: viewModel.playerGames(inSet: 2),
-              currentSetIndex: viewModel.currentSetIndex
-            )
-            
-            // Player label
-            HStack(spacing: 0) {
-              Text("YOUR TEAM")
-                .font(.system(size: 8, weight: .medium))
-                .foregroundColor(.gray)
-              Spacer()
-            }
-          }
-          .frame(width: geometry.size.width * 0.45)
+      // MARK: - PLAYER
+      HStack {
+        Button(action: {
+          viewModel.scorePoint(for: .player)
+        }) {
+          Text(viewModel.playerScore)
+            .font(.system(size: 58, weight: .medium, design: .rounded))
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(.horizontal, 8)
-      }
+        .buttonStyle(.plain)
+        
+        VStack {
+          SetScoresView(
+            set1Games: viewModel.playerGames(inSet: 0),
+            set2Games: viewModel.playerGames(inSet: 1),
+            set3Games: viewModel.playerGames(inSet: 2),
+            currentSetIndex: viewModel.currentSetIndex,
+          )
+          Text("YOUR TEAM")
+            .font(.system(size: 12, weight: .medium))
+            .foregroundColor(.white)
+        } //: VSTACK
+      } //: HSTACK
+      .padding(.horizontal, 12)
       
-      Spacer()
-      
-      // Timer
+      // MARK: - TIMER
       Text(viewModel.formattedTime)
-        .font(.system(size: 20, weight: .semibold, design: .rounded))
+        .font(.system(size: 25, weight: .medium, design: .rounded))
         .foregroundColor(viewModel.isTimeLow ? .red : .white)
         .onTapGesture {
           viewModel.toggleTimer()
         }
         .padding(.bottom, 12)
-    }
+    } //: VSTACK
     .ignoresSafeArea()
     .onAppear {
       viewModel.startTimer()
     }
+    // MARK: - ALERT
     .alert("Match Over!", isPresented: .constant(viewModel.isMatchOver)) {
       Button("New Match") {
         viewModel.restartMatch()
       }
+      
       Button("Exit", role: .cancel) {
         dismiss()
       }
@@ -133,7 +121,8 @@ struct SessionView: View {
       if let winner = viewModel.winner {
         Text(winner == .player ? "Your team wins!" : "Opponent wins!")
       }
-    }
+    } //: ALERT
+    
   }
 }
 
@@ -144,19 +133,20 @@ struct ServeIndicatorView: View {
   var body: some View {
     VStack(spacing: 2) {
       HStack(spacing: 2) {
-        ServeQuadrant(isActive: currentPosition == .topLeft, color: .blue)
-        ServeQuadrant(isActive: currentPosition == .topRight, color: .blue)
-      }
+        ServeQuadrantView(isActive: currentPosition == .topLeft, color: .blue)
+        ServeQuadrantView(isActive: currentPosition == .topRight, color: .blue)
+      } //: HSTACK
+      
       HStack(spacing: 2) {
-        ServeQuadrant(isActive: currentPosition == .bottomLeft, color: .blue)
-        ServeQuadrant(isActive: currentPosition == .bottomRight, color: .blue)
-      }
-    }
+        ServeQuadrantView(isActive: currentPosition == .bottomLeft, color: .blue)
+        ServeQuadrantView(isActive: currentPosition == .bottomRight, color: .blue)
+      } //: HSTACK
+    } //: VSTACK
   }
 }
 
-// MARK: - SERVE QUADRANT
-struct ServeQuadrant: View {
+// MARK: - SERVE QUADRANT VIEW
+struct ServeQuadrantView: View {
   let isActive: Bool
   let color: Color
   
@@ -173,31 +163,66 @@ struct SetScoresView: View {
   let set2Games: Int
   let set3Games: Int
   let currentSetIndex: Int
+  let isPlayer: Bool
+  
+  init(set1Games: Int, set2Games: Int, set3Games: Int, currentSetIndex: Int, isPlayer: Bool = true) {
+    self.set1Games = set1Games
+    self.set2Games = set2Games
+    self.set3Games = set3Games
+    self.currentSetIndex = currentSetIndex
+    self.isPlayer = isPlayer
+  }
   
   var body: some View {
     HStack(spacing: 8) {
-      SetScoreColumn(setNumber: 1, games: set1Games, isCurrentSet: currentSetIndex == 0)
-      SetScoreColumn(setNumber: 2, games: set2Games, isCurrentSet: currentSetIndex == 1)
-      SetScoreColumn(setNumber: 3, games: set3Games, isCurrentSet: currentSetIndex == 2)
-    }
+      SetScoreColumnView(
+        setNumber: 1,
+        games: set1Games,
+        isCurrentSet: currentSetIndex == 0,
+        isPlayer: isPlayer
+      )
+      SetScoreColumnView(
+        setNumber: 2,
+        games: set2Games,
+        isCurrentSet: currentSetIndex == 1,
+        isPlayer: isPlayer
+      )
+      SetScoreColumnView(
+        setNumber: 3,
+        games: set3Games,
+        isCurrentSet: currentSetIndex == 2,
+        isPlayer: isPlayer
+      )
+    } //: HSTACK
   }
 }
 
-// MARK: - SET SCORE COLUMN
-struct SetScoreColumn: View {
+// MARK: - SET SCORE COLUMN VIEW
+struct SetScoreColumnView: View {
   let setNumber: Int
   let games: Int
   let isCurrentSet: Bool
+  let isPlayer: Bool
+  
+  init(setNumber: Int, games: Int, isCurrentSet: Bool, isPlayer: Bool = true) {
+    self.setNumber = setNumber
+    self.games = games
+    self.isCurrentSet = isCurrentSet
+    self.isPlayer = isPlayer
+  }
   
   var body: some View {
-    VStack(spacing: 0) {
-      Text("\(setNumber)")
-        .font(.system(size: 8, weight: .medium))
-        .foregroundColor(.gray)
+    VStack(spacing: -5) {
+      if(!isPlayer) {
+        Text("\(setNumber)")
+          .font(.system(size: 14, weight: .medium))
+          .foregroundColor(isCurrentSet ? .white : .gray)
+      }
+      
       Text("\(games)")
-        .font(.system(size: 14, weight: .bold, design: .rounded))
-        .foregroundColor(isCurrentSet ? .white : .gray)
-    }
+        .font(.system(size: 32, weight: .medium, design: .rounded))
+        .foregroundColor(isPlayer ? .white : .green)
+    } //: VSTACK
   }
 }
 

@@ -37,6 +37,7 @@
 /* Begin PBXFileReference section */
 		1204927D2F18F9E6008D94F2 /* PadelReferee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PadelReferee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		120492832F18F9E6008D94F2 /* PadelReferee Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PadelReferee Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		123F7E6B2F2BA43400CFDE71 /* PadelReferee iOS app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PadelReferee iOS app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -45,10 +46,22 @@
 			path = "PadelReferee Watch App";
 			sourceTree = "<group>";
 		};
+		123F7E6C2F2BA43400CFDE71 /* PadelReferee iOS app */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "PadelReferee iOS app";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		120492802F18F9E6008D94F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		123F7E682F2BA43400CFDE71 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -62,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				120492872F18F9E6008D94F2 /* PadelReferee Watch App */,
+				123F7E6C2F2BA43400CFDE71 /* PadelReferee iOS app */,
 				1204927E2F18F9E6008D94F2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -71,6 +85,7 @@
 			children = (
 				1204927D2F18F9E6008D94F2 /* PadelReferee.app */,
 				120492832F18F9E6008D94F2 /* PadelReferee Watch App.app */,
+				123F7E6B2F2BA43400CFDE71 /* PadelReferee iOS app.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -119,6 +134,28 @@
 			productReference = 120492832F18F9E6008D94F2 /* PadelReferee Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
+		123F7E6A2F2BA43400CFDE71 /* PadelReferee iOS app */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 123F7E732F2BA43600CFDE71 /* Build configuration list for PBXNativeTarget "PadelReferee iOS app" */;
+			buildPhases = (
+				123F7E672F2BA43400CFDE71 /* Sources */,
+				123F7E682F2BA43400CFDE71 /* Frameworks */,
+				123F7E692F2BA43400CFDE71 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				123F7E6C2F2BA43400CFDE71 /* PadelReferee iOS app */,
+			);
+			name = "PadelReferee iOS app";
+			packageProductDependencies = (
+			);
+			productName = "PadelReferee iOS app";
+			productReference = 123F7E6B2F2BA43400CFDE71 /* PadelReferee iOS app.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -126,7 +163,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2600;
+				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					1204927C2F18F9E6008D94F2 = {
@@ -134,6 +171,9 @@
 					};
 					120492822F18F9E6008D94F2 = {
 						CreatedOnToolsVersion = 26.0.1;
+					};
+					123F7E6A2F2BA43400CFDE71 = {
+						CreatedOnToolsVersion = 26.2;
 					};
 				};
 			};
@@ -153,6 +193,7 @@
 			targets = (
 				1204927C2F18F9E6008D94F2 /* PadelReferee */,
 				120492822F18F9E6008D94F2 /* PadelReferee Watch App */,
+				123F7E6A2F2BA43400CFDE71 /* PadelReferee iOS app */,
 			);
 		};
 /* End PBXProject section */
@@ -172,10 +213,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		123F7E692F2BA43400CFDE71 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1204927F2F18F9E6008D94F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		123F7E672F2BA43400CFDE71 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -338,7 +393,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.6;
 			};
 			name = Debug;
 		};
@@ -372,7 +427,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.6;
 			};
 			name = Release;
 		};
@@ -413,6 +468,83 @@
 			};
 			name = Release;
 		};
+		123F7E742F2BA43600CFDE71 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JKVW4Y7PD6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "de.comsystoreply.PadelReferee-iOS-app";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		123F7E752F2BA43600CFDE71 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JKVW4Y7PD6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "de.comsystoreply.PadelReferee-iOS-app";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -439,6 +571,15 @@
 			buildConfigurations = (
 				120492952F18F9E9008D94F2 /* Debug */,
 				120492962F18F9E9008D94F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		123F7E732F2BA43600CFDE71 /* Build configuration list for PBXNativeTarget "PadelReferee iOS app" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				123F7E742F2BA43600CFDE71 /* Debug */,
+				123F7E752F2BA43600CFDE71 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

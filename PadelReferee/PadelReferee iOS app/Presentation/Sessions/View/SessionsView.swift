@@ -15,30 +15,16 @@ struct SessionsView: View {
   
   // MARK: - BODY
   var body: some View {
-    ZStack(alignment: .bottom) {
+    ZStack {
       switch viewModel.state {
         case .empty:
-          EmptyStateView()
+          emptyStateView()
         case .history(let sessions):
-          HistoryStateView(sessions: sessions, onDelete: { session in
-            viewModel.deleteSession(session)
-          })
+          sessionListStateView(sessions: sessions)
       }
-      
-      Button(action: {
-        router.navigate(to: .newSession)
-      }) {
-        Text("Start new session")
-          .font(.headline)
-          .foregroundColor(.white)
-          .frame(maxWidth: .infinity)
-          .padding()
-          .background(Color.accentColor)
-          .cornerRadius(12)
-      }
-      .padding()
     }
     .navigationTitle("Sessions")
+    .preferredColorScheme(.dark)
     .onAppear {
       if let completedSession = appState.completedSession {
         viewModel.addSession(completedSession)
@@ -48,36 +34,43 @@ struct SessionsView: View {
   }
 }
 
-struct EmptyStateView: View {
-  var body: some View {
-    VStack(spacing: 16) {
-      Image(systemName: "tennisball.circle")
+private extension SessionsView {
+  @ViewBuilder
+  func emptyStateView() -> some View {
+    VStack() {
+      Spacer()
+      
+      Image(systemName: "tennisball.circle.fill")
         .font(.system(size: 80))
+        .symbolRenderingMode(.hierarchical)
         .foregroundColor(.accentColor)
+        .padding(.bottom, 16)
+      
       
       Text("No sessions yet")
         .font(.title2)
         .fontWeight(.semibold)
+        .padding(.bottom, 2)
       
       Text("Let's play some Padel")
-        .font(.body)
+        .font(.title3)
         .foregroundColor(.secondary)
+      
+      Spacer()
+      
+      startNewSessionButtonView()
     }
   }
-}
-
-struct HistoryStateView: View {
-  let sessions: [Session]
-  let onDelete: (Session) -> Void
   
-  var body: some View {
+  @ViewBuilder
+  func sessionListStateView(sessions: [Session]) -> some View {
     ScrollView {
       LazyVStack(spacing: 12) {
         ForEach(sessions) { session in
           SessionCard(session: session)
             .swipeActions(edge: .trailing) {
               Button(role: .destructive) {
-                onDelete(session)
+                viewModel.deleteSession(session)
               } label: {
                 Label("Delete", systemImage: "trash")
               }
@@ -88,62 +81,33 @@ struct HistoryStateView: View {
       .padding(.bottom, 80)
     }
   }
-}
-
-struct SessionCard: View {
-  let session: Session
   
-  var body: some View {
-    VStack(alignment: .leading, spacing: 12) {
-      HStack {
-        Image(systemName: session.winner == .player ? "trophy.fill" : "trophy")
-          .foregroundColor(session.winner == .player ? .yellow : .secondary)
-        
-        Text(session.winner == .player ? "You Won!" : "Opponent Won!")
-          .font(.headline)
-        
-        Spacer()
-        
-        Text(session.formattedDate)
-          .font(.caption)
-          .foregroundColor(.secondary)
-      }
-      
-      HStack {
-        Text("Time Played:")
-          .font(.subheadline)
-          .foregroundColor(.secondary)
-        Text(session.formattedDuration)
-          .font(.subheadline)
-          .fontWeight(.semibold)
-      }
-      
-      HStack(spacing: 20) {
-        ForEach(Array(session.sets.enumerated()), id: \.offset) { index, set in
-          VStack(spacing: 4) {
-            Text("Set \(index + 1)")
-              .font(.caption)
-              .foregroundColor(.secondary)
-            HStack(spacing: 8) {
-              Text("\(set.playerGames)")
-                .font(.title3)
-                .fontWeight(.bold)
-              Text("-")
-                .foregroundColor(.secondary)
-              Text("\(set.opponentGames)")
-                .font(.title3)
-                .fontWeight(.bold)
-            }
-          }
-        }
-      }
+  @ViewBuilder
+  func startNewSessionButtonView() -> some View {
+    Button {
+      router.navigate(to: .newSession)
+    } label: {
+      Text("Start new session")
+        .font(.headline)
+        .foregroundColor(.white)
+        .frame(maxWidth: .infinity)
+        .padding()
+        .cornerRadius(12)
     }
+    .glassEffect(.regular.tint(.accentColor.opacity(0.8)).interactive())
     .padding()
-    .background(Color(uiColor: .secondarySystemGroupedBackground))
-    .cornerRadius(12)
   }
 }
 
+// MARK: - PREVIEW
 #Preview {
-  SessionsView()
+  let viewModel = SessionsViewModel()
+  let appState = AppState()
+  return ZStack {
+    NavigationView {
+      SessionsView()
+    }
+  }
+  .environmentObject(viewModel)
+  .environmentObject(appState)
 }

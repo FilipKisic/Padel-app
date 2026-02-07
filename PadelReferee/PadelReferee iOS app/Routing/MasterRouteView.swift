@@ -18,10 +18,12 @@ struct MasterRouteView<Content: View>: View {
   
   private let content: Content
   
+  // MARK: - INITIALIZER
   init(@ViewBuilder content: @escaping () -> Content) {
     self.content = content()
   }
   
+  // MARK: - BODY
   var body: some View {
     NavigationStack(path: $router.path) {
       content.navigationDestination(for: Router.Route.self) { route in

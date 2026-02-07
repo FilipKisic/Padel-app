@@ -9,8 +9,6 @@ import SwiftUI
 
 @main
 struct PadelRefereeiOS: App {
-  @StateObject private var router = Router()
-  
   var body: some Scene {
     WindowGroup {
       MasterRouteView {

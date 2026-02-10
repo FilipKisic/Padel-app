@@ -8,7 +8,7 @@
 import Foundation
 
 class Match {
-  var state: MatchConfig
+  var config: MatchConfig
   var history: [HistoryEntry]
   var remainingTime: TimeInterval
   
@@ -17,7 +17,7 @@ class Match {
   init(durationMinutes: Int = 90) {
     self.totalDuration = TimeInterval(durationMinutes * 60)
     self.remainingTime = self.totalDuration
-    self.state = MatchConfig()
+    self.config = MatchConfig()
     self.history = []
   }
 }

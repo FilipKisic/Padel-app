@@ -12,3 +12,9 @@ enum MatchPhase: Equatable {
   case paused
   case finished
 }
+
+struct MatchScreenState: Equatable {
+  var phase: MatchPhase = .paused
+  var elapsedTime: TimeInterval = 0
+  var showCancelAlert: Bool = false
+}

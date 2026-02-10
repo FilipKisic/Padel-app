@@ -21,7 +21,7 @@ struct MatchView: View {
         
         VStack(spacing: 0) {
           // Serve Position Quadrants
-          ServePositionView(currentPosition: viewModel.match.state.servePosition)
+          ServePositionView(currentPosition: viewModel.match.config.servePosition)
             .frame(height: 100)
             .padding(.horizontal, 40)
             .padding(.top, 60)
@@ -44,7 +44,7 @@ struct MatchView: View {
                 
                 // Opponent Games per Set
                 VStack(alignment: .leading, spacing: 4) {
-                  ForEach(0..<viewModel.match.state.currentSetIndex + 1, id: \.self) { setIndex in
+                  ForEach(0..<viewModel.match.config.currentSetIndex + 1, id: \.self) { setIndex in
                     HStack(spacing: 8) {
                       Text("\(setIndex + 1)")
                         .font(.system(size: 18))
@@ -75,7 +75,7 @@ struct MatchView: View {
                 
                 // Player Games per Set
                 VStack(alignment: .leading, spacing: 4) {
-                  ForEach(0..<viewModel.match.state.currentSetIndex + 1, id: \.self) { setIndex in
+                  ForEach(0..<viewModel.match.config.currentSetIndex + 1, id: \.self) { setIndex in
                     HStack(spacing: 8) {
                       Text("\(setIndex + 1)")
                         .font(.system(size: 18))
@@ -148,7 +148,7 @@ struct MatchView: View {
                   .fill(Color(white: 0.2))
                   .frame(width: 120, height: 120)
                 
-                Image(systemName: viewModel.state == .playing ? "pause" : "play.fill")
+                Image(systemName: viewModel.matchState.phase == .playing ? "pause" : "play.fill")
                   .font(.system(size: 50))
                   .foregroundColor(.white)
               }
@@ -161,7 +161,7 @@ struct MatchView: View {
         }
         
         // Tap Areas for Scoring - Only cover the upper area, not the bottom sheet
-        if viewModel.state == .playing {
+        if viewModel.matchState.phase == .playing {
           GeometryReader { geo in
             HStack(spacing: 0) {
               // Your Team Tap Area (Left Half)
@@ -184,7 +184,7 @@ struct MatchView: View {
       }
     }
     .navigationBarBackButtonHidden(true)
-    .alert("Cancel Match", isPresented: $viewModel.showCancelAlert) {
+    .alert("Cancel Match", isPresented: $viewModel.matchState.showCancelAlert) {
       Button("Cancel Match", role: .destructive) {
         router.navigateToRoot()
       }
@@ -195,13 +195,13 @@ struct MatchView: View {
     .onAppear {
       viewModel.setDuration(appState.matchDuration)
     }
-    .onChange(of: viewModel.state) { newState in
-      if newState == .finished, let winner = viewModel.match.state.winner {
+    .onChange(of: viewModel.matchState.phase) { newPhase in
+      if newPhase == .finished, let winner = viewModel.match.config.winner {
         let session = Session(
           date: Date(),
-          duration: viewModel.elapsedTime,
+          duration: viewModel.matchState.elapsedTime,
           winner: winner,
-          sets: viewModel.match.state.sets
+          sets: viewModel.match.config.sets
         )
         appState.setCompletedSession(session)
         router.navigate(to: .summary)
@@ -289,6 +289,13 @@ struct RoundedCorner: Shape {
   }
 }
 
+// MARK: - PREVIEW
 #Preview {
-  MatchView()
+  let viewModel = MatchViewModel()
+  let appState = AppState()
+  NavigationView {
+    MatchView()
+  }
+  .environmentObject(viewModel)
+  .environmentObject(appState)
 }

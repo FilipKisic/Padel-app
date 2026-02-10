@@ -9,13 +9,9 @@ import Foundation
 import Combine
 
 class MatchViewModel: ObservableObject {
-  private(set) var match: Match
-  @Published var state: MatchPhase = .paused
-  @Published var elapsedTime: TimeInterval = 0
-  @Published var showCancelAlert: Bool = false
-  @Published private var refreshTrigger: Bool = false
+  @Published var matchState = MatchScreenState()
   
-  private var timer: Timer?
+  private(set) var match: Match
   private let gameService: MatchGameService
   private let timerService: TimerService
   
@@ -23,14 +19,23 @@ class MatchViewModel: ObservableObject {
     self.match = Match(durationMinutes: 90)
     self.gameService = gameService
     self.timerService = timerService
+    
+    self.timerService.onTick = { [weak self] in
+      guard let self = self else { return }
+      self.timerService.tick(remainingTime: &self.match.remainingTime)
+      self.matchState.elapsedTime = self.timerService.elapsedTime
+    }
   }
   
   func setDuration(_ duration: TimeInterval) {
     self.match = Match(durationMinutes: Int(duration / 60))
+    self.matchState = MatchScreenState()
+    self.timerService.reset()
   }
   
+  // MARK: - Play / Pause
   func togglePlayPause() {
-    switch state {
+    switch matchState.phase {
       case .playing:
         pause()
       case .paused:
@@ -41,78 +46,61 @@ class MatchViewModel: ObservableObject {
   }
   
   func play() {
-    state = .playing
-    startTimer()
+    matchState.phase = .playing
+    timerService.start()
   }
   
   func pause() {
-    state = .paused
-    stopTimer()
+    matchState.phase = .paused
+    timerService.stop()
   }
   
+  // MARK: - Scoring
   func scorePoint(for team: Team) {
-    guard state == .playing else { return }
-    gameService.saveHistory(history: &match.history, state: match.state, remainingTime: match.remainingTime)
-    gameService.scorePoint(config: &match.state, for: team)
-    refresh()
+    guard matchState.phase == .playing else { return }
+    gameService.saveHistory(history: &match.history, state: match.config, remainingTime: match.remainingTime)
+    gameService.scorePoint(config: &match.config, for: team)
+    objectWillChange.send()
     
-    if match.state.isMatchOver {
+    if match.config.isMatchOver {
       finishMatch()
     }
   }
   
   func undo() {
-    gameService.undo(history: &match.history, state: &match.state, remainingTime: &match.remainingTime)
-    refresh()
+    gameService.undo(history: &match.history, state: &match.config, remainingTime: &match.remainingTime)
+    objectWillChange.send()
   }
   
+  // MARK: - Cancel
   func cancel() {
-    showCancelAlert = true
+    matchState.showCancelAlert = true
   }
   
+  // MARK: - Private
   private func finishMatch() {
-    state = .finished
-    stopTimer()
-  }
-  
-  private func startTimer() {
-    timer?.invalidate()
-    timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-      guard let self = self else { return }
-      self.elapsedTime += 1
-      self.timerService.tick(remainingTime: &self.match.remainingTime)
-      self.refresh()
-    }
-  }
-  
-  private func stopTimer() {
-    timer?.invalidate()
-    timer = nil
-  }
-  
-  private func refresh() {
-    refreshTrigger.toggle()
-  }
-  
-  var formattedElapsedTime: String {
-    timerService.formattedTime(from: elapsedTime)
-  }
-  
-  var progressPercentage: Double {
-    guard match.totalDuration > 0 else { return 0 }
-    return min(elapsedTime / match.totalDuration, 1.0)
+    matchState.phase = .finished
+    timerService.stop()
   }
   
   // MARK: - Display Helpers
+  var formattedElapsedTime: String {
+    timerService.formattedTime(from: matchState.elapsedTime)
+  }
+  
+  var progressPercentage: Double {
+    timerService.progressPercentage(elapsed: matchState.elapsedTime, total: match.totalDuration)
+  }
+  
   func displayScore(for team: Team) -> String {
-    gameService.displayScore(for: team, in: match.state)
+    gameService.displayScore(for: team, in: match.config)
   }
   
   func gamesInSet(_ setIndex: Int, for team: Team) -> Int {
-    gameService.gamesInSet(setIndex, for: team, in: match.state)
+    gameService.gamesInSet(setIndex, for: team, in: match.config)
   }
   
   deinit {
-    stopTimer()
+    timerService.stop()
   }
 }

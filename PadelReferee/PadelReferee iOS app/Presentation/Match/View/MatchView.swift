@@ -20,145 +20,27 @@ struct MatchView: View {
         Color.black.ignoresSafeArea()
         
         VStack(spacing: 0) {
-          // Serve Position Quadrants
-          ServePositionView(currentPosition: viewModel.match.config.servePosition)
+          servePositionDisplay(currentPosition: viewModel.match.config.servePosition)
             .frame(height: 100)
-            .padding(.horizontal, 40)
-            .padding(.top, 60)
+            .padding(.horizontal, 20)
           
           Spacer()
           
-          // Score Display
-          VStack(spacing: 16) {
-            // Opponent Section
-            VStack(spacing: 12) {
-              Text("OPPONENT")
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundColor(.green)
-              
-              HStack(alignment: .top, spacing: 20) {
-                // Opponent Current Score
-                Text(viewModel.displayScore(for: .opponent))
-                  .font(.system(size: 90, weight: .bold))
-                  .foregroundColor(.green)
-                
-                // Opponent Games per Set
-                VStack(alignment: .leading, spacing: 4) {
-                  ForEach(0..<viewModel.match.config.currentSetIndex + 1, id: \.self) { setIndex in
-                    HStack(spacing: 8) {
-                      Text("\(setIndex + 1)")
-                        .font(.system(size: 18))
-                        .foregroundColor(.secondary)
-                      Text("\(viewModel.gamesInSet(setIndex, for: .opponent))")
-                        .font(.system(size: 32, weight: .semibold))
-                        .foregroundColor(.green)
-                        .frame(minWidth: 40, alignment: .trailing)
-                    }
-                  }
-                }
-              }
-            }
+          VStack(spacing: 0) {
+            opponentGameAndSetScore()
             
-            // Divider
-            Rectangle()
-              .fill(Color.cyan)
-              .frame(height: 3)
-              .frame(maxWidth: 300)
+            RoundedRectangle(cornerRadius: 10)
+              .fill(.cyan)
+              .frame(height: 5)
             
-            // Player Section
-            VStack(spacing: 12) {
-              HStack(alignment: .bottom, spacing: 20) {
-                // Player Current Score
-                Text(viewModel.displayScore(for: .player))
-                  .font(.system(size: 90, weight: .bold))
-                  .foregroundColor(.white)
-                
-                // Player Games per Set
-                VStack(alignment: .leading, spacing: 4) {
-                  ForEach(0..<viewModel.match.config.currentSetIndex + 1, id: \.self) { setIndex in
-                    HStack(spacing: 8) {
-                      Text("\(setIndex + 1)")
-                        .font(.system(size: 18))
-                        .foregroundColor(.secondary)
-                      Text("\(viewModel.gamesInSet(setIndex, for: .player))")
-                        .font(.system(size: 32, weight: .semibold))
-                        .foregroundColor(.white)
-                        .frame(minWidth: 40, alignment: .trailing)
-                    }
-                  }
-                }
-              }
-              
-              Text("YOUR TEAM")
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundColor(.white)
-            }
+            playerGameAndSetScore()
           }
           .padding(.horizontal)
           
           Spacer()
           
-          // Bottom Sheet
-          VStack(spacing: 0) {
-            // Top Bar with Timer and Controls
-            HStack(spacing: 20) {
-              // Progress Indicator
-              ZStack {
-                Circle()
-                  .stroke(Color.gray.opacity(0.3), lineWidth: 4)
-                  .frame(width: 50, height: 50)
-                
-                Circle()
-                  .trim(from: 0, to: viewModel.progressPercentage)
-                  .stroke(Color.yellow, style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                  .frame(width: 50, height: 50)
-                  .rotationEffect(.degrees(-90))
-                
-                Image(systemName: "clock")
-                  .foregroundColor(.yellow)
-              }
-              
-              Spacer()
-              
-              // Timer
-              Text(viewModel.formattedElapsedTime)
-                .font(.system(size: 36, weight: .bold, design: .rounded))
-                .foregroundColor(.yellow)
-              
-              Spacer()
-              
-              // Cancel Button
-              Button(action: {
-                viewModel.cancel()
-              }) {
-                Image(systemName: "xmark.circle.fill")
-                  .font(.system(size: 50))
-                  .foregroundColor(.red)
-              }
-            }
-            .padding(.horizontal, 30)
-            .padding(.top, 20)
-            
-            // Play/Pause Button
-            Button(action: {
-              viewModel.togglePlayPause()
-            }) {
-              ZStack {
-                Circle()
-                  .fill(Color(white: 0.2))
-                  .frame(width: 120, height: 120)
-                
-                Image(systemName: viewModel.matchState.phase == .playing ? "pause" : "play.fill")
-                  .font(.system(size: 50))
-                  .foregroundColor(.white)
-              }
-            }
-            .padding(.vertical, 30)
-          }
-          .frame(maxWidth: .infinity)
-          .background(Color(white: 0.15))
-          .cornerRadius(30, corners: [.topLeft, .topRight])
-        }
+          bottomSheet()
+        } //: VSTACK
         
         // Tap Areas for Scoring - Only cover the upper area, not the bottom sheet
         if viewModel.matchState.phase == .playing {
@@ -207,85 +89,165 @@ struct MatchView: View {
         router.navigate(to: .summary)
       }
     }
+    .preferredColorScheme(.dark)
   }
 }
 
-struct ServePositionView: View {
-  let currentPosition: ServePosition
-  
-  var body: some View {
+private extension MatchView {
+  @ViewBuilder
+  func servePositionDisplay(currentPosition: ServePosition) -> some View {
     VStack(spacing: 8) {
       HStack(spacing: 8) {
-        QuadrantBox(isActive: currentPosition == .topLeft)
-        QuadrantBox(isActive: currentPosition == .topRight)
-      }
+        quadrantBox(isActive: currentPosition == .topLeft)
+        quadrantBox(isActive: currentPosition == .topRight)
+      } //: HSTACK
       HStack(spacing: 8) {
-        QuadrantBox(isActive: currentPosition == .bottomLeft)
-        QuadrantBox(isActive: currentPosition == .bottomRight)
-      }
-    }
+        quadrantBox(isActive: currentPosition == .bottomLeft)
+        quadrantBox(isActive: currentPosition == .bottomRight)
+      } //: HSTACK
+    } //: VSTACK
   }
-}
-
-struct QuadrantBox: View {
-  let isActive: Bool
   
-  var body: some View {
+  @ViewBuilder
+  func quadrantBox(isActive: Bool) -> some View {
     RoundedRectangle(cornerRadius: 8)
       .fill(isActive ? Color.yellow : Color.cyan)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
   }
-}
-
-struct SetIndicatorsView: View {
-  let sets: [SetScore]
   
-  var body: some View {
-    HStack(spacing: 12) {
-      ForEach(Array(sets.enumerated()), id: \.offset) { index, set in
-        VStack(spacing: 4) {
-          Text("Set \(index + 1)")
-            .font(.caption2)
-            .foregroundColor(.secondary)
-          
-          HStack(spacing: 4) {
-            Text("\(set.playerGames)")
-              .font(.caption)
-              .foregroundColor(.white)
-            Text("-")
-              .font(.caption2)
-              .foregroundColor(.secondary)
-            Text("\(set.opponentGames)")
-              .font(.caption)
+  @ViewBuilder
+  func opponentGameAndSetScore() -> some View {
+    HStack(alignment: .top, spacing: 0) {
+      // Opponent Current Score
+      Text(viewModel.displayScore(for: .opponent))
+        .font(.system(size: 96, weight: .bold, design: .rounded))
+        .foregroundColor(.accent)
+      
+      Spacer()
+      
+      VStack(alignment: .leading) {
+        Text("Opponent")
+          .textCase(.uppercase)
+          .font(.system(size: 20, weight: .medium, design: .rounded))
+          .foregroundColor(.accent)
+        
+        HStack(spacing: 25) {
+          VStack {
+            Text("1")
+              .font(.system(size: 18))
+              .foregroundColor(.gray)
+            Text("\(viewModel.gamesInSet(0, for: .opponent))")
+              .font(.system(size: 48, weight: .medium, design: .rounded))
               .foregroundColor(.green)
-          }
-        }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 4)
-        .background(Color(white: 0.2))
-        .cornerRadius(6)
-      }
-    }
+          } //: VSTACK
+          VStack {
+            Text("2")
+              .font(.system(size: 18))
+              .foregroundColor(.gray)
+            Text("\(viewModel.gamesInSet(1, for: .opponent))")
+              .font(.system(size: 48, weight: .medium, design: .rounded))
+              .foregroundColor(.green)
+          } //: VSTACK
+          VStack {
+            Text("3")
+              .font(.system(size: 18))
+              .foregroundColor(.gray)
+            Text("\(viewModel.gamesInSet(2, for: .opponent))")
+              .font(.system(size: 48, weight: .medium, design: .rounded))
+              .foregroundColor(.green)
+          } //: VSTACK
+        } //: HSTACK
+        
+      } //: VSTACK
+    } //: HSTACK
   }
-}
-
-extension View {
-  func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-    clipShape(RoundedCorner(radius: radius, corners: corners))
-  }
-}
-
-struct RoundedCorner: Shape {
-  var radius: CGFloat = .infinity
-  var corners: UIRectCorner = .allCorners
   
-  func path(in rect: CGRect) -> Path {
-    let path = UIBezierPath(
-      roundedRect: rect,
-      byRoundingCorners: corners,
-      cornerRadii: CGSize(width: radius, height: radius)
-    )
-    return Path(path.cgPath)
+  @ViewBuilder
+  func playerGameAndSetScore() -> some View {
+    HStack(spacing: 0) {
+      // Opponent Current Score
+      Text(viewModel.displayScore(for: .player))
+        .font(.system(size: 96, weight: .bold, design: .rounded))
+      
+      Spacer()
+      
+      VStack(alignment: .leading) {
+        HStack(spacing: 25) {
+          Text("\(viewModel.gamesInSet(0, for: .player))")
+            .font(.system(size: 48, weight: .medium, design: .rounded))
+          Text("\(viewModel.gamesInSet(1, for: .player))")
+            .font(.system(size: 48, weight: .medium, design: .rounded))
+          Text("\(viewModel.gamesInSet(2, for: .player))")
+            .font(.system(size: 48, weight: .medium, design: .rounded))
+        } //: HSTACK
+        Text("Your team")
+          .textCase(.uppercase)
+          .font(.system(size: 20, weight: .medium, design: .rounded))
+      } //: VSTACK
+    } //: HSTACK
+  }
+  
+  @ViewBuilder
+  func bottomSheet() -> some View {
+    VStack(spacing: 0) {
+      HStack(spacing: 0) {
+        undoWithProgressIndicator()
+        
+        Spacer()
+        
+        Text(viewModel.formattedElapsedTime)
+          .font(.system(size: 48, weight: .medium, design: .rounded))
+          .foregroundColor(.yellow)
+        
+        Spacer()
+        
+        Button {
+          viewModel.cancel()
+        } label: {
+          Image(systemName: "xmark.circle.fill")
+            .font(.system(size: 50))
+            .symbolRenderingMode(.palette)
+            .foregroundStyle(.white, .red)
+        }
+      } //: HSTACK
+      .padding(.horizontal, 20)
+      .padding(.top, 20)
+      
+      Button {
+        viewModel.togglePlayPause()
+      } label: {
+          Image(systemName: viewModel.matchState.phase == .playing ? "pause" : "play.fill")
+            .font(.system(size: 50))
+            .foregroundColor(.white)
+      }
+      .frame(width: 120, height: 120)
+      .background(.button)
+      .clipShape(Circle())
+      .padding(.vertical, 30)
+      
+    } //: VSTACK
+    .frame(maxWidth: .infinity)
+    .background(.sheet)
+    .cornerRadius(30)
+  }
+  
+  @ViewBuilder
+  func undoWithProgressIndicator() -> some View {
+    ZStack {
+      Circle()
+        .stroke(.yellow.opacity(0.3), lineWidth: 6)
+        .frame(width: 50, height: 50)
+      
+      Circle()
+        .trim(from: 0, to: viewModel.progressPercentage)
+        .stroke(.yellow, style: StrokeStyle(lineWidth: 6, lineCap: .round))
+        .frame(width: 50, height: 50)
+        .rotationEffect(.degrees(-90))
+      
+      Image(systemName: "arrow.uturn.backward")
+        .font(.system(size: 24))
+        .foregroundColor(.yellow)
+    }
   }
 }
 
@@ -295,6 +257,7 @@ struct RoundedCorner: Shape {
   let appState = AppState()
   NavigationView {
     MatchView()
+      .preferredColorScheme(.dark)
   }
   .environmentObject(viewModel)
   .environmentObject(appState)

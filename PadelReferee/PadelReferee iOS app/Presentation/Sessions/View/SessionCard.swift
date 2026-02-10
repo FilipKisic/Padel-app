@@ -26,55 +26,6 @@ struct SessionCard: View {
   }
 }
 
-// PREVIOUS CODE
-//VStack(alignment: .leading, spacing: 12) {
-//  HStack {
-//    Image(systemName: session.winner == .player ? "trophy.fill" : "trophy")
-//      .foregroundColor(session.winner == .player ? .yellow : .secondary)
-//    
-//    Text(session.winner == .player ? "You Won!" : "Opponent Won!")
-//      .font(.headline)
-//    
-//    Spacer()
-//    
-//    Text(session.formattedDate)
-//      .font(.caption)
-//      .foregroundColor(.secondary)
-//  }
-//  
-//  HStack {
-//    Text("Time Played:")
-//      .font(.subheadline)
-//      .foregroundColor(.secondary)
-//    Text(session.formattedDuration)
-//      .font(.subheadline)
-//      .fontWeight(.semibold)
-//  }
-//  
-//  HStack(spacing: 20) {
-//    ForEach(Array(session.sets.enumerated()), id: \.offset) { index, set in
-//      VStack(spacing: 4) {
-//        Text("Set \(index + 1)")
-//          .font(.caption)
-//          .foregroundColor(.secondary)
-//        HStack(spacing: 8) {
-//          Text("\(set.playerGames)")
-//            .font(.title3)
-//            .fontWeight(.bold)
-//          Text("-")
-//            .foregroundColor(.secondary)
-//          Text("\(set.opponentGames)")
-//            .font(.title3)
-//            .fontWeight(.bold)
-//        }
-//      }
-//    }
-//  }
-//}
-//.padding()
-//.background(Color(uiColor: .secondarySystemGroupedBackground))
-//.cornerRadius(12)
-
 // MARK: - EXTENSIONS
 private extension SessionCard {
   @ViewBuilder
@@ -131,7 +82,7 @@ private extension SessionCard {
       
       RoundedRectangle(cornerRadius: 5)
         .frame(width: 80, height: 2)
-        .foregroundStyle(.blue)
+        .foregroundStyle(.cyan)
         .padding(.vertical, 5)
       
       HStack {

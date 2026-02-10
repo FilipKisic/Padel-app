@@ -9,42 +9,35 @@ import Foundation
 import Combine
 
 class SessionsViewModel: ObservableObject {
-  @Published var state: SessionsState = .empty
+  @Published var state: SessionHistoryState
   
-  private var sessions: [Session] = []
   private let userDefaultsKey = "savedSessions"
   
-  init() {
+  init(state: SessionHistoryState = SessionHistoryState()) {
+    self.state = state
     loadSessions()
   }
   
   func addSession(_ session: Session) {
-    sessions.insert(session, at: 0)
+    state.sessionHistory.insert(session, at: 0)
     saveSessions()
-    updateState()
   }
   
   func deleteSession(_ session: Session) {
-    sessions.removeAll { $0.id == session.id }
+    state.sessionHistory.removeAll { $0.id == session.id }
     saveSessions()
-    updateState()
   }
   
   private func loadSessions() {
     if let data = UserDefaults.standard.data(forKey: userDefaultsKey),
        let decoded = try? JSONDecoder().decode([Session].self, from: data) {
-      sessions = decoded
+      state.sessionHistory = decoded
     }
-    updateState()
   }
   
   private func saveSessions() {
-    if let encoded = try? JSONEncoder().encode(sessions) {
+    if let encoded = try? JSONEncoder().encode(state.sessionHistory) {
       UserDefaults.standard.set(encoded, forKey: userDefaultsKey)
     }
-  }
-  
-  private func updateState() {
-    state = sessions.isEmpty ? .empty : .history(sessions)
   }
 }

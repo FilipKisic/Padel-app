@@ -209,6 +209,10 @@ class MatchGameService {
     if wonSets >= 2 {
       state.isMatchOver = true
       state.winner = team
+      guard state.sets.count == 3 else {
+        state.sets.append(SetScore(playerGames: 0, opponentGames: 0, isTiebreak: false));
+        return
+      }
     } else {
       state.currentSetIndex += 1
       state.sets.append(SetScore())

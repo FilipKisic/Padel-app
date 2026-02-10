@@ -12,7 +12,7 @@ struct PadelRefereeiOS: App {
   var body: some Scene {
     WindowGroup {
       MasterRouteView {
-        SessionsView()
+        SessionHistoryView()
       }
     }
   }

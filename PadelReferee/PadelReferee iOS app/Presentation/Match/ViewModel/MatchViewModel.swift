@@ -10,7 +10,7 @@ import Combine
 
 class MatchViewModel: ObservableObject {
   private(set) var match: Match
-  @Published var state: MatchScreenState = .paused
+  @Published var state: MatchPhase = .paused
   @Published var elapsedTime: TimeInterval = 0
   @Published var showCancelAlert: Bool = false
   @Published private var refreshTrigger: Bool = false

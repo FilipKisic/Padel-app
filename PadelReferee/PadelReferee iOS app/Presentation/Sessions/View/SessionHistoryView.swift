@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SessionsView: View {
+struct SessionHistoryView: View {
   // MARK: - PROPERTIES
   @EnvironmentObject private var viewModel: SessionsViewModel
   @EnvironmentObject private var router: Router
@@ -16,11 +16,10 @@ struct SessionsView: View {
   // MARK: - BODY
   var body: some View {
     ZStack {
-      switch viewModel.state {
-        case .empty:
-          emptyStateView()
-        case .history(let sessions):
-          sessionListStateView(sessions: sessions)
+      if viewModel.state.sessionHistory.isEmpty {
+        emptyStateView()
+      } else {
+        sessionListStateView()
       }
     }
     .navigationTitle("Sessions")
@@ -34,17 +33,18 @@ struct SessionsView: View {
   }
 }
 
-private extension SessionsView {
+// MARK: - EXTENSIONS
+private extension SessionHistoryView {
   @ViewBuilder
   func emptyStateView() -> some View {
     VStack() {
       Spacer()
       
       Image(systemName: "tennisball.circle.fill")
-        .font(.system(size: 80))
+        .font(.system(size: 50))
         .symbolRenderingMode(.hierarchical)
         .foregroundColor(.accentColor)
-        .padding(.bottom, 16)
+        .padding(.bottom)
       
       
       Text("No sessions yet")
@@ -63,23 +63,26 @@ private extension SessionsView {
   }
   
   @ViewBuilder
-  func sessionListStateView(sessions: [Session]) -> some View {
-    ScrollView {
-      LazyVStack(spacing: 12) {
-        ForEach(sessions) { session in
-          SessionCard(session: session)
-            .swipeActions(edge: .trailing) {
-              Button(role: .destructive) {
-                viewModel.deleteSession(session)
-              } label: {
-                Label("Delete", systemImage: "trash")
+  func sessionListStateView() -> some View {
+    VStack {
+      ScrollView {
+        LazyVStack(spacing: 12) {
+          ForEach(viewModel.state.sessionHistory) { session in
+            SessionCard(session: session)
+              .swipeActions(edge: .trailing) {
+                Button(role: .destructive) {
+                  viewModel.deleteSession(session)
+                } label: {
+                  Label("Delete", systemImage: "trash")
+                }
               }
-            }
+          }
         }
-      }
-      .padding()
-      .padding(.bottom, 80)
-    }
+        .padding()
+        .padding(.bottom, 80)
+      } //: SCROLL VIEW
+      startNewSessionButtonView()
+    } //: VSTACK
   }
   
   @ViewBuilder
@@ -101,11 +104,25 @@ private extension SessionsView {
 
 // MARK: - PREVIEW
 #Preview {
+  let session = Session(
+    id: UUID(),
+    date: Date(),
+    duration: 3600,
+    winner: .player,
+    sets: [
+      SetScore(playerGames: 6, opponentGames: 4),
+      SetScore(playerGames: 3, opponentGames: 6),
+      SetScore(playerGames: 7, opponentGames: 5)
+    ]
+  )
   let viewModel = SessionsViewModel()
   let appState = AppState()
+  
+  viewModel.state.sessionHistory = [session]
+  
   return ZStack {
     NavigationView {
-      SessionsView()
+      SessionHistoryView()
     }
   }
   .environmentObject(viewModel)

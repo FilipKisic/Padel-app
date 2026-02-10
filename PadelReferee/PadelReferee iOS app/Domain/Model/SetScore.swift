@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SetScore: Equatable, Codable {
+struct SetScore: Equatable, Codable, Hashable {
   var playerGames: Int
   var opponentGames: Int
   var isTiebreak: Bool

@@ -15,56 +15,28 @@ struct MatchView: View {
   
   // MARK: - BODY
   var body: some View {
-    GeometryReader { geometry in
-      ZStack(alignment: .bottom) {
-        Color.black.ignoresSafeArea()
+    VStack(spacing: 0) {
+      servePositionDisplay(currentPosition: viewModel.match.config.servePosition)
+        .frame(height: 100)
+        .padding(.horizontal, 20)
+      
+      Spacer()
+      
+      VStack(spacing: 0) {
+        opponentGameAndSetScore()
         
-        VStack(spacing: 0) {
-          servePositionDisplay(currentPosition: viewModel.match.config.servePosition)
-            .frame(height: 100)
-            .padding(.horizontal, 20)
-          
-          Spacer()
-          
-          VStack(spacing: 0) {
-            opponentGameAndSetScore()
-            
-            RoundedRectangle(cornerRadius: 10)
-              .fill(.cyan)
-              .frame(height: 5)
-            
-            playerGameAndSetScore()
-          }
-          .padding(.horizontal)
-          
-          Spacer()
-          
-          bottomSheet()
-        } //: VSTACK
+        RoundedRectangle(cornerRadius: 10)
+          .fill(.cyan)
+          .frame(height: 5)
         
-        // Tap Areas for Scoring - Only cover the upper area, not the bottom sheet
-        if viewModel.matchState.phase == .playing {
-          GeometryReader { geo in
-            HStack(spacing: 0) {
-              // Your Team Tap Area (Left Half)
-              Color.clear
-                .contentShape(Rectangle())
-                .onTapGesture {
-                  viewModel.scorePoint(for: .player)
-                }
-              
-              // Opponent Tap Area (Right Half)
-              Color.clear
-                .contentShape(Rectangle())
-                .onTapGesture {
-                  viewModel.scorePoint(for: .opponent)
-                }
-            }
-            .frame(height: geo.size.height - 250) // Exclude bottom sheet area
-          }
-        }
+        playerGameAndSetScore()
       }
-    }
+      .padding(.horizontal, 20)
+      
+      Spacer()
+      
+      bottomSheet()
+    } //: VSTACK
     .navigationBarBackButtonHidden(true)
     .alert("Cancel Match", isPresented: $viewModel.matchState.showCancelAlert) {
       Button("Cancel Match", role: .destructive) {
@@ -77,7 +49,7 @@ struct MatchView: View {
     .onAppear {
       viewModel.setDuration(appState.matchDuration)
     }
-    .onChange(of: viewModel.matchState.phase) { newPhase in
+    .onChange(of: viewModel.matchState.phase) { _,newPhase in
       if newPhase == .finished, let winner = viewModel.match.config.winner {
         let session = Session(
           date: Date(),
@@ -213,17 +185,63 @@ private extension MatchView {
       .padding(.horizontal, 20)
       .padding(.top, 20)
       
-      Button {
-        viewModel.togglePlayPause()
-      } label: {
+      HStack(alignment: .bottom) {
+        VStack {
+          Text("Opponent")
+            .textCase(.uppercase)
+            .font(.system(size: 12, weight: .medium, design: .rounded))
+            .foregroundStyle(.accent)
+          
+          Button {
+            if viewModel.matchState.phase == .playing {
+              viewModel.scorePoint(for: .opponent)
+            }
+          } label: {
+            Text("+15")
+              .font(.system(size: 24, weight: .semibold, design: .rounded))
+              .foregroundStyle(.accent)
+          }
+          .frame(width: 85, height: 85)
+          .background(.button)
+          .clipShape(Circle())
+        } //: VSTACK
+        
+        Spacer()
+        
+        Button {
+          viewModel.togglePlayPause()
+        } label: {
           Image(systemName: viewModel.matchState.phase == .playing ? "pause" : "play.fill")
             .font(.system(size: 50))
             .foregroundColor(.white)
-      }
-      .frame(width: 120, height: 120)
-      .background(.button)
-      .clipShape(Circle())
+        }
+        .frame(width: 130, height: 130)
+        .background(.button)
+        .clipShape(Circle())
+        
+        Spacer()
+        
+        VStack {
+          Text("Your team")
+            .textCase(.uppercase)
+            .font(.system(size: 12, weight: .medium, design: .rounded))
+          
+          Button {
+            if viewModel.matchState.phase == .playing {
+              viewModel.scorePoint(for: .player)
+            }
+          } label: {
+            Text("+15")
+              .font(.system(size: 24, weight: .semibold, design: .rounded))
+              .foregroundStyle(.plainText)
+          }
+          .frame(width: 85, height: 85)
+          .background(.button)
+          .clipShape(Circle())
+        } //: VSTACK
+      } //: HSTACK
       .padding(.vertical, 30)
+      .padding(.horizontal, 20)
       
     } //: VSTACK
     .frame(maxWidth: .infinity)
@@ -244,9 +262,14 @@ private extension MatchView {
         .frame(width: 50, height: 50)
         .rotationEffect(.degrees(-90))
       
-      Image(systemName: "arrow.uturn.backward")
-        .font(.system(size: 24))
-        .foregroundColor(.yellow)
+      Button {
+        viewModel.undo()
+      }
+      label: {
+        Image(systemName: "arrow.uturn.backward")
+          .font(.system(size: 24))
+          .foregroundColor(.yellow)
+      }
     }
   }
 }

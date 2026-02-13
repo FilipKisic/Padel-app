@@ -9,13 +9,14 @@ import Foundation
 import Combine
 
 class NewSessionViewModel: ObservableObject {
-  @Published var state: NewSessionState = .idle
-  @Published var hours: Int = 1
-  @Published var minutes: Int = 30
-  @Published var seconds: Int = 0
+  @Published var state: NewSessionState
+  
+  init(state: NewSessionState = NewSessionState()) {
+    self.state = state
+  }
   
   var selectedDuration: TimeInterval {
-    TimeInterval(hours * 3600 + minutes * 60 + seconds)
+    TimeInterval(state.hours * 3600 + state.minutes * 60 + state.seconds)
   }
   
   var isValidDuration: Bool {

@@ -22,6 +22,9 @@ struct SessionHistoryView: View {
         sessionListStateView()
       }
     }
+    .safeAreaBar(edge: .bottom, content: {
+      startNewSessionButtonView()
+    })
     .navigationTitle("Sessions")
     .preferredColorScheme(.dark)
     .onAppear {
@@ -57,8 +60,6 @@ private extension SessionHistoryView {
         .foregroundColor(.secondary)
       
       Spacer()
-      
-      startNewSessionButtonView()
     }
   }
   
@@ -81,7 +82,6 @@ private extension SessionHistoryView {
         .padding()
         .padding(.bottom, 80)
       } //: SCROLL VIEW
-      startNewSessionButtonView()
     } //: VSTACK
   }
   
@@ -104,7 +104,51 @@ private extension SessionHistoryView {
 
 // MARK: - PREVIEW
 #Preview {
-  let session = Session(
+  let session1 = Session(
+    id: UUID(),
+    date: Date(),
+    duration: 3600,
+    winner: .player,
+    sets: [
+      SetScore(playerGames: 6, opponentGames: 4),
+      SetScore(playerGames: 3, opponentGames: 6),
+      SetScore(playerGames: 7, opponentGames: 5)
+    ]
+  )
+  let session2 = Session(
+    id: UUID(),
+    date: Date(),
+    duration: 3600,
+    winner: .player,
+    sets: [
+      SetScore(playerGames: 6, opponentGames: 4),
+      SetScore(playerGames: 3, opponentGames: 6),
+      SetScore(playerGames: 7, opponentGames: 5)
+    ]
+  )
+  let session3 = Session(
+    id: UUID(),
+    date: Date(),
+    duration: 3600,
+    winner: .player,
+    sets: [
+      SetScore(playerGames: 6, opponentGames: 4),
+      SetScore(playerGames: 3, opponentGames: 6),
+      SetScore(playerGames: 7, opponentGames: 5)
+    ]
+  )
+  let session4 = Session(
+    id: UUID(),
+    date: Date(),
+    duration: 3600,
+    winner: .player,
+    sets: [
+      SetScore(playerGames: 6, opponentGames: 4),
+      SetScore(playerGames: 3, opponentGames: 6),
+      SetScore(playerGames: 7, opponentGames: 5)
+    ]
+  )
+  let session5 = Session(
     id: UUID(),
     date: Date(),
     duration: 3600,
@@ -117,9 +161,8 @@ private extension SessionHistoryView {
   )
   let viewModel = SessionsViewModel()
   let appState = AppState()
-  
-  viewModel.state.sessionHistory = [session]
-  
+
+  viewModel.state.sessionHistory = [session1, session2, session3, session4, session5]
   return ZStack {
     NavigationView {
       SessionHistoryView()

@@ -107,7 +107,7 @@ private extension MatchView {
           VStack {
             Text("1")
               .font(.system(size: 18))
-              .foregroundColor(.gray)
+              .foregroundColor(viewModel.match.config.currentSetIndex == 0 ? .white : .gray)
             Text("\(viewModel.gamesInSet(0, for: .opponent))")
               .font(.system(size: 48, weight: .medium, design: .rounded))
               .foregroundColor(.green)
@@ -115,7 +115,7 @@ private extension MatchView {
           VStack {
             Text("2")
               .font(.system(size: 18))
-              .foregroundColor(.gray)
+              .foregroundColor(viewModel.match.config.currentSetIndex == 1 ? .white : .gray)
             Text("\(viewModel.gamesInSet(1, for: .opponent))")
               .font(.system(size: 48, weight: .medium, design: .rounded))
               .foregroundColor(.green)
@@ -123,7 +123,7 @@ private extension MatchView {
           VStack {
             Text("3")
               .font(.system(size: 18))
-              .foregroundColor(.gray)
+              .foregroundColor(viewModel.match.config.currentSetIndex == 2 ? .white : .gray)
             Text("\(viewModel.gamesInSet(2, for: .opponent))")
               .font(.system(size: 48, weight: .medium, design: .rounded))
               .foregroundColor(.green)

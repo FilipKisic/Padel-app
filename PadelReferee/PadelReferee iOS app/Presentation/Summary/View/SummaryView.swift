@@ -18,7 +18,7 @@ struct SummaryView: View {
     ZStack(alignment: .bottom) {
       LinearGradient(
         colors: [
-          Color.accentColor.opacity(0.6),
+          Color.accentColor.opacity(0.8),
           Color.accentColor.opacity(0.3),
           Color(uiColor: .systemBackground)
         ],
@@ -27,93 +27,141 @@ struct SummaryView: View {
       )
       .ignoresSafeArea()
       
-      VStack(spacing: 40) {
-        Spacer()
+      VStack(spacing: 0) {
+        winnerPodium()
+          .padding(.vertical, 30)
         
-        // Trophy Icon
-        Image(systemName: "trophy.fill")
-          .font(.system(size: 100))
-          .foregroundColor(.yellow)
-          .shadow(color: .yellow.opacity(0.5), radius: 20)
+        timePlayed()
+          .padding(.vertical, 30)
         
-        // Winner Text
-        Text(viewModel.winnerText)
-          .font(.system(size: 42, weight: .bold))
-          .foregroundColor(.primary)
-        
-        // Time Played
-        VStack(spacing: 8) {
-          Text("Time Played")
-            .font(.headline)
-            .foregroundColor(.secondary)
-          
-          Text(viewModel.formattedElapsedTime)
-            .font(.system(size: 36, weight: .semibold, design: .rounded))
-            .foregroundColor(.primary)
-        }
-        
-        // Final Score
-        VStack(spacing: 16) {
-          Text("Final Score")
-            .font(.headline)
-            .foregroundColor(.secondary)
-          
-          HStack(spacing: 24) {
-            ForEach(Array(viewModel.sets.enumerated()), id: \.offset) { index, set in
-              VStack(spacing: 8) {
-                Text("Set \(index + 1)")
-                  .font(.caption)
-                  .foregroundColor(.secondary)
-                
-                VStack(spacing: 4) {
-                  Text("\(set.playerGames)")
-                    .font(.title)
-                    .fontWeight(set.playerGames > set.opponentGames ? .bold : .regular)
-                    .foregroundColor(set.playerGames > set.opponentGames ? .accentColor : .primary)
-                  
-                  Divider()
-                    .frame(width: 40)
-                  
-                  Text("\(set.opponentGames)")
-                    .font(.title)
-                    .fontWeight(set.opponentGames > set.playerGames ? .bold : .regular)
-                    .foregroundColor(set.opponentGames > set.playerGames ? .accentColor : .primary)
-                }
-                .padding()
-                .background(Color(uiColor: .secondarySystemGroupedBackground))
-                .cornerRadius(12)
-              }
-            }
-          }
-        }
+        finalScore()
         
         Spacer()
         
-        // Finish Button
-        Button(action: {
-          router.navigateToRoot()
-        }) {
-          Text("Finish")
-            .font(.headline)
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color.accentColor)
-            .cornerRadius(12)
-        }
-        .padding(.horizontal)
-        .padding(.bottom, 40)
-      }
-    }
+        finishButton()
+      } //: VSTACK
+    } //: ZSTACK
     .navigationBarBackButtonHidden(true)
     .onAppear {
       if let completedSession = appState.completedSession {
+        //TODO: App state completed session is not saved anywhere
         viewModel.loadSession(completedSession)
       }
     }
+    .preferredColorScheme(.dark)
   }
 }
 
+private extension SummaryView {
+  @ViewBuilder
+  func winnerPodium() -> some View {
+    Image(systemName: "trophy.fill")
+      .font(.system(size: 100))
+      .foregroundColor(.yellow)
+      .shadow(color: .yellow.opacity(0.5), radius: 20)
+    
+    Text(viewModel.winnerText)
+      .font(.system(size: 42, weight: .bold, design: .rounded))
+      .foregroundColor(.primary)
+  }
+  
+  @ViewBuilder
+  func timePlayed() -> some View {
+    VStack(spacing: 10) {
+      Text("Time Played")
+        .font(.headline)
+        .fontDesign(.rounded)
+        .foregroundColor(.secondary)
+      
+      Text(viewModel.formattedElapsedTime)
+        .font(.system(size: 36, weight: .medium, design: .rounded))
+        .foregroundColor(.plainText)
+    } //: VSTACK
+  }
+  
+  @ViewBuilder
+  func finalScore() -> some View {
+    VStack(spacing: 16) {
+      Text("Final Score")
+        .font(.headline)
+        .foregroundColor(.secondary)
+      
+      HStack(spacing: 24) {
+        ForEach(Array(viewModel.sets.enumerated()), id: \.offset) { index, set in
+          VStack(spacing: 8) {
+            Text("Set \(index + 1)")
+              .font(.caption)
+              .foregroundColor(.secondary)
+            
+            VStack(spacing: 4) {
+              Text("\(set.playerGames)")
+                .font(.title)
+                .fontWeight(.bold)
+                .foregroundColor(.accentColor)
+              
+              Divider()
+                .frame(width: 40)
+              
+              Text("\(set.opponentGames)")
+                .font(.title)
+                .fontWeight(.bold)
+                .foregroundColor(.plainText)
+            }
+            .padding()
+            .background(.button)
+            .cornerRadius(12)
+          } //: VSTACK
+        } //: FOR EACH
+      } //: HSTACK
+    } //: VSTACK
+  }
+  
+  @ViewBuilder
+  func finishButton() -> some View {
+    Button {
+      router.navigateToRoot()
+    } label: {
+      Text("Finish")
+        .font(.headline)
+        .foregroundColor(.white)
+        .frame(maxWidth: .infinity)
+        .padding()
+        .cornerRadius(12)
+    }
+    .glassEffect(.regular.tint(.accentColor.opacity(0.8)).interactive())
+    .padding(.horizontal)
+    .padding(.bottom, 40)
+  }
+}
+
+
+// MARK: - PREVIEW
 #Preview {
-  SummaryView()
+  let session = Session(
+    id: UUID(),
+    date: Date(),
+    duration: 3600,
+    winner: .player,
+    sets: [
+      SetScore(playerGames: 6, opponentGames: 4),
+      SetScore(playerGames: 3, opponentGames: 6),
+      SetScore(playerGames: 7, opponentGames: 5)
+    ]
+  )
+  let viewModel = SummaryViewModel()
+  let router = Router()
+  let appState = AppState()
+  
+  //viewModel.loadSession(session)
+  
+  NavigationView {
+    SummaryView()
+      .preferredColorScheme(.dark)
+      .onAppear{
+        viewModel.loadSession(session)
+      }
+  }
+  .environmentObject(viewModel)
+  .environmentObject(router)
+  .environmentObject(appState)
 }

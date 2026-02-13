@@ -44,7 +44,6 @@ struct SummaryView: View {
     .navigationBarBackButtonHidden(true)
     .onAppear {
       if let completedSession = appState.completedSession {
-        //TODO: App state completed session is not saved anywhere
         viewModel.loadSession(completedSession)
       }
     }
@@ -94,7 +93,7 @@ private extension SummaryView {
               .foregroundColor(.secondary)
             
             VStack(spacing: 4) {
-              Text("\(set.playerGames)")
+              Text("\(set.opponentGames)")
                 .font(.title)
                 .fontWeight(.bold)
                 .foregroundColor(.accentColor)
@@ -102,7 +101,7 @@ private extension SummaryView {
               Divider()
                 .frame(width: 40)
               
-              Text("\(set.opponentGames)")
+              Text("\(set.playerGames)")
                 .font(.title)
                 .fontWeight(.bold)
                 .foregroundColor(.plainText)

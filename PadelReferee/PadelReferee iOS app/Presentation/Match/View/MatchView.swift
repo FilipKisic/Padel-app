@@ -12,6 +12,7 @@ struct MatchView: View {
   @EnvironmentObject private var viewModel: MatchViewModel
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var appState: AppState
+  @ObservedObject private var phoneConnectivityManager = PhoneConnectivityManager.shared
   
   // MARK: - BODY
   var body: some View {
@@ -65,6 +66,7 @@ struct MatchView: View {
   }
 }
 
+// MARK: - EXTENSIONS
 private extension MatchView {
   @ViewBuilder
   func servePositionDisplay(currentPosition: ServePosition) -> some View {
@@ -156,6 +158,10 @@ private extension MatchView {
           .textCase(.uppercase)
           .font(.system(size: 20, weight: .medium, design: .rounded))
       } //: VSTACK
+      
+      Text("WatchOS message: \(phoneConnectivityManager.lastReceivedMessage)")
+        .font(.system(size: 18, weight: .medium, design: .rounded))
+        
     } //: HSTACK
   }
   
@@ -195,6 +201,7 @@ private extension MatchView {
           Button {
             if viewModel.matchState.phase == .playing {
               viewModel.scorePoint(for: .opponent)
+              phoneConnectivityManager.sendUpdate(text: "Hello from iOS!")
             }
           } label: {
             Text("+15")

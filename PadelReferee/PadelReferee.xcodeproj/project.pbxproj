@@ -7,11 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		120492842F18F9E6008D94F2 /* PadelReferee Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 120492832F18F9E6008D94F2 /* PadelReferee Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		12798CEC2F4B786D0089B3EB /* WatchPadelReferee Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 12798CE22F4B786B0089B3EB /* WatchPadelReferee Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		120492852F18F9E6008D94F2 /* PBXContainerItemProxy */ = {
+		12798CEA2F4B786D0089B3EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 120492772F18F9E6008D94F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 12798CE12F4B786B0089B3EB;
+			remoteInfo = "WatchPadelReferee Watch App";
+		};
+		1297BAB02F4B4936008C951C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 120492772F18F9E6008D94F2 /* Project object */;
 			proxyType = 1;
@@ -27,7 +34,17 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				120492842F18F9E6008D94F2 /* PadelReferee Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1297BAAF2F4B492E008C951C /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				12798CEC2F4B786D0089B3EB /* WatchPadelReferee Watch App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -36,32 +53,32 @@
 
 /* Begin PBXFileReference section */
 		1204927D2F18F9E6008D94F2 /* PadelReferee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PadelReferee.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		120492832F18F9E6008D94F2 /* PadelReferee Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PadelReferee Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		123F7E6B2F2BA43400CFDE71 /* PadelReferee iOS app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PadelReferee iOS app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		12798CE22F4B786B0089B3EB /* WatchPadelReferee Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchPadelReferee Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		120492872F18F9E6008D94F2 /* PadelReferee Watch App */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "PadelReferee Watch App";
-			sourceTree = "<group>";
-		};
 		123F7E6C2F2BA43400CFDE71 /* PadelReferee iOS app */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "PadelReferee iOS app";
 			sourceTree = "<group>";
 		};
+		12798CE32F4B786B0089B3EB /* WatchPadelReferee Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "WatchPadelReferee Watch App";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		120492802F18F9E6008D94F2 /* Frameworks */ = {
+		123F7E682F2BA43400CFDE71 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		123F7E682F2BA43400CFDE71 /* Frameworks */ = {
+		12798CDF2F4B786B0089B3EB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -74,8 +91,9 @@
 		120492762F18F9E6008D94F2 = {
 			isa = PBXGroup;
 			children = (
-				120492872F18F9E6008D94F2 /* PadelReferee Watch App */,
 				123F7E6C2F2BA43400CFDE71 /* PadelReferee iOS app */,
+				12798CE32F4B786B0089B3EB /* WatchPadelReferee Watch App */,
+				1297BAAB2F4B492E008C951C /* Frameworks */,
 				1204927E2F18F9E6008D94F2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -84,10 +102,17 @@
 			isa = PBXGroup;
 			children = (
 				1204927D2F18F9E6008D94F2 /* PadelReferee.app */,
-				120492832F18F9E6008D94F2 /* PadelReferee Watch App.app */,
 				123F7E6B2F2BA43400CFDE71 /* PadelReferee iOS app.app */,
+				12798CE22F4B786B0089B3EB /* WatchPadelReferee Watch App.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		1297BAAB2F4B492E008C951C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -103,7 +128,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				120492862F18F9E6008D94F2 /* PBXTargetDependency */,
 			);
 			name = PadelReferee;
 			packageProductDependencies = (
@@ -112,28 +136,6 @@
 			productReference = 1204927D2F18F9E6008D94F2 /* PadelReferee.app */;
 			productType = "com.apple.product-type.application.watchapp2-container";
 		};
-		120492822F18F9E6008D94F2 /* PadelReferee Watch App */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 120492902F18F9E9008D94F2 /* Build configuration list for PBXNativeTarget "PadelReferee Watch App" */;
-			buildPhases = (
-				1204927F2F18F9E6008D94F2 /* Sources */,
-				120492802F18F9E6008D94F2 /* Frameworks */,
-				120492812F18F9E6008D94F2 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				120492872F18F9E6008D94F2 /* PadelReferee Watch App */,
-			);
-			name = "PadelReferee Watch App";
-			packageProductDependencies = (
-			);
-			productName = "PadelReferee Watch App";
-			productReference = 120492832F18F9E6008D94F2 /* PadelReferee Watch App.app */;
-			productType = "com.apple.product-type.application";
-		};
 		123F7E6A2F2BA43400CFDE71 /* PadelReferee iOS app */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 123F7E732F2BA43600CFDE71 /* Build configuration list for PBXNativeTarget "PadelReferee iOS app" */;
@@ -141,10 +143,13 @@
 				123F7E672F2BA43400CFDE71 /* Sources */,
 				123F7E682F2BA43400CFDE71 /* Frameworks */,
 				123F7E692F2BA43400CFDE71 /* Resources */,
+				1297BAAF2F4B492E008C951C /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				1297BAB12F4B4936008C951C /* PBXTargetDependency */,
+				12798CEB2F4B786D0089B3EB /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				123F7E6C2F2BA43400CFDE71 /* PadelReferee iOS app */,
@@ -154,6 +159,28 @@
 			);
 			productName = "PadelReferee iOS app";
 			productReference = 123F7E6B2F2BA43400CFDE71 /* PadelReferee iOS app.app */;
+			productType = "com.apple.product-type.application";
+		};
+		12798CE12F4B786B0089B3EB /* WatchPadelReferee Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 12798CED2F4B786D0089B3EB /* Build configuration list for PBXNativeTarget "WatchPadelReferee Watch App" */;
+			buildPhases = (
+				12798CDE2F4B786B0089B3EB /* Sources */,
+				12798CDF2F4B786B0089B3EB /* Frameworks */,
+				12798CE02F4B786B0089B3EB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				12798CE32F4B786B0089B3EB /* WatchPadelReferee Watch App */,
+			);
+			name = "WatchPadelReferee Watch App";
+			packageProductDependencies = (
+			);
+			productName = "WatchPadelReferee Watch App";
+			productReference = 12798CE22F4B786B0089B3EB /* WatchPadelReferee Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -169,10 +196,10 @@
 					1204927C2F18F9E6008D94F2 = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
-					120492822F18F9E6008D94F2 = {
-						CreatedOnToolsVersion = 26.0.1;
-					};
 					123F7E6A2F2BA43400CFDE71 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					12798CE12F4B786B0089B3EB = {
 						CreatedOnToolsVersion = 26.2;
 					};
 				};
@@ -192,21 +219,14 @@
 			projectRoot = "";
 			targets = (
 				1204927C2F18F9E6008D94F2 /* PadelReferee */,
-				120492822F18F9E6008D94F2 /* PadelReferee Watch App */,
 				123F7E6A2F2BA43400CFDE71 /* PadelReferee iOS app */,
+				12798CE12F4B786B0089B3EB /* WatchPadelReferee Watch App */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1204927B2F18F9E6008D94F2 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		120492812F18F9E6008D94F2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -220,17 +240,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		12798CE02F4B786B0089B3EB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		1204927F2F18F9E6008D94F2 /* Sources */ = {
+		123F7E672F2BA43400CFDE71 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		123F7E672F2BA43400CFDE71 /* Sources */ = {
+		12798CDE2F4B786B0089B3EB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -240,10 +267,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		120492862F18F9E6008D94F2 /* PBXTargetDependency */ = {
+		12798CEB2F4B786D0089B3EB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 120492822F18F9E6008D94F2 /* PadelReferee Watch App */;
-			targetProxy = 120492852F18F9E6008D94F2 /* PBXContainerItemProxy */;
+			target = 12798CE12F4B786B0089B3EB /* WatchPadelReferee Watch App */;
+			targetProxy = 12798CEA2F4B786D0089B3EB /* PBXContainerItemProxy */;
+		};
+		1297BAB12F4B4936008C951C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			targetProxy = 1297BAB02F4B4936008C951C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -364,73 +395,6 @@
 			};
 			name = Release;
 		};
-		120492912F18F9E9008D94F2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JKVW4Y7PD6;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = PadelReferee;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKWatchOnly = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = de.comsystoreply.PadelReferee.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 10.6;
-			};
-			name = Debug;
-		};
-		120492922F18F9E9008D94F2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JKVW4Y7PD6;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = PadelReferee;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKWatchOnly = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = de.comsystoreply.PadelReferee.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 10.6;
-			};
-			name = Release;
-		};
 		120492952F18F9E9008D94F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -438,7 +402,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JKVW4Y7PD6;
 				INFOPLIST_KEY_CFBundleDisplayName = "Padel+";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = kisic.filip.PadelReferee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -456,7 +420,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JKVW4Y7PD6;
 				INFOPLIST_KEY_CFBundleDisplayName = "Padel+";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = kisic.filip.PadelReferee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -489,7 +453,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "de.comsystoreply.PadelReferee-iOS-app";
+				PRODUCT_BUNDLE_IDENTIFIER = de.comsystoreply.PadelReferee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -527,7 +491,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "de.comsystoreply.PadelReferee-iOS-app";
+				PRODUCT_BUNDLE_IDENTIFIER = de.comsystoreply.PadelReferee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -545,6 +509,73 @@
 			};
 			name = Release;
 		};
+		12798CEE2F4B786D0089B3EB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JKVW4Y7PD6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = WatchPadelReferee;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = de.comsystoreply.PadelReferee;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.comsystoreply.PadelReferee.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.6;
+			};
+			name = Debug;
+		};
+		12798CEF2F4B786D0089B3EB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JKVW4Y7PD6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = WatchPadelReferee;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = de.comsystoreply.PadelReferee;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = de.comsystoreply.PadelReferee.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 10.6;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -553,15 +584,6 @@
 			buildConfigurations = (
 				1204928E2F18F9E9008D94F2 /* Debug */,
 				1204928F2F18F9E9008D94F2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		120492902F18F9E9008D94F2 /* Build configuration list for PBXNativeTarget "PadelReferee Watch App" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				120492912F18F9E9008D94F2 /* Debug */,
-				120492922F18F9E9008D94F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -580,6 +602,15 @@
 			buildConfigurations = (
 				123F7E742F2BA43600CFDE71 /* Debug */,
 				123F7E752F2BA43600CFDE71 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		12798CED2F4B786D0089B3EB /* Build configuration list for PBXNativeTarget "WatchPadelReferee Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				12798CEE2F4B786D0089B3EB /* Debug */,
+				12798CEF2F4B786D0089B3EB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

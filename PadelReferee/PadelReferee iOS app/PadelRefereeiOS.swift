@@ -9,6 +9,10 @@ import SwiftUI
 
 @main
 struct PadelRefereeiOS: App {
+  init() {
+    PhoneConnectivityManager.shared.startSession()
+  }
+  
   var body: some Scene {
     WindowGroup {
       MasterRouteView {

@@ -12,6 +12,8 @@ struct SessionView: View {
   @StateObject private var viewModel = SessionViewModel()
   @Environment(\.dismiss) private var dismiss
   
+  @ObservedObject private var watchConnectivityManager = WatchConnectivityManager.shared
+  
   // MARK: - BODY
   var body: some View {
     VStack(spacing: 0) {
@@ -41,6 +43,8 @@ struct SessionView: View {
       HStack {
         Button(action: {
           viewModel.scorePoint(for: .opponent)
+          
+          watchConnectivityManager.sendUpdate(text: "Hello from watchOS!")
         }) {
           Text(viewModel.opponentScore)
             .font(.system(size: 58, weight: .medium, design: .rounded))
@@ -103,6 +107,10 @@ struct SessionView: View {
           viewModel.toggleTimer()
         }
         .padding(.bottom, 12)
+      
+      Text(watchConnectivityManager.lastReceivedText)
+        .font(.system(size: 12, weight: .medium))
+        
     } //: VSTACK
     .ignoresSafeArea()
     .onAppear {

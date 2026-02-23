@@ -152,9 +152,6 @@
         }
       }
     },
-    "WatchOS message: %@" : {
-
-    },
     "You Won!" : {
       "localizations" : {
         "en" : {

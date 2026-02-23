@@ -14,6 +14,8 @@ class MatchViewModel: ObservableObject {
   private(set) var match: Match
   private let gameService: MatchGameService
   private let timerService: TimerService
+  private let connectivity = PhoneConnectivityManager.shared
+  private var connectivityCancellable: AnyCancellable?
   
   init(gameService: MatchGameService = MatchGameService(), timerService: TimerService = TimerService()) {
     self.match = Match(durationMinutes: 90)
@@ -25,12 +27,32 @@ class MatchViewModel: ObservableObject {
       self.timerService.tick(remainingTime: &self.match.remainingTime)
       self.matchState.elapsedTime = self.timerService.elapsedTime
     }
+    
+    // Subscribe to incoming score updates from Watch
+    setupConnectivitySubscription()
+  }
+  
+  private func setupConnectivitySubscription() {
+    connectivityCancellable = connectivity.$receivedMatchConfig
+      .compactMap { $0 }
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] newConfig in
+        guard let self = self else { return }
+        self.match.config = newConfig
+        self.objectWillChange.send()
+        
+        if newConfig.isMatchOver {
+          self.finishMatch()
+        }
+      }
   }
   
   func setDuration(_ duration: TimeInterval) {
     self.match = Match(durationMinutes: Int(duration / 60))
     self.matchState = MatchScreenState()
     self.timerService.reset()
+    // Re-subscribe since match object changed
+    setupConnectivitySubscription()
   }
   
   // MARK: - Play / Pause
@@ -62,6 +84,9 @@ class MatchViewModel: ObservableObject {
     gameService.scorePoint(config: &match.config, for: team)
     objectWillChange.send()
     
+    // Send updated state to Watch
+    connectivity.sendMatchState(match.config, elapsedTime: matchState.elapsedTime)
+    
     if match.config.isMatchOver {
       finishMatch()
     }
@@ -70,6 +95,9 @@ class MatchViewModel: ObservableObject {
   func undo() {
     gameService.undo(history: &match.history, state: &match.config, remainingTime: &match.remainingTime)
     objectWillChange.send()
+    
+    // Send updated state to Watch after undo
+    connectivity.sendMatchState(match.config, elapsedTime: matchState.elapsedTime)
   }
   
   // MARK: - Cancel

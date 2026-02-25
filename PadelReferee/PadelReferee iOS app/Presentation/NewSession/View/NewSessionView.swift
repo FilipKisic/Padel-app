@@ -13,6 +13,9 @@ struct NewSessionView: View {
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var appState: AppState
   
+  // MARK: - TEST
+  @State private var duration = Date.now
+  
   // MARK: - BODY
   var body: some View {
     ZStack(alignment: .bottom) {
@@ -39,17 +42,19 @@ private extension NewSessionView {
       Text("Match Duration")
         .font(.headline)
       
-      HStack(spacing: 20) {
-        TimePickerComponent(value: $viewModel.state.hours, label: "Hours", range: 0...23)
-        Text(":")
-          .font(.largeTitle)
-          .fontWeight(.bold)
-        TimePickerComponent(value: $viewModel.state.minutes, label: "Minutes", range: 0...59)
-        Text(":")
-          .font(.largeTitle)
-          .fontWeight(.bold)
-        TimePickerComponent(value: $viewModel.state.seconds, label: "Seconds", range: 0...59)
-      } //: HSTACK
+      DatePicker("", selection: $duration, displayedComponents: .hourAndMinute)
+      
+//      HStack(spacing: 20) {
+//        TimePickerComponent(value: $viewModel.state.hours, label: "Hours", range: 0...23)
+//        Text(":")
+//          .font(.largeTitle)
+//          .fontWeight(.bold)
+//        TimePickerComponent(value: $viewModel.state.minutes, label: "Minutes", range: 0...59)
+//        Text(":")
+//          .font(.largeTitle)
+//          .fontWeight(.bold)
+//        TimePickerComponent(value: $viewModel.state.seconds, label: "Seconds", range: 0...59)
+//      } //: HSTACK
     } //: VSTACK
   }
   

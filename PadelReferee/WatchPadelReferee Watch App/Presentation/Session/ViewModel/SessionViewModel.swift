@@ -15,6 +15,9 @@ class SessionViewModel: ObservableObject {
   
   private var timerCancellable: AnyCancellable?
   private var matchCancellable: AnyCancellable?
+  private var connectivityCancellable: AnyCancellable?
+  private let connectivity = WatchConnectivityManager.shared
+  private var hasNotifiedSessionStart = false
   
   // MARK: - INIT
   init(durationMinutes: Int = 90) {
@@ -24,12 +27,27 @@ class SessionViewModel: ObservableObject {
     matchCancellable = match.objectWillChange.sink { [weak self] _ in
       self?.objectWillChange.send()
     }
+    
+    // Subscribe to incoming score updates from iOS
+    connectivityCancellable = connectivity.$receivedMatchState
+      .compactMap { $0 }
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] newState in
+        self?.match.state = newState
+      }
   }
   
   // MARK: - TIMER
   func startTimer() {
     guard !isRunning else { return }
     isRunning = true
+    
+    // Notify iOS that session started (only once)
+    if !hasNotifiedSessionStart {
+      hasNotifiedSessionStart = true
+      let durationMinutes = Int(match.totalDuration / 60)
+      connectivity.sendSessionStarted(durationMinutes: durationMinutes)
+    }
     
     timerCancellable = Timer.publish(every: 1, on: .main, in: .common)
       .autoconnect()
@@ -55,10 +73,18 @@ class SessionViewModel: ObservableObject {
   // MARK: - SCORING
   func scorePoint(for team: Team) {
     match.scorePoint(for: team)
+    
+    // Send updated state to iOS
+    let elapsed = match.totalDuration - match.remainingTime
+    connectivity.sendMatchState(match.state, elapsedTime: elapsed)
   }
   
   func undo() {
     match.undo()
+    
+    // Send updated state to iOS after undo
+    let elapsed = match.totalDuration - match.remainingTime
+    connectivity.sendMatchState(match.state, elapsedTime: elapsed)
   }
   
   func restartMatch() {
@@ -69,6 +95,18 @@ class SessionViewModel: ObservableObject {
     matchCancellable = match.objectWillChange.sink { [weak self] _ in
       self?.objectWillChange.send()
     }
+    
+    // Re-subscribe to connectivity for the new match
+    connectivityCancellable = connectivity.$receivedMatchState
+      .compactMap { $0 }
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] newState in
+        self?.match.state = newState
+      }
+    
+    // Notify iOS of restart
+    hasNotifiedSessionStart = true
+    connectivity.sendSessionStarted(durationMinutes: 90)
     
     startTimer()
   }

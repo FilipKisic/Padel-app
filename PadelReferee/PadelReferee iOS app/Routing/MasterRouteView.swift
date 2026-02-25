@@ -16,6 +16,8 @@ struct MasterRouteView<Content: View>: View {
   @StateObject private var matchViewModel = MatchViewModel()
   @StateObject private var summaryViewModel = SummaryViewModel()
   
+  @ObservedObject private var phoneConnectivity = PhoneConnectivityManager.shared
+  
   private let content: Content
   
   // MARK: - INITIALIZER
@@ -36,5 +38,14 @@ struct MasterRouteView<Content: View>: View {
     .environmentObject(newSessionViewModel)
     .environmentObject(matchViewModel)
     .environmentObject(summaryViewModel)
+    .onReceive(phoneConnectivity.$watchSessionStarted) { started in
+      guard started else { return }
+      let duration = TimeInterval(phoneConnectivity.watchDurationMinutes * 60)
+      appState.setMatchDuration(duration)
+      appState.isWatchInitiated = true
+      router.navigateToRoot()
+      router.navigate(to: .match)
+      phoneConnectivity.watchSessionStarted = false
+    }
   }
 }

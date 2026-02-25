@@ -48,6 +48,10 @@ struct MatchView: View {
     }
     .onAppear {
       viewModel.setDuration(appState.matchDuration)
+      if appState.isWatchInitiated {
+        viewModel.play()
+        appState.isWatchInitiated = false
+      }
     }
     .onChange(of: viewModel.matchState.phase) { _,newPhase in
       if newPhase == .finished, let winner = viewModel.match.config.winner {
@@ -65,6 +69,7 @@ struct MatchView: View {
   }
 }
 
+// MARK: - EXTENSIONS
 private extension MatchView {
   @ViewBuilder
   func servePositionDisplay(currentPosition: ServePosition) -> some View {

@@ -172,7 +172,7 @@ private extension MatchView {
         
         Spacer()
         
-        Text(viewModel.formattedElapsedTime)
+        Text(viewModel.formattedRemainingTime)
           .font(.system(size: 48, weight: .medium, design: .rounded))
           .foregroundColor(.yellow)
         

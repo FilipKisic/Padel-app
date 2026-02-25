@@ -17,7 +17,6 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
   @Published var watchSessionStarted: Bool = false
   @Published var watchDurationMinutes: Int = 90
   @Published var receivedMatchConfig: MatchConfig?
-  @Published var receivedElapsedTime: TimeInterval = 0
   
   // MARK: - Session
   func startSession() {
@@ -28,12 +27,11 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
   }
   
   // MARK: - Send match state to Watch
-  func sendMatchState(_ config: MatchConfig, elapsedTime: TimeInterval) {
+  func sendMatchState(_ config: MatchConfig) {
     let message = WatchMessage
       .build()
       .withType(.scoreUpdate)
       .withConfig(config)
-      .withElapsedTime(elapsedTime)
       .serialize()
     
     send(message)
@@ -78,7 +76,6 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
       case .scoreUpdate:
       if let config = WatchMessage.decodeMatchConfig(from: message) {
         self.receivedMatchConfig = config
-        self.receivedElapsedTime = WatchMessage.decodeElapsedTime(from: message)
       }
     }
   }

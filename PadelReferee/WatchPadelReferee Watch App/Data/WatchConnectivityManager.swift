@@ -33,12 +33,11 @@ class WatchConnectivityManager: NSObject, ObservableObject {
   }
   
   // MARK: - Send match state to iOS
-  func sendMatchState(_ state: MatchState, elapsedTime: TimeInterval) {
+  func sendMatchState(_ state: MatchState) {
     let message = WatchMessage
       .build()
       .withType(.scoreUpdate)
       .withState(state)
-      .withElapsedTime(elapsedTime)
       .serialize()
     
     send(message)

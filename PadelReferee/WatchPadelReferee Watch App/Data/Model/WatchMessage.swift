@@ -19,7 +19,6 @@ class WatchMessage {
   private var isTiebreak: Bool?
   private var isMatchOver: Bool?
   private var winner: String?
-  private var elapsedTime: TimeInterval?
   private var durationMinutes: Int?
   
   static func build() -> WatchMessage {
@@ -53,11 +52,6 @@ class WatchMessage {
     return self
   }
   
-  func withElapsedTime(_ time: TimeInterval) -> WatchMessage {
-    self.elapsedTime = time
-    return self
-  }
-  
   func withDurationMinutes(_ minutes: Int) -> WatchMessage {
     self.durationMinutes = minutes
     return self
@@ -79,7 +73,6 @@ class WatchMessage {
     if let isMatchOver { message["isMatchOver"] = isMatchOver }
     if let winner { message["winner"] = winner }
     if let sets { message["sets"] = sets }
-    if let elapsedTime { message["elapsedTime"] = elapsedTime }
     if let durationMinutes { message["durationMinutes"] = durationMinutes }
     
     return message
@@ -136,9 +129,6 @@ class WatchMessage {
     )
   }
   
-  static func decodeElapsedTime(from message: [String: Any]) -> TimeInterval {
-    message["elapsedTime"] as? Double ?? 0
-  }
 }
 
 enum WatchMessageType: String {

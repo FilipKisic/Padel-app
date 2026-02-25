@@ -85,7 +85,7 @@ class MatchViewModel: ObservableObject {
     objectWillChange.send()
     
     // Send updated state to Watch
-    connectivity.sendMatchState(match.config, elapsedTime: matchState.elapsedTime)
+    connectivity.sendMatchState(match.config)
     
     if match.config.isMatchOver {
       finishMatch()
@@ -97,7 +97,7 @@ class MatchViewModel: ObservableObject {
     objectWillChange.send()
     
     // Send updated state to Watch after undo
-    connectivity.sendMatchState(match.config, elapsedTime: matchState.elapsedTime)
+    connectivity.sendMatchState(match.config)
   }
   
   // MARK: - Cancel
@@ -112,8 +112,8 @@ class MatchViewModel: ObservableObject {
   }
   
   // MARK: - Display Helpers
-  var formattedElapsedTime: String {
-    timerService.formattedTime(from: matchState.elapsedTime)
+  var formattedRemainingTime: String {
+    timerService.formattedTime(from: match.remainingTime)
   }
   
   var progressPercentage: Double {

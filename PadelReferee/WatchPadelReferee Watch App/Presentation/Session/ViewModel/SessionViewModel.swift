@@ -75,16 +75,14 @@ class SessionViewModel: ObservableObject {
     match.scorePoint(for: team)
     
     // Send updated state to iOS
-    let elapsed = match.totalDuration - match.remainingTime
-    connectivity.sendMatchState(match.state, elapsedTime: elapsed)
+    connectivity.sendMatchState(match.state)
   }
   
   func undo() {
     match.undo()
     
     // Send updated state to iOS after undo
-    let elapsed = match.totalDuration - match.remainingTime
-    connectivity.sendMatchState(match.state, elapsedTime: elapsed)
+    connectivity.sendMatchState(match.state)
   }
   
   func restartMatch() {

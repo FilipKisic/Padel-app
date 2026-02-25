@@ -13,6 +13,7 @@ class WatchConnectivityManager: NSObject, ObservableObject {
   
   // MARK: - Published state from iOS
   @Published var receivedMatchState: MatchState?
+  @Published var receivedIsRunning: Bool?
   
   // MARK: - Session
   func startSession() {
@@ -43,6 +44,16 @@ class WatchConnectivityManager: NSObject, ObservableObject {
     send(message)
   }
   
+  // MARK: - Send timer state to iOS
+  func sendTimerState(isRunning: Bool) {
+    let message = WatchMessage
+      .build()
+      .withType(.timerUpdate)
+      .withIsRunning(isRunning)
+      .serialize()
+    send(message)
+  }
+  
   // MARK: - Private
   private func send(_ message: [String: Any]) {
     let session = WCSession.default
@@ -68,6 +79,12 @@ class WatchConnectivityManager: NSObject, ObservableObject {
       if let matchState = WatchMessage.decodeMatchState(from: message) {
         Task { @MainActor in
           self.receivedMatchState = matchState
+        }
+      }
+    case .timerUpdate:
+      if let isRunning = WatchMessage.decodeIsRunning(from: message) {
+        Task { @MainActor in
+          self.receivedIsRunning = isRunning
         }
       }
     case .sessionStarted:

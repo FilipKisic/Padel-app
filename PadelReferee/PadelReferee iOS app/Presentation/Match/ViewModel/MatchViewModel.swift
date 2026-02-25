@@ -16,6 +16,7 @@ class MatchViewModel: ObservableObject {
   private let timerService: TimerService
   private let connectivity = PhoneConnectivityManager.shared
   private var connectivityCancellable: AnyCancellable?
+  private var timerStateCancellable: AnyCancellable?
   
   init(gameService: MatchGameService = MatchGameService(), timerService: TimerService = TimerService()) {
     self.match = Match(durationMinutes: 90)
@@ -45,6 +46,13 @@ class MatchViewModel: ObservableObject {
           self.finishMatch()
         }
       }
+    
+    timerStateCancellable = connectivity.$receivedIsRunning
+      .compactMap { $0 }
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] isRunning in
+        self?.applyTimerState(isRunning: isRunning)
+      }
   }
   
   func setDuration(_ duration: TimeInterval) {
@@ -70,11 +78,23 @@ class MatchViewModel: ObservableObject {
   func play() {
     matchState.phase = .playing
     timerService.start()
+    connectivity.sendTimerState(isRunning: true)
   }
   
   func pause() {
     matchState.phase = .paused
     timerService.stop()
+    connectivity.sendTimerState(isRunning: false)
+  }
+  
+  private func applyTimerState(isRunning: Bool) {
+    if isRunning {
+      matchState.phase = .playing
+      timerService.start()
+    } else {
+      matchState.phase = .paused
+      timerService.stop()
+    }
   }
   
   // MARK: - Scoring

@@ -17,6 +17,7 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
   @Published var watchSessionStarted: Bool = false
   @Published var watchDurationMinutes: Int = 90
   @Published var receivedMatchConfig: MatchConfig?
+  @Published var receivedIsRunning: Bool?
   
   // MARK: - Session
   func startSession() {
@@ -40,6 +41,16 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
   func resetWatchSession() {
     watchSessionStarted = false
     receivedMatchConfig = nil
+  }
+  
+  // MARK: - Send timer state to Watch
+  func sendTimerState(isRunning: Bool) {
+    let message = WatchMessage
+      .build()
+      .withType(.timerUpdate)
+      .withIsRunning(isRunning)
+      .serialize()
+    send(message)
   }
   
   // MARK: - Private
@@ -76,6 +87,11 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
       case .scoreUpdate:
       if let config = WatchMessage.decodeMatchConfig(from: message) {
         self.receivedMatchConfig = config
+      }
+      
+      case .timerUpdate:
+      if let isRunning = WatchMessage.decodeIsRunning(from: message) {
+        self.receivedIsRunning = isRunning
       }
     }
   }

@@ -20,6 +20,7 @@ class WatchMessage {
   private var isMatchOver: Bool?
   private var winner: String?
   private var durationMinutes: Int?
+  private var isRunning: Bool?
   
   static func build() -> WatchMessage {
     return WatchMessage()
@@ -57,6 +58,11 @@ class WatchMessage {
     return self
   }
   
+  func withIsRunning(_ running: Bool) -> WatchMessage {
+    self.isRunning = running
+    return self
+  }
+  
   func serialize() -> [String: Any] {
     var message: [String: Any] = [
       "type": type?.rawValue ?? WatchMessageType.scoreUpdate.rawValue
@@ -74,6 +80,7 @@ class WatchMessage {
     if let winner { message["winner"] = winner }
     if let sets { message["sets"] = sets }
     if let durationMinutes { message["durationMinutes"] = durationMinutes }
+    if let isRunning { message["isRunning"] = isRunning }
     
     return message
   }
@@ -129,9 +136,14 @@ class WatchMessage {
     )
   }
   
+  static func decodeIsRunning(from message: [String: Any]) -> Bool? {
+    return message["isRunning"] as? Bool
+  }
+  
 }
 
 enum WatchMessageType: String {
   case scoreUpdate
   case sessionStarted
+  case timerUpdate
 }

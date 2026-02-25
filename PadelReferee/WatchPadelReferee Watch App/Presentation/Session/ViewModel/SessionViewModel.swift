@@ -16,6 +16,7 @@ class SessionViewModel: ObservableObject {
   private var timerCancellable: AnyCancellable?
   private var matchCancellable: AnyCancellable?
   private var connectivityCancellable: AnyCancellable?
+  private var timerStateCancellable: AnyCancellable?
   private let connectivity = WatchConnectivityManager.shared
   private var hasNotifiedSessionStart = false
   
@@ -35,6 +36,14 @@ class SessionViewModel: ObservableObject {
       .sink { [weak self] newState in
         self?.match.state = newState
       }
+    
+    // Subscribe to incoming timer state from iOS
+    timerStateCancellable = connectivity.$receivedIsRunning
+      .compactMap { $0 }
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] isRunning in
+        self?.applyTimerState(isRunning: isRunning)
+      }
   }
   
   // MARK: - TIMER
@@ -47,6 +56,8 @@ class SessionViewModel: ObservableObject {
       hasNotifiedSessionStart = true
       let durationMinutes = Int(match.totalDuration / 60)
       connectivity.sendSessionStarted(durationMinutes: durationMinutes)
+    } else {
+      connectivity.sendTimerState(isRunning: true)
     }
     
     timerCancellable = Timer.publish(every: 1, on: .main, in: .common)
@@ -60,6 +71,7 @@ class SessionViewModel: ObservableObject {
     isRunning = false
     timerCancellable?.cancel()
     timerCancellable = nil
+    connectivity.sendTimerState(isRunning: false)
   }
   
   func toggleTimer() {
@@ -67,6 +79,20 @@ class SessionViewModel: ObservableObject {
       stopTimer()
     } else {
       startTimer()
+    }
+  }
+  
+  private func applyTimerState(isRunning: Bool) {
+    if isRunning {
+      guard !self.isRunning else { return }
+      self.isRunning = true
+      timerCancellable = Timer.publish(every: 1, on: .main, in: .common)
+        .autoconnect()
+        .sink { [weak self] _ in self?.match.tick() }
+    } else {
+      self.isRunning = false
+      timerCancellable?.cancel()
+      timerCancellable = nil
     }
   }
   

@@ -103,7 +103,6 @@ struct SessionView: View {
           viewModel.toggleTimer()
         }
         .padding(.bottom, 12)
-      
     } //: VSTACK
     .ignoresSafeArea()
     .onAppear {

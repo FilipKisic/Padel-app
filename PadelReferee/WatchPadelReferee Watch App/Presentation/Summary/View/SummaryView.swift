@@ -36,6 +36,7 @@ struct SummaryView: View {
       
     } //: VSTACK
     .navigationTitle("Summary")
+    .navigationBarBackButtonHidden()
   }
 }
 

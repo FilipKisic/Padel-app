@@ -109,6 +109,12 @@ struct SessionView: View {
     .onAppear {
       viewModel.startTimer()
     }
+    .onChange(of: viewModel.isMatchOver) { _, isMatchOver in
+      if isMatchOver {
+        router.navigate(to: .summary)
+      }
+    }
+    .navigationBarBackButtonHidden()
     // MARK: - MOVE THIS TO SUMMARY VIEW INSTEAD
     //    .alert("Match Over!", isPresented: .constant(viewModel.isMatchOver)) {
     //      Button("New Match") {
@@ -123,7 +129,6 @@ struct SessionView: View {
     //        Text(winner == .player ? "Your team wins!" : "Opponent wins!")
     //      }
     //    } //: ALERT
-    
   }
 }
 

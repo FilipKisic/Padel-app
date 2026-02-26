@@ -19,11 +19,11 @@ struct StartView: View {
         
         // App icon / Title
         VStack(spacing: 8) {
-          Image(systemName: "sportscourt")
+          Image(systemName: "figure.racquetball")
             .font(.system(size: 40))
             .foregroundColor(.green)
           
-          Text("Padel Referee")
+          Text("Padel+")
             .font(.system(size: 16, weight: .bold))
             .foregroundColor(.white)
           

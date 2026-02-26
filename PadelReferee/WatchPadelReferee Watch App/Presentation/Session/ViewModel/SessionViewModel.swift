@@ -111,6 +111,13 @@ class SessionViewModel: ObservableObject {
     connectivity.sendMatchState(match.state)
   }
   
+  func setDuration(minutes: Int) {
+    match = Match(durationMinutes: minutes)
+    matchCancellable = match.objectWillChange.sink { [weak self] _ in
+      self?.objectWillChange.send()
+    }
+  }
+
   func restartMatch() {
     stopTimer()
     match = Match(durationMinutes: 90)

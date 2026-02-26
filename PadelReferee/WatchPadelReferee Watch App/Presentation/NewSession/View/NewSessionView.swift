@@ -24,6 +24,7 @@ struct NewSessionView: View {
       )
       
       Button {
+        setDuration()
         router.navigate(to: .session)
       } label: {
         Text("Start Match")
@@ -33,6 +34,16 @@ struct NewSessionView: View {
     } //: VSTACK
     .navigationTitle("Duration")
     .padding(.horizontal)
+  }
+  
+  // MARK: - FUNCTIONS
+  func setDuration() {
+    let calendar = Calendar.current
+    let hour = calendar.component(.hour, from: selectedDuration)
+    let minute = calendar.component(.minute, from: selectedDuration)
+    let totalMinutes = hour * 60 + minute
+    
+    viewModel.setDuration(minutes: totalMinutes)
   }
 }
 

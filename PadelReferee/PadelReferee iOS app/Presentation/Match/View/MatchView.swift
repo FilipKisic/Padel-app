@@ -13,8 +13,50 @@ struct MatchView: View {
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var appState: AppState
   
+  @Environment(\.verticalSizeClass) private var verticalSizeClass
+  
   // MARK: - BODY
   var body: some View {
+    Group {
+      if verticalSizeClass == .compact {
+        landscapeBody
+      } else {
+        portraitBody
+      }
+    }
+    .navigationBarBackButtonHidden(true)
+    .alert("Cancel Match", isPresented: $viewModel.matchState.showCancelAlert) {
+      Button("Cancel Match", role: .destructive) {
+        router.navigateToRoot()
+      }
+      Button("Continue Playing", role: .cancel) { }
+    } message: {
+      Text("Are you sure you want to cancel this match? All progress will be lost.")
+    }
+    .onAppear {
+      viewModel.setDuration(appState.matchDuration)
+      if appState.isWatchInitiated {
+        viewModel.play()
+        appState.isWatchInitiated = false
+      }
+    }
+    .onChange(of: viewModel.matchState.phase) { _, newPhase in
+      if newPhase == .finished, let winner = viewModel.match.config.winner {
+        let session = Session(
+          date: Date(),
+          duration: viewModel.matchState.elapsedTime,
+          winner: winner,
+          sets: viewModel.match.config.sets
+        )
+        appState.setCompletedSession(session)
+        router.navigate(to: .summary)
+      }
+    }
+    .preferredColorScheme(.dark)
+  }
+  
+  // MARK: - PORTRAIT BODY
+  private var portraitBody: some View {
     VStack(spacing: 0) {
       servePositionDisplay(currentPosition: viewModel.match.config.servePosition)
         .frame(height: 100)
@@ -37,40 +79,122 @@ struct MatchView: View {
       
       bottomSheet()
     } //: VSTACK
-    .navigationBarBackButtonHidden(true)
-    .alert("Cancel Match", isPresented: $viewModel.matchState.showCancelAlert) {
-      Button("Cancel Match", role: .destructive) {
-        router.navigateToRoot()
-      }
-      Button("Continue Playing", role: .cancel) { }
-    } message: {
-      Text("Are you sure you want to cancel this match? All progress will be lost.")
-    }
-    .onAppear {
-      viewModel.setDuration(appState.matchDuration)
-      if appState.isWatchInitiated {
-        viewModel.play()
-        appState.isWatchInitiated = false
-      }
-    }
-    .onChange(of: viewModel.matchState.phase) { _,newPhase in
-      if newPhase == .finished, let winner = viewModel.match.config.winner {
-        let session = Session(
-          date: Date(),
-          duration: viewModel.matchState.elapsedTime,
-          winner: winner,
-          sets: viewModel.match.config.sets
-        )
-        appState.setCompletedSession(session)
-        router.navigate(to: .summary)
-      }
-    }
-    .preferredColorScheme(.dark)
+  }
+  
+  // MARK: - LANDSCAPE BODY
+  private var landscapeBody: some View {
+    HStack(spacing: 0) {
+      // LEFT: Opponent score panel
+      landscapeScorePanel(for: .opponent)
+      
+      // CENTER: Controls
+      landscapeControlPanel()
+      
+      // RIGHT: Player score panel
+      landscapeScorePanel(for: .player)
+    } //: HSTACK
+    .ignoresSafeArea(.keyboard)
   }
 }
 
 // MARK: - EXTENSIONS
 private extension MatchView {
+  // MARK: - LANDSCAPE HELPERS
+  @ViewBuilder
+  func landscapeScorePanel(for team: Team) -> some View {
+    let isOpponent = team == .opponent
+    VStack(spacing: 0) {
+      Text(isOpponent ? "Opponent" : "Your team")
+        .textCase(.uppercase)
+        .font(.system(size: 14, weight: .medium, design: .rounded))
+        .foregroundColor(isOpponent ? .accent : .primary)
+        .padding(.top, 12)
+      
+      HStack(spacing: 16) {
+        ForEach(0..<3, id: \.self) { setIndex in
+          VStack(spacing: 2) {
+            Text("\(setIndex + 1)")
+              .font(.system(size: 14))
+              .foregroundColor(viewModel.match.config.currentSetIndex == setIndex ? .white : .gray)
+            Text("\(viewModel.gamesInSet(setIndex, for: team))")
+              .font(.system(size: 36, weight: .medium, design: .rounded))
+              .foregroundColor(.green)
+          } //: VSTACK
+        }
+      } //: HSTACK
+      .padding(.top, 8)
+      
+      Spacer()
+      
+      Text(viewModel.displayScore(for: team))
+        .font(.system(size: 72, weight: .bold, design: .rounded))
+        .foregroundColor(isOpponent ? .accent : .primary)
+      
+      Spacer()
+      
+      Button {
+        if viewModel.matchState.phase == .playing {
+          viewModel.scorePoint(for: team)
+        }
+      } label: {
+        Text("+15")
+          .font(.system(size: 22, weight: .semibold, design: .rounded))
+          .foregroundStyle(isOpponent ? AnyShapeStyle(.accent) : AnyShapeStyle(.plainText))
+      }
+      .frame(width: 75, height: 75)
+      .background(.button)
+      .clipShape(Circle())
+      .padding(.bottom, 12)
+    } //: VSTACK
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(.sheet)
+  }
+  
+  @ViewBuilder
+  func landscapeControlPanel() -> some View {
+    VStack(spacing: 8) {
+      servePositionDisplay(currentPosition: viewModel.match.config.servePosition)
+        .frame(width: 72, height: 72)
+        .padding(.top, 12)
+      
+      Spacer()
+      
+      Text(viewModel.formattedRemainingTime)
+        .font(.system(size: 32, weight: .medium, design: .rounded))
+        .foregroundColor(.yellow)
+      
+      Button {
+        viewModel.togglePlayPause()
+      } label: {
+        Image(systemName: viewModel.matchState.phase == .playing ? "pause" : "play.fill")
+          .font(.system(size: 36))
+          .foregroundColor(.white)
+      }
+      .frame(width: 90, height: 90)
+      .background(.button)
+      .clipShape(Circle())
+      
+      Spacer()
+      
+      HStack {
+        undoWithProgressIndicator()
+        Spacer()
+        Button {
+          viewModel.cancel()
+        } label: {
+          Image(systemName: "xmark.circle.fill")
+            .font(.system(size: 36))
+            .symbolRenderingMode(.palette)
+            .foregroundStyle(.white, .red)
+        }
+      } //: HSTACK
+      .padding(.horizontal, 12)
+      .padding(.bottom, 12)
+    } //: VSTACK
+    .frame(width: 140, maxHeight: .infinity)
+  }
+  
+  // MARK: - PORTRAIT HELPERS
   @ViewBuilder
   func servePositionDisplay(currentPosition: ServePosition) -> some View {
     VStack(spacing: 8) {
@@ -280,7 +404,7 @@ private extension MatchView {
 }
 
 // MARK: - PREVIEW
-#Preview {
+#Preview("Portrait") {
   let viewModel = MatchViewModel()
   let appState = AppState()
   NavigationView {
@@ -289,4 +413,16 @@ private extension MatchView {
   }
   .environmentObject(viewModel)
   .environmentObject(appState)
+}
+
+#Preview("Landscape") {
+  let viewModel = MatchViewModel()
+  let appState = AppState()
+  NavigationView {
+    MatchView()
+      .preferredColorScheme(.dark)
+  }
+  .environmentObject(viewModel)
+  .environmentObject(appState)
+  .previewInterfaceOrientation(.landscapeLeft)
 }

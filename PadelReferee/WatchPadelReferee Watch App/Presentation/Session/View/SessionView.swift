@@ -9,17 +9,17 @@ import SwiftUI
 
 struct SessionView: View {
   // MARK: - PROPERTIES
-  @StateObject private var viewModel = SessionViewModel()
-  @Environment(\.dismiss) private var dismiss
+  @EnvironmentObject private var viewModel: SessionViewModel
+  @EnvironmentObject private var router: Router
   
   // MARK: - BODY
   var body: some View {
     VStack(spacing: 0) {
       // MARK: - UNDO BUTTON
       HStack {
-        Button(action: {
+        Button {
           viewModel.undo()
-        }) {
+        } label: {
           Image(systemName: "arrow.uturn.backward")
             .font(.system(size: 16, weight: .semibold))
             .foregroundColor(.red)
@@ -39,9 +39,9 @@ struct SessionView: View {
       
       // MARK: - OPPONENT
       HStack {
-        Button(action: {
+        Button {
           viewModel.scorePoint(for: .opponent)
-        }) {
+        } label: {
           Text(viewModel.opponentScore)
             .font(.system(size: 58, weight: .medium, design: .rounded))
             .foregroundColor(.green)
@@ -51,7 +51,7 @@ struct SessionView: View {
         
         VStack {
           Text("OPPONENT")
-            .font(.system(size: 12, weight: .medium))
+            .font(.system(size: 14, weight: .semibold, design: .rounded))
             .foregroundColor(.green)
           
           SetScoresView(
@@ -63,17 +63,18 @@ struct SessionView: View {
           )
         } //: VSTACK
       } //: HSTACK
-      .padding(.horizontal, 12)
+      .padding(.horizontal)
       
       // MARK: - SERVING
       ServeIndicatorView(currentPosition: viewModel.currentServePosition)
         .frame(height: 35)
+        .padding(.horizontal)
       
       // MARK: - PLAYER
       HStack {
-        Button(action: {
+        Button {
           viewModel.scorePoint(for: .player)
-        }) {
+        } label: {
           Text(viewModel.playerScore)
             .font(.system(size: 58, weight: .medium, design: .rounded))
             .foregroundColor(.white)
@@ -89,11 +90,11 @@ struct SessionView: View {
             currentSetIndex: viewModel.currentSetIndex,
           )
           Text("YOUR TEAM")
-            .font(.system(size: 12, weight: .medium))
+            .font(.system(size: 14, weight: .semibold, design: .rounded))
             .foregroundColor(.white)
         } //: VSTACK
       } //: HSTACK
-      .padding(.horizontal, 12)
+      .padding(.horizontal)
       
       // MARK: - TIMER
       Text(viewModel.formattedTime)
@@ -102,26 +103,26 @@ struct SessionView: View {
         .onTapGesture {
           viewModel.toggleTimer()
         }
-        .padding(.bottom, 12)
+        .padding(.bottom, 10)
     } //: VSTACK
     .ignoresSafeArea()
     .onAppear {
       viewModel.startTimer()
     }
-    // MARK: - ALERT
-    .alert("Match Over!", isPresented: .constant(viewModel.isMatchOver)) {
-      Button("New Match") {
-        viewModel.restartMatch()
-      }
-      
-      Button("Exit", role: .cancel) {
-        dismiss()
-      }
-    } message: {
-      if let winner = viewModel.winner {
-        Text(winner == .player ? "Your team wins!" : "Opponent wins!")
-      }
-    } //: ALERT
+    // MARK: - MOVE THIS TO SUMMARY VIEW INSTEAD
+    //    .alert("Match Over!", isPresented: .constant(viewModel.isMatchOver)) {
+    //      Button("New Match") {
+    //        viewModel.restartMatch()
+    //      }
+    //
+    //      Button("Exit", role: .cancel) {
+    //        dismiss()
+    //      }
+    //    } message: {
+    //      if let winner = viewModel.winner {
+    //        Text(winner == .player ? "Your team wins!" : "Opponent wins!")
+    //      }
+    //    } //: ALERT
     
   }
 }
@@ -133,13 +134,13 @@ struct ServeIndicatorView: View {
   var body: some View {
     VStack(spacing: 2) {
       HStack(spacing: 2) {
-        ServeQuadrantView(isActive: currentPosition == .topLeft, color: .blue)
-        ServeQuadrantView(isActive: currentPosition == .topRight, color: .blue)
+        ServeQuadrantView(isActive: currentPosition == .topLeft, color: .cyan)
+        ServeQuadrantView(isActive: currentPosition == .topRight, color: .cyan)
       } //: HSTACK
       
       HStack(spacing: 2) {
-        ServeQuadrantView(isActive: currentPosition == .bottomLeft, color: .blue)
-        ServeQuadrantView(isActive: currentPosition == .bottomRight, color: .blue)
+        ServeQuadrantView(isActive: currentPosition == .bottomLeft, color: .cyan)
+        ServeQuadrantView(isActive: currentPosition == .bottomRight, color: .cyan)
       } //: HSTACK
     } //: VSTACK
   }
@@ -151,7 +152,7 @@ struct ServeQuadrantView: View {
   let color: Color
   
   var body: some View {
-    RoundedRectangle(cornerRadius: 2)
+    RoundedRectangle(cornerRadius: 4)
       .fill(isActive ? .yellow : color)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
   }
@@ -213,9 +214,9 @@ struct SetScoreColumnView: View {
   
   var body: some View {
     VStack(spacing: -5) {
-      if(!isPlayer) {
+      if (!isPlayer) {
         Text("\(setNumber)")
-          .font(.system(size: 14, weight: .medium))
+          .font(.system(size: 14, weight: .semibold, design: .rounded))
           .foregroundColor(isCurrentSet ? .white : .gray)
       }
       
@@ -228,5 +229,12 @@ struct SetScoreColumnView: View {
 
 // MARK: - PREVIEW
 #Preview {
-  SessionView()
+  let sessionViewModel = SessionViewModel()
+  let router = Router()
+  
+  NavigationView {
+    SessionView()
+  }
+  .environmentObject(sessionViewModel)
+  .environmentObject(router)
 }

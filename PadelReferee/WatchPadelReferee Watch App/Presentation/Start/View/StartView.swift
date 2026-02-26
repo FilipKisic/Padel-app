@@ -9,7 +9,7 @@ import SwiftUI
 
 struct StartView: View {
   // MARK: - PROPERTIES
-  @State private var isShowingSession = false
+  @EnvironmentObject private var router: Router
   
   // MARK: - BODY
   var body: some View {
@@ -17,8 +17,7 @@ struct StartView: View {
       VStack(spacing: 16) {
         Spacer()
         
-        // App icon / Title
-        VStack(spacing: 8) {
+        VStack(spacing: 5) {
           Image(systemName: "figure.racquetball")
             .font(.system(size: 40))
             .foregroundColor(.green)
@@ -27,37 +26,27 @@ struct StartView: View {
             .font(.system(size: 16, weight: .bold))
             .foregroundColor(.white)
           
-          Text("Score Tracker")
+          Text("Get ready to play!")
             .font(.system(size: 12))
             .foregroundColor(.gray)
         }
         
         Spacer()
         
-        // Start match button
-        Button(action: {
-          isShowingSession = true
-        }) {
-          HStack {
+        Button {
+          router.navigate(to: .newSession)
+        } label: {
+          HStack(spacing: 10) {
             Image(systemName: "play.fill")
             Text("Start Match")
           }
           .font(.system(size: 14, weight: .semibold))
           .foregroundColor(.black)
-          .frame(maxWidth: .infinity)
-          .padding(.vertical, 12)
-          .background(Color.green)
-          .cornerRadius(12)
         }
-        .buttonStyle(.plain)
-        .padding(.horizontal, 16)
-        .padding(.bottom, 8)
-      }
-      .navigationDestination(isPresented: $isShowingSession) {
-        SessionView()
-          .navigationBarBackButtonHidden(true)
-      }
-    }
+        .buttonStyle(.borderedProminent)
+        .padding(.horizontal)
+      } //: VSTACK
+    } //: NAVIGATION STACK
   }
 }
 

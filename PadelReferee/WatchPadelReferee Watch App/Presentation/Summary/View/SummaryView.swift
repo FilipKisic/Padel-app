@@ -1,5 +1,5 @@
 //
-//  NewSessionView.swift
+//  SummaryView.swift
 //  WatchPadelReferee Watch App
 //
 //  Created by Filip Kisić on 26.02.2026..
@@ -7,32 +7,35 @@
 
 import SwiftUI
 
-struct NewSessionView: View {
-  // MARK: - PROPERTIES
-  @EnvironmentObject private var router: Router
+struct SummaryView: View {
   @EnvironmentObject private var viewModel: SessionViewModel
+  @EnvironmentObject private var router: Router
   
-  @State private var selectedDuration = Calendar.current.date(bySettingHour: 1, minute: 30, second: 0, of: Date())!
-
   // MARK: - BODY
   var body: some View {
-    VStack {
-      DatePicker(
-        "Duration",
-        selection: $selectedDuration,
-        displayedComponents: .hourAndMinute
-      )
+    VStack(spacing: 10) {
+      Image(systemName: "trophy.fill")
+        .resizable()
+        .frame(width: 40, height: 40)
+        .foregroundStyle(.yellow)
+        .padding(.top)
+      
+      Text("Your team won!")
+        .font(.system(size: 16, weight: .semibold, design: .rounded))
+      
+      Spacer()
       
       Button {
-        router.navigate(to: .session)
+        
       } label: {
-        Text("Start Match")
+        Text("Rematch")
           .foregroundStyle(.black)
       }
       .buttonStyle(.borderedProminent)
+      .padding(.horizontal)
+      
     } //: VSTACK
-    .navigationTitle("Duration")
-    .padding(.horizontal)
+    .navigationTitle("Summary")
   }
 }
 
@@ -42,7 +45,7 @@ struct NewSessionView: View {
   let router = Router()
   
   NavigationView {
-    NewSessionView()
+    SummaryView()
   }
   .environmentObject(viewModel)
   .environmentObject(router)

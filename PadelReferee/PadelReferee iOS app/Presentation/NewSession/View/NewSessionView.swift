@@ -20,8 +20,6 @@ struct NewSessionView: View {
   var body: some View {
     ZStack(alignment: .bottom) {
       VStack {
-        Spacer()
-        
         timePicker()
         
         Spacer()
@@ -30,7 +28,6 @@ struct NewSessionView: View {
       } //: VSTACK
     }
     .navigationTitle("New Session")
-    .navigationBarTitleDisplayMode(.inline)
     .preferredColorScheme(.dark)
   }
 }
@@ -38,24 +35,36 @@ struct NewSessionView: View {
 private extension NewSessionView {
   @ViewBuilder
   func timePicker() -> some View {
-    VStack(spacing: 16) {
-      Text("Match Duration")
-        .font(.headline)
+    VStack() {
+      HStack {
+        Image(systemName: "timer")
+          .foregroundColor(.yellow)
+        Text("Duration")
+        Spacer()
+        Text("\(viewModel.state.hours) h : \(viewModel.state.minutes) min")
+          .foregroundColor(.yellow)
+          .padding(.horizontal, 10)
+          .padding(.vertical, 5)
+          .background {
+            Capsule()
+              .fill(.white.opacity(0.2))
+          }
+      } //: HSTACK
+      Divider()
       
-      DatePicker("", selection: $duration, displayedComponents: .hourAndMinute)
       
-//      HStack(spacing: 20) {
-//        TimePickerComponent(value: $viewModel.state.hours, label: "Hours", range: 0...23)
-//        Text(":")
-//          .font(.largeTitle)
-//          .fontWeight(.bold)
-//        TimePickerComponent(value: $viewModel.state.minutes, label: "Minutes", range: 0...59)
-//        Text(":")
-//          .font(.largeTitle)
-//          .fontWeight(.bold)
-//        TimePickerComponent(value: $viewModel.state.seconds, label: "Seconds", range: 0...59)
-//      } //: HSTACK
+      HStack(spacing: 20) {
+        TimePickerComponent(value: $viewModel.state.hours, label: "h", range: 0...23)
+        Text(":")
+          .font(.title)
+          .fontWeight(.bold)
+        TimePickerComponent(value: $viewModel.state.minutes, label: "min", range: 0...59)
+      } //: HSTACK
     } //: VSTACK
+    .padding()
+    .background(.card)
+    .cornerRadius(20)
+    .padding()
   }
   
   @ViewBuilder
@@ -83,11 +92,7 @@ struct TimePickerComponent: View {
   let range: ClosedRange<Int>
   
   var body: some View {
-    VStack(spacing: 8) {
-      Text(label)
-        .font(.caption)
-        .foregroundColor(.secondary)
-      
+    HStack {
       Picker("", selection: $value) {
         ForEach(Array(range), id: \.self) { number in
           Text(String(format: "%02d", number))
@@ -95,9 +100,13 @@ struct TimePickerComponent: View {
         }
       }
       .pickerStyle(.wheel)
-      .frame(width: 80, height: 120)
+      .frame(width: 60, height: 200)
       .clipped()
-    }
+      
+      Text(label)
+        .font(.subheadline)
+        .fontWeight(.medium)
+    } //: HSTACK
   }
 }
 

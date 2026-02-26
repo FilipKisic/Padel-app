@@ -22,4 +22,8 @@ class NewSessionViewModel: ObservableObject {
   var isValidDuration: Bool {
     selectedDuration > 0
   }
+  
+  func getFormattedDuration() -> String {
+    return state.hours == 0 ? String(format: "%02d min", state.minutes) : String(format: "%2d h: %02d min", state.hours, state.minutes)
+  }
 }

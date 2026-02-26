@@ -13,6 +13,9 @@ struct NewSessionView: View {
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var appState: AppState
   
+  @State var isExpanded = false
+  @State var viewHeight: CGFloat = .zero
+  
   // MARK: - TEST
   @State private var duration = Date.now
   
@@ -41,7 +44,7 @@ private extension NewSessionView {
           .foregroundColor(.yellow)
         Text("Duration")
         Spacer()
-        Text("\(viewModel.state.hours) h : \(viewModel.state.minutes) min")
+        Text(viewModel.getFormattedDuration())
           .foregroundColor(.yellow)
           .padding(.horizontal, 10)
           .padding(.vertical, 5)
@@ -50,8 +53,10 @@ private extension NewSessionView {
               .fill(.white.opacity(0.2))
           }
       } //: HSTACK
-      Divider()
       
+      if isExpanded {
+        Divider()
+      }
       
       HStack(spacing: 20) {
         TimePickerComponent(value: $viewModel.state.hours, label: "h", range: 0...23)
@@ -62,7 +67,19 @@ private extension NewSessionView {
       } //: HSTACK
     } //: VSTACK
     .padding()
-    .background(.card)
+    .background(GeometryReader {
+      Color.card.preference(key: ViewHeightKey.self, value: $0.frame(in: .local).size.height)
+    })
+    .onPreferenceChange(ViewHeightKey.self) { viewHeight = $0 }
+    .frame(height: isExpanded ? viewHeight : 60, alignment: .top)
+    .clipped()
+    .frame(maxWidth: .infinity)
+    .transition(.move(edge: .bottom))
+    .onTapGesture {
+      withAnimation(.easeInOut) {
+        isExpanded.toggle()
+      }
+    }
     .cornerRadius(20)
     .padding()
   }
@@ -107,6 +124,14 @@ struct TimePickerComponent: View {
         .font(.subheadline)
         .fontWeight(.medium)
     } //: HSTACK
+  }
+}
+
+private struct ViewHeightKey: PreferenceKey {
+  static var defaultValue: CGFloat { 0 }
+  
+  static func reduce(value: inout Value, nextValue: () -> Value) {
+    value = value + nextValue()
   }
 }
 

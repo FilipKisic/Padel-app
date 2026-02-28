@@ -9,19 +9,19 @@ import SwiftUI
 
 struct SessionTabView: View {
   // MARK: - PROPERTIES
-  @State private var activeTab: Tab = .session
-  
-  enum Tab {
-    case controls, session
-  }
+  @State private var activeTab: SessionTab = .session
   
   // MARK: - BODY
   var body: some View {
     TabView(selection: $activeTab) {
-      ControlsView().tag(Tab.controls)
-      SessionView().tag(Tab.session)
+      ControlsView(activeTab: $activeTab).tag(SessionTab.controls)
+      SessionView().tag(SessionTab.session)
     }
   }
+}
+
+enum SessionTab {
+  case controls, session
 }
 
 // MARK: - PREVIEW

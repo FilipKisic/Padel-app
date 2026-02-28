@@ -280,6 +280,10 @@ class Match: ObservableObject {
     if setsWon >= 2 {
       state.isMatchOver = true
       state.winner = team
+      guard state.sets.count == 3 else {
+        state.sets.append(SetScore(playerGames: 0, opponentGames: 0, isTiebreak: false));
+        return
+      }
     } else {
       // Start new set
       state.currentSetIndex += 1

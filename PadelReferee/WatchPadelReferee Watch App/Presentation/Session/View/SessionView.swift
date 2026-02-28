@@ -15,95 +15,16 @@ struct SessionView: View {
   // MARK: - BODY
   var body: some View {
     VStack(spacing: 0) {
-      // MARK: - UNDO BUTTON
-      HStack {
-        Button {
-          viewModel.undo()
-        } label: {
-          Image(systemName: "arrow.uturn.backward")
-            .font(.system(size: 16, weight: .semibold))
-            .foregroundColor(.red)
-            .frame(width: 24, height: 24)
-        }
-        .buttonStyle(.plain)
-        .padding(5)
-        .background(.darkGray)
-        .clipShape(.circle)
-        .opacity(viewModel.canUndo ? 1.0 : 0.5)
-        .disabled(!viewModel.canUndo)
-        .offset(x: -10, y: 7)
-        
-        Spacer()
-      } //: HSTACK
-      .padding(.horizontal, 24)
+      Spacer()
       
-      // MARK: - OPPONENT
-      HStack {
-        Button {
-          viewModel.scorePoint(for: .opponent)
-        } label: {
-          Text(viewModel.opponentScore)
-            .font(.system(size: 58, weight: .medium, design: .rounded))
-            .foregroundColor(.green)
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .buttonStyle(.plain)
-        
-        VStack {
-          Text("OPPONENT")
-            .font(.system(size: 14, weight: .semibold, design: .rounded))
-            .foregroundColor(.green)
-          
-          SetScoresView(
-            set1Games: viewModel.opponentGames(inSet: 0),
-            set2Games: viewModel.opponentGames(inSet: 1),
-            set3Games: viewModel.opponentGames(inSet: 2),
-            currentSetIndex: viewModel.currentSetIndex,
-            isPlayer: false
-          )
-        } //: VSTACK
-      } //: HSTACK
-      .padding(.horizontal)
+      opponentScoreDisplay()
+        .padding(.top, 20)
       
-      // MARK: - SERVING
-      ServeIndicatorView(currentPosition: viewModel.currentServePosition)
-        .frame(height: 35)
-        .padding(.horizontal)
+      servingIndicator()
       
-      // MARK: - PLAYER
-      HStack {
-        Button {
-          viewModel.scorePoint(for: .player)
-        } label: {
-          Text(viewModel.playerScore)
-            .font(.system(size: 58, weight: .medium, design: .rounded))
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .buttonStyle(.plain)
-        
-        VStack {
-          SetScoresView(
-            set1Games: viewModel.playerGames(inSet: 0),
-            set2Games: viewModel.playerGames(inSet: 1),
-            set3Games: viewModel.playerGames(inSet: 2),
-            currentSetIndex: viewModel.currentSetIndex,
-          )
-          Text("YOUR TEAM")
-            .font(.system(size: 14, weight: .semibold, design: .rounded))
-            .foregroundColor(.white)
-        } //: VSTACK
-      } //: HSTACK
-      .padding(.horizontal)
+      playerScoreDisplay()
       
-      // MARK: - TIMER
-      Text(viewModel.formattedTime)
-        .font(.system(size: 25, weight: .medium, design: .rounded))
-        .foregroundColor(viewModel.isTimeLow ? .red : .white)
-        .onTapGesture {
-          viewModel.toggleTimer()
-        }
-        .padding(.bottom, 10)
+      timer()
     } //: VSTACK
     .ignoresSafeArea()
     .onAppear {
@@ -115,39 +36,118 @@ struct SessionView: View {
       }
     }
     .navigationBarBackButtonHidden()
-    // MARK: - MOVE THIS TO SUMMARY VIEW INSTEAD
-    //    .alert("Match Over!", isPresented: .constant(viewModel.isMatchOver)) {
-    //      Button("New Match") {
-    //        viewModel.restartMatch()
-    //      }
-    //
-    //      Button("Exit", role: .cancel) {
-    //        dismiss()
-    //      }
-    //    } message: {
-    //      if let winner = viewModel.winner {
-    //        Text(winner == .player ? "Your team wins!" : "Opponent wins!")
-    //      }
-    //    } //: ALERT
   }
 }
 
-// MARK: - SERVE INDICATOR VIEW
-struct ServeIndicatorView: View {
-  let currentPosition: ServePosition
+// MARK: - VIEW EXTENSIONS
+private extension SessionView {
+  @ViewBuilder
+  func undoControl() -> some View {
+    HStack {
+      Button {
+        viewModel.undo()
+      } label: {
+        Image(systemName: "arrow.uturn.backward")
+          .font(.system(size: 16, weight: .semibold))
+          .foregroundColor(.red)
+          .frame(width: 24, height: 24)
+      }
+      .buttonStyle(.plain)
+      .padding(5)
+      .background(.darkGray)
+      .clipShape(.circle)
+      .disabled(!viewModel.canUndo)
+      .offset(x: -10, y: 7)
+      
+      Spacer()
+    } //: HSTACK
+    .padding(.horizontal, 24)
+  }
   
-  var body: some View {
+  @ViewBuilder
+  func opponentScoreDisplay() -> some View {
+    HStack {
+      Button {
+        viewModel.scorePoint(for: .opponent)
+      } label: {
+        Text(viewModel.opponentScore)
+          .font(.system(size: 58, weight: .medium, design: .rounded))
+          .foregroundColor(.green)
+          .frame(maxWidth: .infinity, alignment: .leading)
+      }
+      .buttonStyle(.plain)
+      
+      VStack {
+        Text("OPPONENT")
+          .font(.system(size: 14, weight: .semibold, design: .rounded))
+          .foregroundColor(.green)
+        
+        SetScoresView(
+          set1Games: viewModel.opponentGames(inSet: 0),
+          set2Games: viewModel.opponentGames(inSet: 1),
+          set3Games: viewModel.opponentGames(inSet: 2),
+          currentSetIndex: viewModel.currentSetIndex,
+          isPlayer: false
+        )
+      } //: VSTACK
+    } //: HSTACK
+    .padding(.horizontal)
+  }
+  
+  @ViewBuilder
+  func servingIndicator() -> some View {
     VStack(spacing: 2) {
       HStack(spacing: 2) {
-        ServeQuadrantView(isActive: currentPosition == .topLeft, color: .cyan)
-        ServeQuadrantView(isActive: currentPosition == .topRight, color: .cyan)
+        ServeQuadrantView(isActive: viewModel.currentServePosition == .topLeft, color: .cyan)
+        ServeQuadrantView(isActive: viewModel.currentServePosition == .topRight, color: .cyan)
       } //: HSTACK
       
       HStack(spacing: 2) {
-        ServeQuadrantView(isActive: currentPosition == .bottomLeft, color: .cyan)
-        ServeQuadrantView(isActive: currentPosition == .bottomRight, color: .cyan)
+        ServeQuadrantView(isActive: viewModel.currentServePosition == .bottomLeft, color: .cyan)
+        ServeQuadrantView(isActive: viewModel.currentServePosition == .bottomRight, color: .cyan)
       } //: HSTACK
     } //: VSTACK
+    .frame(height: 35)
+    .padding(.horizontal)
+  }
+  
+  @ViewBuilder
+  func playerScoreDisplay() -> some View {
+    HStack {
+      Button {
+        viewModel.scorePoint(for: .player)
+      } label: {
+        Text(viewModel.playerScore)
+          .font(.system(size: 58, weight: .medium, design: .rounded))
+          .foregroundColor(.white)
+          .frame(maxWidth: .infinity, alignment: .leading)
+      }
+      .buttonStyle(.plain)
+      
+      VStack {
+        SetScoresView(
+          set1Games: viewModel.playerGames(inSet: 0),
+          set2Games: viewModel.playerGames(inSet: 1),
+          set3Games: viewModel.playerGames(inSet: 2),
+          currentSetIndex: viewModel.currentSetIndex,
+        )
+        Text("YOUR TEAM")
+          .font(.system(size: 14, weight: .semibold, design: .rounded))
+          .foregroundColor(.white)
+      } //: VSTACK
+    } //: HSTACK
+    .padding(.horizontal)
+  }
+  
+  @ViewBuilder
+  func timer() -> some View {
+    Text(viewModel.formattedTime)
+      .font(.system(size: 25, weight: .medium, design: .rounded))
+      .foregroundColor(viewModel.isTimeLow ? .red : .white)
+      .onTapGesture {
+        viewModel.toggleTimer()
+      }
+      .padding(.bottom, 10)
   }
 }
 

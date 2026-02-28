@@ -27,7 +27,7 @@ class Router: ObservableObject {
       case .newSession:
         NewSessionView()
       case .session:
-        SessionView()
+        SessionTabView()
       case .summary:
         SummaryView()
     }

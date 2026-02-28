@@ -19,14 +19,14 @@ struct SummaryView: View {
         .frame(width: 40, height: 40)
         .foregroundStyle(.yellow)
         .padding(.top)
-      
-      Text("Your team won!")
+
+      Text(viewModel.winner == .player ? "Your team won!" : "Opponent won!")
         .font(.system(size: 16, weight: .semibold, design: .rounded))
       
       Spacer()
       
       Button {
-        
+        router.navigateToRoot()
       } label: {
         Text("Rematch")
           .foregroundStyle(.black)

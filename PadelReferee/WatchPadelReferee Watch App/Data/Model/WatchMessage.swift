@@ -140,6 +140,10 @@ class WatchMessage {
     return message["isRunning"] as? Bool
   }
   
+  static func decodeDurationMinutes(from message: [String: Any]) -> Int {
+    message["durationMinutes"] as? Int ?? 90
+  }
+  
 }
 
 enum WatchMessageType: String {

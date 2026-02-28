@@ -72,16 +72,20 @@ class SessionViewModel: ObservableObject {
   }
 
   // MARK: - TIMER
-  func startTimer() {
+  func startTimer(notifyPeer: Bool = true) {
     guard screenState.phase != .playing else { return }
     screenState.phase = .playing
 
-    if !hasNotifiedSessionStart {
-      hasNotifiedSessionStart = true
-      let durationMinutes = Int(match.totalDuration / 60)
-      connectivity.sendSessionStarted(durationMinutes: durationMinutes)
+    if notifyPeer {
+      if !hasNotifiedSessionStart {
+        hasNotifiedSessionStart = true
+        let durationMinutes = Int(match.totalDuration / 60)
+        connectivity.sendSessionStarted(durationMinutes: durationMinutes)
+      } else {
+        connectivity.sendTimerState(isRunning: true)
+      }
     } else {
-      connectivity.sendTimerState(isRunning: true)
+      hasNotifiedSessionStart = true
     }
 
     timerService.start()

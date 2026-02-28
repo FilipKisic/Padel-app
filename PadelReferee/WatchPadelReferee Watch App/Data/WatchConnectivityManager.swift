@@ -14,6 +14,8 @@ class WatchConnectivityManager: NSObject, ObservableObject {
   // MARK: - Published state from iOS
   @Published var receivedMatchState: MatchState?
   @Published var receivedIsRunning: Bool?
+  @Published var iOSSessionStarted: Bool = false
+  @Published var iOSDurationMinutes: Int = 90
   
   // MARK: - Session
   func startSession() {
@@ -88,7 +90,11 @@ class WatchConnectivityManager: NSObject, ObservableObject {
         }
       }
     case .sessionStarted:
-      break
+      let duration = WatchMessage.decodeDurationMinutes(from: message)
+      Task { @MainActor in
+        self.iOSDurationMinutes = duration
+        self.iOSSessionStarted = true
+      }
     }
   }
 }

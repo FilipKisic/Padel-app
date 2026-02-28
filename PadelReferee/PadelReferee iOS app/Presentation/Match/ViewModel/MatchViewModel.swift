@@ -17,6 +17,7 @@ class MatchViewModel: ObservableObject {
   private let connectivity = PhoneConnectivityManager.shared
   private var connectivityCancellable: AnyCancellable?
   private var timerStateCancellable: AnyCancellable?
+  private var hasNotifiedSessionStart = false
   
   init(gameService: MatchGameService = MatchGameService(), timerService: TimerService = TimerService()) {
     self.match = Match(durationMinutes: 90)
@@ -60,6 +61,7 @@ class MatchViewModel: ObservableObject {
     self.match = Match(durationMinutes: Int(duration / 60))
     self.matchState = MatchScreenState()
     self.timerService.reset()
+    self.hasNotifiedSessionStart = false
     // Re-subscribe since match object changed
     setupConnectivitySubscription()
   }
@@ -79,7 +81,14 @@ class MatchViewModel: ObservableObject {
   func play() {
     matchState.phase = .playing
     timerService.start()
-    connectivity.sendTimerState(isRunning: true)
+
+    if !hasNotifiedSessionStart {
+      hasNotifiedSessionStart = true
+      let durationMinutes = Int(match.totalDuration / 60)
+      connectivity.sendSessionStarted(durationMinutes: durationMinutes)
+    } else {
+      connectivity.sendTimerState(isRunning: true)
+    }
   }
   
   func pause() {

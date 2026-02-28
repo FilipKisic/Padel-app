@@ -38,6 +38,17 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
     send(message)
   }
   
+  // MARK: - Send session started to Watch
+  func sendSessionStarted(durationMinutes: Int) {
+    let message = WatchMessage
+      .build()
+      .withType(.sessionStarted)
+      .withDurationMinutes(durationMinutes)
+      .serialize()
+    
+    send(message)
+  }
+
   func resetWatchSession() {
     watchSessionStarted = false
     receivedMatchConfig = nil

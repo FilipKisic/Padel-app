@@ -10,15 +10,12 @@ import Combine
 
 class SessionViewModel: ObservableObject {
   // MARK: - PROPERTIES
-  @Published var state: MatchState = MatchState()
-  @Published var remainingTime: TimeInterval = 0
-  @Published var isRunning: Bool = false
+  @Published var screenState = SessionScreenState()
 
-  private var totalDuration: TimeInterval = 0
-  private var history: [HistoryEntry] = []
+  private(set) var match: Match
 
-  private let gameService = MatchGameService()
-  private let timerService = TimerService()
+  private let gameService: MatchGameService
+  private let timerService: TimerService
 
   private var connectivityCancellable: AnyCancellable?
   private var timerStateCancellable: AnyCancellable?
@@ -26,26 +23,38 @@ class SessionViewModel: ObservableObject {
   private var hasNotifiedSessionStart = false
 
   // MARK: - INIT
-  init(durationMinutes: Int = 90) {
-    self.totalDuration = TimeInterval(durationMinutes * 60)
-    self.remainingTime = self.totalDuration
+  init(
+    durationMinutes: Int = 90,
+    gameService: MatchGameService = MatchGameService(),
+    timerService: TimerService = TimerService()
+  ) {
+    self.match = Match(durationMinutes: durationMinutes)
+    self.gameService = gameService
+    self.timerService = timerService
 
-    timerService.onTick = { [weak self] in
+    self.timerService.onTick = { [weak self] in
       guard let self = self else { return }
-      if self.remainingTime > 0 {
-        self.remainingTime -= 1
-      }
+      self.timerService.tick(remainingTime: &self.match.remainingTime)
+      self.objectWillChange.send()
     }
 
-    // Subscribe to incoming score updates from iOS
+    setupConnectivitySubscriptions()
+  }
+
+  private func setupConnectivitySubscriptions() {
     connectivityCancellable = connectivity.$receivedMatchState
       .compactMap { $0 }
       .receive(on: DispatchQueue.main)
       .sink { [weak self] newState in
-        self?.state = newState
+        guard let self = self else { return }
+        self.match.state = newState
+        self.objectWillChange.send()
+
+        if newState.isMatchOver {
+          self.finishMatch()
+        }
       }
 
-    // Subscribe to incoming timer state from iOS
     timerStateCancellable = connectivity.$receivedIsRunning
       .compactMap { $0 }
       .receive(on: DispatchQueue.main)
@@ -54,15 +63,21 @@ class SessionViewModel: ObservableObject {
       }
   }
 
+  // MARK: - DURATION
+  func setDuration(minutes: Int) {
+    match = Match(durationMinutes: minutes)
+    screenState = SessionScreenState()
+    timerService.reset()
+  }
+
   // MARK: - TIMER
   func startTimer() {
-    guard !isRunning else { return }
-    isRunning = true
+    guard screenState.phase != .playing else { return }
+    screenState.phase = .playing
 
-    // Notify iOS that session started (only once)
     if !hasNotifiedSessionStart {
       hasNotifiedSessionStart = true
-      let durationMinutes = Int(totalDuration / 60)
+      let durationMinutes = Int(match.totalDuration / 60)
       connectivity.sendSessionStarted(durationMinutes: durationMinutes)
     } else {
       connectivity.sendTimerState(isRunning: true)
@@ -72,124 +87,121 @@ class SessionViewModel: ObservableObject {
   }
 
   func stopTimer() {
-    isRunning = false
+    screenState.phase = .paused
     timerService.stop()
     connectivity.sendTimerState(isRunning: false)
   }
 
   func toggleTimer() {
-    if isRunning {
-      stopTimer()
-    } else {
-      startTimer()
+    switch screenState.phase {
+      case .playing: stopTimer()
+      case .paused: startTimer()
+      case .finished: break
     }
   }
 
   private func applyTimerState(isRunning: Bool) {
     if isRunning {
-      guard !self.isRunning else { return }
-      self.isRunning = true
+      guard screenState.phase != .playing else { return }
+      screenState.phase = .playing
       timerService.start()
     } else {
-      self.isRunning = false
+      screenState.phase = .paused
       timerService.stop()
     }
   }
 
+  private func finishMatch() {
+    screenState.phase = .finished
+    timerService.stop()
+  }
+
   // MARK: - SCORING
   func scorePoint(for team: Team) {
-    gameService.saveHistory(history: &history, state: state, remainingTime: remainingTime)
-    gameService.scorePoint(state: &state, for: team)
-    connectivity.sendMatchState(state)
+    gameService.saveHistory(history: &match.history, state: match.state, remainingTime: match.remainingTime)
+    gameService.scorePoint(state: &match.state, for: team)
+    objectWillChange.send()
+    connectivity.sendMatchState(match.state)
+
+    if match.state.isMatchOver {
+      finishMatch()
+    }
   }
 
   func undo() {
-    guard let lastEntry = history.popLast() else { return }
-    state = lastEntry.state
-    remainingTime = lastEntry.remainingTime
-    connectivity.sendMatchState(state)
-  }
-
-  func setDuration(minutes: Int) {
-    totalDuration = TimeInterval(minutes * 60)
-    remainingTime = totalDuration
-    state = MatchState()
-    history = []
-    timerService.reset()
+    gameService.undo(history: &match.history, state: &match.state, remainingTime: &match.remainingTime)
+    objectWillChange.send()
+    connectivity.sendMatchState(match.state)
   }
 
   func restartMatch() {
     stopTimer()
-    totalDuration = TimeInterval(90 * 60)
-    remainingTime = totalDuration
-    state = MatchState()
-    history = []
+    match = Match(durationMinutes: 90)
+    screenState = SessionScreenState()
     timerService.reset()
 
-    // Notify iOS of restart
     hasNotifiedSessionStart = true
     connectivity.sendSessionStarted(durationMinutes: 90)
 
+    setupConnectivitySubscriptions()
     startTimer()
   }
 
   // MARK: - DISPLAY
   var playerScore: String {
-    gameService.displayScore(for: .player, in: state)
+    gameService.displayScore(for: .player, in: match.state)
   }
 
   var opponentScore: String {
-    gameService.displayScore(for: .opponent, in: state)
+    gameService.displayScore(for: .opponent, in: match.state)
   }
 
   var formattedTime: String {
-    timerService.formattedTime(from: remainingTime)
+    timerService.formattedTime(from: match.remainingTime)
   }
 
   var isTimeLow: Bool {
-    timerService.isTimeLow(remainingTime: remainingTime)
+    timerService.isTimeLow(remainingTime: match.remainingTime)
   }
 
   var canUndo: Bool {
-    gameService.canUndo(history: history)
+    gameService.canUndo(history: match.history)
   }
 
   var isMatchOver: Bool {
-    state.isMatchOver
+    match.state.isMatchOver
   }
 
   var winner: Team? {
-    state.winner
+    match.state.winner
   }
 
   var currentServePosition: ServePosition {
-    state.servePosition
+    match.state.servePosition
   }
 
   func playerGames(inSet setIndex: Int) -> Int {
-    gameService.gamesInSet(setIndex, for: .player, in: state)
+    gameService.gamesInSet(setIndex, for: .player, in: match.state)
   }
 
   func opponentGames(inSet setIndex: Int) -> Int {
-    gameService.gamesInSet(setIndex, for: .opponent, in: state)
+    gameService.gamesInSet(setIndex, for: .opponent, in: match.state)
   }
 
   var currentSetIndex: Int {
-    state.currentSetIndex
+    match.state.currentSetIndex
   }
 
   var playerSetsWon: Int {
-    state.playerSetsWon
+    match.state.playerSetsWon
   }
 
   var opponentSetsWon: Int {
-    state.opponentSetsWon
+    match.state.opponentSetsWon
   }
 
   // MARK: - CLEANUP
   deinit {
-    stopTimer()
+    timerService.stop()
   }
 }
-
-  

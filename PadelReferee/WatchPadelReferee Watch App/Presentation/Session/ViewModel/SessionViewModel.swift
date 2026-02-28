@@ -48,6 +48,7 @@ class SessionViewModel: ObservableObject {
       .sink { [weak self] newState in
         guard let self = self else { return }
         self.match.state = newState
+        self.match.history.removeAll()
         self.objectWillChange.send()
 
         if newState.isMatchOver {

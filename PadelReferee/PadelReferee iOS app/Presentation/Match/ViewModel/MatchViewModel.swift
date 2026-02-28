@@ -40,6 +40,7 @@ class MatchViewModel: ObservableObject {
       .sink { [weak self] newConfig in
         guard let self = self else { return }
         self.match.config = newConfig
+        self.match.history.removeAll()
         self.objectWillChange.send()
         
         if newConfig.isMatchOver {

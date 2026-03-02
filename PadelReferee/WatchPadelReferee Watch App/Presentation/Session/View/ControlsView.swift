@@ -31,7 +31,7 @@ struct ControlsView: View {
           .padding(.bottom, 15)
         
         Button {
-          viewModel.stopTimer()
+          viewModel.endMatch()
           router.navigateToRoot()
         } label: {
           Image(systemName: "xmark")
@@ -61,11 +61,11 @@ struct ControlsView: View {
             activeTab = .session
           }
         } label: {
-          Image(systemName: "pause")
+          Image(systemName: viewModel.screenState.phase == .playing ? "pause" : "play")
         }
         .tint(.yellow)
         .font(.title2)
-        Text("Pause")
+        Text(viewModel.screenState.phase == .playing ? "Pause" : "Resume")
       } //: VSTACK
     } //: HSTACK
     .navigationBarBackButtonHidden()

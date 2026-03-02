@@ -17,6 +17,7 @@ class MatchViewModel: ObservableObject {
   private let connectivity = PhoneConnectivityManager.shared
   private var connectivityCancellable: AnyCancellable?
   private var timerStateCancellable: AnyCancellable?
+  private var sessionEndedCancellable: AnyCancellable?
   private var hasNotifiedSessionStart = false
   
   init(gameService: MatchGameService = MatchGameService(), timerService: TimerService = TimerService()) {
@@ -55,6 +56,14 @@ class MatchViewModel: ObservableObject {
       .sink { [weak self] isRunning in
         self?.applyTimerState(isRunning: isRunning)
       }
+    
+    sessionEndedCancellable = connectivity.$peerSessionEnded
+      .filter { $0 }
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] _ in
+        self?.timerService.stop()
+        self?.matchState.phase = .paused
+      }
   }
   
   func setDuration(_ duration: TimeInterval) {
@@ -78,16 +87,20 @@ class MatchViewModel: ObservableObject {
     }
   }
   
-  func play() {
+  func play(notifyPeer: Bool = true) {
     matchState.phase = .playing
     timerService.start()
 
-    if !hasNotifiedSessionStart {
-      hasNotifiedSessionStart = true
-      let durationMinutes = Int(match.totalDuration / 60)
-      connectivity.sendSessionStarted(durationMinutes: durationMinutes)
+    if notifyPeer {
+      if !hasNotifiedSessionStart {
+        hasNotifiedSessionStart = true
+        let durationMinutes = Int(match.totalDuration / 60)
+        connectivity.sendSessionStarted(durationMinutes: durationMinutes)
+      } else {
+        connectivity.sendTimerState(isRunning: true)
+      }
     } else {
-      connectivity.sendTimerState(isRunning: true)
+      hasNotifiedSessionStart = true
     }
   }
   
@@ -133,6 +146,12 @@ class MatchViewModel: ObservableObject {
   // MARK: - Cancel
   func cancel() {
     matchState.showCancelAlert = true
+  }
+  
+  func confirmCancel() {
+    timerService.stop()
+    matchState.phase = .paused
+    connectivity.sendSessionEnded()
   }
   
   // MARK: - Private

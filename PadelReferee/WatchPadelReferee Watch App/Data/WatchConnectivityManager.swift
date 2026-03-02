@@ -16,6 +16,7 @@ class WatchConnectivityManager: NSObject, ObservableObject {
   @Published var receivedIsRunning: Bool?
   @Published var iOSSessionStarted: Bool = false
   @Published var iOSDurationMinutes: Int = 90
+  @Published var peerSessionEnded: Bool = false
   
   // MARK: - Session
   func startSession() {
@@ -52,6 +53,15 @@ class WatchConnectivityManager: NSObject, ObservableObject {
       .build()
       .withType(.timerUpdate)
       .withIsRunning(isRunning)
+      .serialize()
+    send(message)
+  }
+  
+  // MARK: - Send session ended to iOS
+  func sendSessionEnded() {
+    let message = WatchMessage
+      .build()
+      .withType(.sessionEnded)
       .serialize()
     send(message)
   }
@@ -94,6 +104,10 @@ class WatchConnectivityManager: NSObject, ObservableObject {
       Task { @MainActor in
         self.iOSDurationMinutes = duration
         self.iOSSessionStarted = true
+      }
+    case .sessionEnded:
+      Task { @MainActor in
+        self.peerSessionEnded = true
       }
     }
   }

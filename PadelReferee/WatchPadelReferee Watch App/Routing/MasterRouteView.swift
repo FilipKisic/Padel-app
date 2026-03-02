@@ -37,5 +37,10 @@ struct MasterRouteView<Content: View>: View {
       sessionViewModel.startTimer(notifyPeer: false)
       watchConnectivity.iOSSessionStarted = false
     }
+    .onReceive(watchConnectivity.$peerSessionEnded) { ended in
+      guard ended else { return }
+      router.navigateToRoot()
+      watchConnectivity.peerSessionEnded = false
+    }
   }
 }

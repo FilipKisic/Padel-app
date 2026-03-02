@@ -27,9 +27,6 @@ struct SessionView: View {
       timer()
     } //: VSTACK
     .ignoresSafeArea()
-    .onAppear {
-      viewModel.startTimer()
-    }
     .onChange(of: viewModel.isMatchOver) { _, isMatchOver in
       if isMatchOver {
         router.navigate(to: .summary)

@@ -25,6 +25,7 @@ struct NewSessionView: View {
       
       Button {
         setDuration()
+        viewModel.startTimer()
         router.navigate(to: .session)
       } label: {
         Text("Start Match")

@@ -150,4 +150,5 @@ enum WatchMessageType: String {
   case scoreUpdate
   case sessionStarted
   case timerUpdate
+  case sessionEnded
 }

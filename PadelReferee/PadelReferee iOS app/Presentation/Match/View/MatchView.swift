@@ -40,6 +40,7 @@ struct MatchView: View {
     .navigationBarBackButtonHidden(true)
     .alert("Cancel Match", isPresented: $viewModel.matchState.showCancelAlert) {
       Button("Cancel Match", role: .destructive) {
+        viewModel.confirmCancel()
         router.navigateToRoot()
       }
       Button("Continue Playing", role: .cancel) { }
@@ -49,7 +50,7 @@ struct MatchView: View {
     .onAppear {
       viewModel.setDuration(appState.matchDuration)
       if appState.isWatchInitiated {
-        viewModel.play()
+        viewModel.play(notifyPeer: false)
         appState.isWatchInitiated = false
       }
     }

@@ -19,6 +19,7 @@ class SessionViewModel: ObservableObject {
 
   private var connectivityCancellable: AnyCancellable?
   private var timerStateCancellable: AnyCancellable?
+  private var sessionEndedCancellable: AnyCancellable?
   private let connectivity = WatchConnectivityManager.shared
   private var hasNotifiedSessionStart = false
 
@@ -62,6 +63,14 @@ class SessionViewModel: ObservableObject {
       .sink { [weak self] isRunning in
         self?.applyTimerState(isRunning: isRunning)
       }
+
+    sessionEndedCancellable = connectivity.$peerSessionEnded
+      .filter { $0 }
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] _ in
+        self?.timerService.stop()
+        self?.screenState.phase = .paused
+      }
   }
 
   // MARK: - DURATION
@@ -95,6 +104,12 @@ class SessionViewModel: ObservableObject {
     screenState.phase = .paused
     timerService.stop()
     connectivity.sendTimerState(isRunning: false)
+  }
+
+  func endMatch() {
+    timerService.stop()
+    screenState.phase = .paused
+    connectivity.sendSessionEnded()
   }
 
   func toggleTimer() {

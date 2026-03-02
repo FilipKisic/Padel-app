@@ -18,6 +18,7 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
   @Published var watchDurationMinutes: Int = 90
   @Published var receivedMatchConfig: MatchConfig?
   @Published var receivedIsRunning: Bool?
+  @Published var peerSessionEnded: Bool = false
   
   // MARK: - Session
   func startSession() {
@@ -64,6 +65,15 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
     send(message)
   }
   
+  // MARK: - Send session ended to Watch
+  func sendSessionEnded() {
+    let message = WatchMessage
+      .build()
+      .withType(.sessionEnded)
+      .serialize()
+    send(message)
+  }
+  
   // MARK: - Private
   private func send(_ message: [String: Any]) {
     let session = WCSession.default
@@ -104,6 +114,9 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
       if let isRunning = WatchMessage.decodeIsRunning(from: message) {
         self.receivedIsRunning = isRunning
       }
+      
+      case .sessionEnded:
+      self.peerSessionEnded = true
     }
   }
 }

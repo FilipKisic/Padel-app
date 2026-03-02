@@ -47,5 +47,10 @@ struct MasterRouteView<Content: View>: View {
       router.navigate(to: .match)
       phoneConnectivity.watchSessionStarted = false
     }
+    .onReceive(phoneConnectivity.$peerSessionEnded) { ended in
+      guard ended else { return }
+      router.navigateToRoot()
+      phoneConnectivity.peerSessionEnded = false
+    }
   }
 }

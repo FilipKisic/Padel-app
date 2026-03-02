@@ -26,6 +26,7 @@ struct SessionHistoryView: View {
       startNewSessionButtonView()
     })
     .navigationTitle("Sessions")
+    .navigationBarBackButtonHidden()
     .preferredColorScheme(.dark)
     .onAppear {
       if let completedSession = appState.completedSession {
@@ -95,7 +96,6 @@ private extension SessionHistoryView {
         .foregroundColor(.white)
         .frame(maxWidth: .infinity)
         .padding()
-        .cornerRadius(12)
     }
     .glassEffect(.regular.tint(.accentColor.opacity(0.8)).interactive())
     .padding()

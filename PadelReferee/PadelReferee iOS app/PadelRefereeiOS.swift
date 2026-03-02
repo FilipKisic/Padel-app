@@ -9,14 +9,19 @@ import SwiftUI
 
 @main
 struct PadelRefereeiOS: App {
+  // MARK: - PROPERTIES
+  @AppStorage("isOnboarded") var isOnboarded: Bool = false
+  
+  // MARK: - CONSTRUCTOR
   init() {
     PhoneConnectivityManager.shared.startSession()
   }
   
+  // MARK: - BODY
   var body: some Scene {
     WindowGroup {
       MasterRouteView {
-        SessionHistoryView()
+        if isOnboarded { SessionHistoryView() } else { OnboardingView() }
       }
     }
   }

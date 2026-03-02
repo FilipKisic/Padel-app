@@ -43,6 +43,14 @@ class MatchViewModel: ObservableObject {
         guard let self = self else { return }
         self.match.config = newConfig
         self.match.history.removeAll()
+
+        // Detect a restart (fresh default state) and reset the timer
+        if newConfig == MatchConfig() {
+          self.match.remainingTime = self.match.totalDuration
+          self.timerService.reset()
+          self.matchState.elapsedTime = 0
+        }
+
         self.objectWillChange.send()
         
         if newConfig.isMatchOver {

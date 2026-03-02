@@ -156,12 +156,12 @@ class SessionViewModel: ObservableObject {
 
   func restartMatch() {
     stopTimer()
-    match = Match(durationMinutes: 90)
+    let durationMinutes = Int(match.totalDuration / 60)
+    match = Match(durationMinutes: durationMinutes)
     screenState = SessionScreenState()
     timerService.reset()
 
-    hasNotifiedSessionStart = true
-    connectivity.sendSessionStarted(durationMinutes: 90)
+    connectivity.sendMatchState(match.state)
 
     setupConnectivitySubscriptions()
     startTimer()

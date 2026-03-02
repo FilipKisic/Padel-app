@@ -11,7 +11,6 @@ import Combine
 class AppState: ObservableObject {
   @Published var matchDuration: TimeInterval = 0
   @Published var completedSession: Session?
-  @Published var isWatchInitiated: Bool = false
   
   func setMatchDuration(_ duration: TimeInterval) {
     matchDuration = duration
@@ -24,6 +23,5 @@ class AppState: ObservableObject {
   func reset() {
     matchDuration = 0
     completedSession = nil
-    isWatchInitiated = false
   }
 }

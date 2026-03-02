@@ -37,6 +37,7 @@ class MatchViewModel: ObservableObject {
   
   private func setupConnectivitySubscription() {
     connectivityCancellable = connectivity.$receivedMatchConfig
+      .dropFirst()
       .compactMap { $0 }
       .receive(on: DispatchQueue.main)
       .sink { [weak self] newConfig in
@@ -59,6 +60,7 @@ class MatchViewModel: ObservableObject {
       }
     
     timerStateCancellable = connectivity.$receivedIsRunning
+      .dropFirst()
       .compactMap { $0 }
       .receive(on: DispatchQueue.main)
       .sink { [weak self] isRunning in
@@ -66,6 +68,7 @@ class MatchViewModel: ObservableObject {
       }
     
     sessionEndedCancellable = connectivity.$peerSessionEnded
+      .dropFirst()
       .filter { $0 }
       .receive(on: DispatchQueue.main)
       .sink { [weak self] _ in
@@ -81,6 +84,14 @@ class MatchViewModel: ObservableObject {
     self.hasNotifiedSessionStart = false
     // Re-subscribe since match object changed
     setupConnectivitySubscription()
+  }
+  
+  func handleWatchSessionStarted(durationMinutes: Int) {
+    let duration = TimeInterval(durationMinutes * 60)
+    connectivity.receivedIsRunning = nil
+    connectivity.receivedMatchConfig = nil
+    setDuration(duration)
+    play(notifyPeer: false)
   }
   
   // MARK: - Play / Pause

@@ -48,11 +48,9 @@ struct MatchView: View {
       Text("Are you sure you want to cancel this match? All progress will be lost.")
     }
     .onAppear {
+      guard viewModel.matchState.phase != .playing else { return }
       viewModel.setDuration(appState.matchDuration)
-      if appState.isWatchInitiated {
-        viewModel.play(notifyPeer: false)
-        appState.isWatchInitiated = false
-      }
+      viewModel.play()
     }
     .onChange(of: viewModel.matchState.phase) { _,newPhase in
       if newPhase == .finished, let winner = viewModel.match.config.winner {

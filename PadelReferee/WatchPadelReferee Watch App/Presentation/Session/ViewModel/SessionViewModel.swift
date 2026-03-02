@@ -44,6 +44,7 @@ class SessionViewModel: ObservableObject {
 
   private func setupConnectivitySubscriptions() {
     connectivityCancellable = connectivity.$receivedMatchState
+      .dropFirst()
       .compactMap { $0 }
       .receive(on: DispatchQueue.main)
       .sink { [weak self] newState in
@@ -58,6 +59,7 @@ class SessionViewModel: ObservableObject {
       }
 
     timerStateCancellable = connectivity.$receivedIsRunning
+      .dropFirst()
       .compactMap { $0 }
       .receive(on: DispatchQueue.main)
       .sink { [weak self] isRunning in
@@ -65,6 +67,7 @@ class SessionViewModel: ObservableObject {
       }
 
     sessionEndedCancellable = connectivity.$peerSessionEnded
+      .dropFirst()
       .filter { $0 }
       .receive(on: DispatchQueue.main)
       .sink { [weak self] _ in
@@ -78,6 +81,7 @@ class SessionViewModel: ObservableObject {
     match = Match(durationMinutes: minutes)
     screenState = SessionScreenState()
     timerService.reset()
+    hasNotifiedSessionStart = false
   }
 
   // MARK: - TIMER

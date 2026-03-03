@@ -13,30 +13,17 @@ struct MatchView: View {
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var appState: AppState
   
+  @Environment(\.verticalSizeClass) private var verticalType
+  
   // MARK: - BODY
   var body: some View {
-    VStack(spacing: 0) {
-      servePositionDisplay(currentPosition: viewModel.match.config.servePosition)
-        .frame(height: 100)
-        .padding(.horizontal, 20)
-      
-      Spacer()
-      
-      VStack(spacing: 0) {
-        opponentGameAndSetScore()
-        
-        RoundedRectangle(cornerRadius: 10)
-          .fill(.cyan)
-          .frame(height: 5)
-        
-        playerGameAndSetScore()
+    Group {
+      if verticalType == .compact {
+        horizontalLayout()
+      } else {
+        verticalLayout()
       }
-      .padding(.horizontal, 20)
-      
-      Spacer()
-      
-      bottomSheet()
-    } //: VSTACK
+    }
     .navigationBarBackButtonHidden(true)
     .alert("Cancel Match", isPresented: $viewModel.matchState.showCancelAlert) {
       Button("Cancel Match", role: .destructive) {
@@ -70,6 +57,43 @@ struct MatchView: View {
 
 // MARK: - EXTENSIONS
 private extension MatchView {
+  @ViewBuilder
+  func verticalLayout() -> some View {
+    VStack(spacing: 0) {
+      servePositionDisplay(currentPosition: viewModel.match.config.servePosition)
+        .frame(height: 100)
+        .padding(.horizontal, 20)
+      
+      Spacer()
+      
+      VStack(spacing: 0) {
+        opponentGameAndSetScore()
+        
+        RoundedRectangle(cornerRadius: 10)
+          .fill(.cyan)
+          .frame(height: 5)
+        
+        playerGameAndSetScore()
+      }
+      .padding(.horizontal, 20)
+      
+      Spacer()
+      
+      bottomSheet()
+    } //: VSTACK
+  }
+  
+  @ViewBuilder
+  func horizontalLayout() -> some View {
+    HStack {
+      opponentScoreHorizontal(currentPosition: viewModel.match.config.servePosition)
+      
+      timerColumnHorizontal()
+      
+      playerScoreHorizontal(currentPosition: viewModel.match.config.servePosition)
+    }
+  }
+  
   @ViewBuilder
   func servePositionDisplay(currentPosition: ServePosition) -> some View {
     VStack(spacing: 8) {
@@ -276,12 +300,82 @@ private extension MatchView {
       }
     }
   }
+  
+  @ViewBuilder
+  func opponentScoreHorizontal(currentPosition: ServePosition) -> some View {
+    VStack {
+      Text("Opponent")
+        .textCase(.uppercase)
+        .font(.system(size: 48, weight: .medium, design: .rounded))
+        .foregroundStyle(.accent)
+      
+      Text(viewModel.displayScore(for: .opponent))
+        .font(.system(size: 242, weight: .bold, design: .rounded))
+        .foregroundColor(.accent)
+        .frame(height: 240)
+      
+      HStack(spacing: 8) {
+        quadrantBox(isActive: currentPosition == .topLeft)
+        quadrantBox(isActive: currentPosition == .topRight)
+      } //: HSTACK
+    } //: VSTACK
+  }
+  
+  @ViewBuilder
+  func timerColumnHorizontal() -> some View {
+    VStack(alignment: .center) {
+//      Text("TIME")
+//        .textCase(.uppercase)
+//        .font(.system(size: 48, weight: .medium, design: .rounded))
+//        .foregroundStyle(.yellow)
+      
+      Image(systemName: "timer")
+        .font(.system(size: 48, weight: .medium, design: .rounded))
+        .foregroundStyle(.yellow)
+        .padding(.bottom, 10)
+      
+      GeometryReader { geo in
+        ZStack(alignment: .bottom) {
+          RoundedRectangle(cornerRadius: 20)
+            .fill(.yellow.opacity(0.2))
+
+          RoundedRectangle(cornerRadius: 20)
+            .fill(.yellow)
+            .frame(height: geo.size.height * (1 - viewModel.progressPercentage))
+            .animation(.linear(duration: 1), value: viewModel.progressPercentage)
+        }
+      }
+      .frame(width: 30)
+      .frame(maxHeight: .infinity)
+    } //: VSTACK
+    .frame(width: 60)
+  }
+  
+  @ViewBuilder
+  func playerScoreHorizontal(currentPosition: ServePosition) -> some View {
+    VStack {
+      Text("Your team")
+        .textCase(.uppercase)
+        .font(.system(size: 48, weight: .medium, design: .rounded))
+      
+      Text(viewModel.displayScore(for: .player))
+        .font(.system(size: 242, weight: .bold, design: .rounded))
+        .frame(height: 240)
+      
+      HStack(spacing: 8) {
+        quadrantBox(isActive: currentPosition == .bottomLeft)
+        quadrantBox(isActive: currentPosition == .bottomRight)
+      } //: HSTACK
+    } //: VSTACK
+  }
+  
 }
 
 // MARK: - PREVIEW
 #Preview {
   let viewModel = MatchViewModel()
   let appState = AppState()
+  
   NavigationView {
     MatchView()
       .preferredColorScheme(.dark)

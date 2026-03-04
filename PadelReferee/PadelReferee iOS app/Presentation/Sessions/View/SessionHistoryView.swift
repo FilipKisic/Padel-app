@@ -25,7 +25,7 @@ struct SessionHistoryView: View {
     .safeAreaBar(edge: .bottom, content: {
       startNewSessionButtonView()
     })
-    .navigationTitle("Sessions")
+    .navigationTitle("sessions.title")
     .navigationBarBackButtonHidden()
     .preferredColorScheme(.dark)
     .onAppear {
@@ -51,12 +51,12 @@ private extension SessionHistoryView {
         .padding(.bottom)
       
       
-      Text("No sessions yet")
+      Text("sessions.empty-state.title")
         .font(.title2)
         .fontWeight(.semibold)
         .padding(.bottom, 2)
       
-      Text("Let's play some Padel")
+      Text("sessions.empty-state.message")
         .font(.title3)
         .foregroundColor(.secondary)
       
@@ -66,24 +66,20 @@ private extension SessionHistoryView {
   
   @ViewBuilder
   func sessionListStateView() -> some View {
-    VStack {
-      ScrollView {
-        LazyVStack(spacing: 12) {
-          ForEach(viewModel.state.sessionHistory) { session in
-            SessionCard(session: session)
-              .swipeActions(edge: .trailing) {
-                Button(role: .destructive) {
-                  viewModel.deleteSession(session)
-                } label: {
-                  Label("Delete", systemImage: "trash")
-                }
-              }
+    List {
+      ForEach(viewModel.state.sessionHistory) { session in
+        SessionCard(session: session)
+          .swipeActions(edge: .trailing) {
+            Button(role: .destructive) {
+              viewModel.deleteSession(session)
+            } label: {
+              Label("label.delete", systemImage: "trash")
+            }
           }
-        }
-        .padding()
-        .padding(.bottom, 80)
-      } //: SCROLL VIEW
-    } //: VSTACK
+          .listRowSeparator(.hidden)
+      }
+    } //: LIST VIEW
+    .listStyle(.inset)
   }
   
   @ViewBuilder
@@ -91,13 +87,13 @@ private extension SessionHistoryView {
     Button {
       router.navigate(to: .newSession)
     } label: {
-      Text("Start new session")
+      Text("sessions.button.title")
         .font(.headline)
         .foregroundColor(.white)
         .frame(maxWidth: .infinity)
         .padding()
     }
-    .glassEffect(.regular.tint(.accentColor.opacity(0.8)).interactive())
+    .glassEffect(.regular.tint(.accentColor.opacity(0.7)).interactive())
     .padding()
   }
 }
@@ -161,7 +157,7 @@ private extension SessionHistoryView {
   )
   let viewModel = SessionsViewModel()
   let appState = AppState()
-
+  
   viewModel.state.sessionHistory = [session1, session2, session3, session4, session5]
   return ZStack {
     NavigationView {

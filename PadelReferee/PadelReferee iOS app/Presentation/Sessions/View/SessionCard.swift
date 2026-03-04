@@ -38,7 +38,7 @@ private extension SessionCard {
       
       Spacer()
       
-      Text(session.winner == .player ? "You Won!" : "Opponent Won!")
+      Text(session.winner == .player ? "session.your-team.won.message" : "session.opponent.won.message")
         .font(.title2)
         .bold()
       
@@ -53,7 +53,7 @@ private extension SessionCard {
   @ViewBuilder
   func rightColumn() -> some View {
     VStack(spacing: 0) {
-      Text("Opponent")
+      Text("label.opponent")
         .textCase(.uppercase)
         .font(.caption)
         .bold()
@@ -93,7 +93,7 @@ private extension SessionCard {
         }
       } //: HSTACK
       
-      Text("Your team")
+      Text("label.your-team")
         .textCase(.uppercase)
         .font(.caption)
         .bold()

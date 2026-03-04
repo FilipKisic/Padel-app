@@ -25,14 +25,14 @@ struct MatchView: View {
       }
     }
     .navigationBarBackButtonHidden(true)
-    .alert("Cancel Match", isPresented: $viewModel.matchState.showCancelAlert) {
-      Button("Cancel Match", role: .destructive) {
+    .alert("match.cancel-match.alert.title", isPresented: $viewModel.matchState.showCancelAlert) {
+      Button("match.cancel-match.alert.button.confirm.title", role: .destructive) {
         viewModel.confirmCancel()
         router.navigateToRoot()
       }
-      Button("Continue Playing", role: .cancel) { }
+      Button("match.cancel-match.alert.button.cancel.title", role: .cancel) { }
     } message: {
-      Text("Are you sure you want to cancel this match? All progress will be lost.")
+      Text("match.cancel-match.alert.description")
     }
     .onAppear {
       guard viewModel.matchState.phase != .playing else { return }
@@ -126,7 +126,7 @@ private extension MatchView {
       Spacer()
       
       VStack(alignment: .leading) {
-        Text("Opponent")
+        Text("label.opponent")
           .textCase(.uppercase)
           .font(.system(size: 20, weight: .medium, design: .rounded))
           .foregroundColor(.accent)
@@ -180,7 +180,7 @@ private extension MatchView {
           Text("\(viewModel.gamesInSet(2, for: .player))")
             .font(.system(size: 48, weight: .medium, design: .rounded))
         } //: HSTACK
-        Text("Your team")
+        Text("label.your-team")
           .textCase(.uppercase)
           .font(.system(size: 20, weight: .medium, design: .rounded))
       } //: VSTACK
@@ -215,7 +215,7 @@ private extension MatchView {
       
       HStack(alignment: .bottom) {
         VStack {
-          Text("Opponent")
+          Text("label.opponent")
             .textCase(.uppercase)
             .font(.system(size: 12, weight: .medium, design: .rounded))
             .foregroundStyle(.accent)
@@ -250,7 +250,7 @@ private extension MatchView {
         Spacer()
         
         VStack {
-          Text("Your team")
+          Text("label.your-team")
             .textCase(.uppercase)
             .font(.system(size: 12, weight: .medium, design: .rounded))
           
@@ -304,7 +304,7 @@ private extension MatchView {
   @ViewBuilder
   func opponentScoreHorizontal(currentPosition: ServePosition) -> some View {
     VStack {
-      Text("Opponent")
+      Text("label.opponent")
         .textCase(.uppercase)
         .font(.system(size: 48, weight: .medium, design: .rounded))
         .foregroundStyle(.accent)
@@ -349,7 +349,7 @@ private extension MatchView {
   @ViewBuilder
   func playerScoreHorizontal(currentPosition: ServePosition) -> some View {
     VStack {
-      Text("Your team")
+      Text("label.your-team")
         .textCase(.uppercase)
         .font(.system(size: 48, weight: .medium, design: .rounded))
       

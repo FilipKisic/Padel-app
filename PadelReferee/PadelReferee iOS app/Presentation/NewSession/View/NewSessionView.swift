@@ -30,7 +30,7 @@ struct NewSessionView: View {
         startNewSessionButton()
       } //: VSTACK
     }
-    .navigationTitle("New Session")
+    .navigationTitle("new-session.title")
     .preferredColorScheme(.dark)
   }
 }
@@ -42,7 +42,7 @@ private extension NewSessionView {
       HStack {
         Image(systemName: "timer")
           .foregroundColor(.yellow)
-        Text("Duration")
+        Text("new-session.duration")
         Spacer()
         Text(viewModel.getFormattedDuration())
           .foregroundColor(.yellow)
@@ -90,14 +90,14 @@ private extension NewSessionView {
       appState.setMatchDuration(viewModel.selectedDuration)
       router.navigate(to: .match)
     } label: {
-      Text("Start new session")
+      Text("new-session.button.title")
         .font(.headline)
         .foregroundColor(.plainText)
         .frame(maxWidth: .infinity)
         .padding()
         .cornerRadius(12)
     }
-    .glassEffect(.regular.tint(.accentColor.opacity(0.8)).interactive())
+    .glassEffect(.regular.tint(.accentColor.opacity(0.7)).interactive())
     .disabled(!viewModel.isValidDuration)
     .padding()
   }

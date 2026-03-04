@@ -29,6 +29,6 @@ class SummaryViewModel: ObservableObject {
   }
   
   var winnerText: String {
-    winner == .player ? "You Won!" : "Opponent Won!"
+    winner == .player ? "session.your-team.won.message" : "session.opponent.won.message"
   }
 }

@@ -59,7 +59,7 @@ private extension SummaryView {
       .foregroundColor(.yellow)
       .shadow(color: .yellow.opacity(0.5), radius: 20)
     
-    Text(viewModel.winnerText)
+    Text(LocalizedStringKey(viewModel.winnerText))
       .font(.system(size: 42, weight: .bold, design: .rounded))
       .foregroundColor(.primary)
   }
@@ -67,7 +67,7 @@ private extension SummaryView {
   @ViewBuilder
   func timePlayed() -> some View {
     VStack(spacing: 10) {
-      Text("Time Played")
+      Text("summary.time-played")
         .font(.headline)
         .fontDesign(.rounded)
         .foregroundColor(.secondary)
@@ -81,7 +81,7 @@ private extension SummaryView {
   @ViewBuilder
   func finalScore() -> some View {
     VStack(spacing: 16) {
-      Text("Final Score")
+      Text("summary.final-score")
         .font(.headline)
         .foregroundColor(.secondary)
       
@@ -120,7 +120,7 @@ private extension SummaryView {
     Button {
       router.navigateToRoot()
     } label: {
-      Text("Finish")
+      Text("summary.button.title")
         .font(.headline)
         .foregroundColor(.white)
         .frame(maxWidth: .infinity)

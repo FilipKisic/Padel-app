@@ -14,32 +14,38 @@ struct OnboardingView: View {
   
   // MARK: - BODY
   var body: some View {
-    VStack(spacing: 20) {
+    VStack {
       Image("PadelPlusLogo")
         .resizable()
         .frame(width: 80, height: 80)
         .cornerRadius(20)
+        .padding()
       
-      Text("Welcome to the\nPadel+")
+      Text("onboarding.title")
         .font(.title.bold())
         .multilineTextAlignment(.center)
         .padding(.bottom, 40)
       
       FeatureView(
         image: "ipod.and.applewatch",
-        title: "Companion app",
-        description: "To get most out of the Padel+ experience, install watchOS companion app and track match score of your wrist."
+        title: "onboarding.companion.title",
+        description: "onboarding.companion.description"
       )
+      .padding(.vertical)
+      
       FeatureView(
         image: "rectangle.landscape.rotate",
-        title: "Horizontal mode",
-        description: "While you are on the padel court, put your iPhone in the horizontal orientation and transform it into the scoreboard."
+        title: "onboarding.horizontal.title",
+        description: "onboarding.horizontal.description"
       )
+      .padding(.vertical)
+      
       FeatureView(
         image: "arrow.uturn.backward.circle",
-        title: "Undo last entry",
-        description: "If you are using the companion app, add or undo points from the one device while the other one will just correct the points."
+        title: "onboarding.undo.title",
+        description: "onboarding.undo.description"
       )
+      .padding(.vertical)
       
       Spacer()
       
@@ -55,34 +61,10 @@ struct OnboardingView: View {
       }
       .glassEffect(.regular.tint(.onboarding.opacity(0.8)).interactive())
       .padding()
-
+      
     } //: VSTACK
     .padding()
     .preferredColorScheme(.dark)
-  }
-}
-
-struct FeatureView: View {
-  let image: String
-  let title: String
-  let description: String
-  
-  var body: some View {
-    HStack {
-      Image(systemName: image)
-        .resizable()
-        .frame(width: 45, height: 45)
-        .foregroundStyle(.onboarding)
-        .padding()
-      
-      VStack(alignment: .leading) {
-        Text(title)
-          .font(.headline.bold())
-        Text(description)
-          .font(.system(size: 14))
-          .foregroundStyle(.gray)
-      } //: VSTACK
-    } //: HSTACK
   }
 }
 

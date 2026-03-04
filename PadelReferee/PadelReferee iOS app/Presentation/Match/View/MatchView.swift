@@ -324,11 +324,6 @@ private extension MatchView {
   @ViewBuilder
   func timerColumnHorizontal() -> some View {
     VStack(alignment: .center) {
-//      Text("TIME")
-//        .textCase(.uppercase)
-//        .font(.system(size: 48, weight: .medium, design: .rounded))
-//        .foregroundStyle(.yellow)
-      
       Image(systemName: "timer")
         .font(.system(size: 48, weight: .medium, design: .rounded))
         .foregroundStyle(.yellow)

@@ -20,7 +20,7 @@ struct SummaryView: View {
         .foregroundStyle(.yellow)
         .padding(.top)
 
-      Text(viewModel.winner == .player ? "Your team won!" : "Opponent won!")
+      Text(viewModel.winner == .player ? LocalizedStringKey("summary.your-team-won") : LocalizedStringKey("summary.opponent-won"))
         .font(.system(size: 16, weight: .semibold, design: .rounded))
       
       Spacer()
@@ -28,14 +28,14 @@ struct SummaryView: View {
       Button {
         router.navigateToRoot()
       } label: {
-        Text("Rematch")
+        Text("summary.rematch")
           .foregroundStyle(.black)
       }
       .buttonStyle(.borderedProminent)
       .padding(.horizontal)
       
     } //: VSTACK
-    .navigationTitle("Summary")
+    .navigationTitle("summary.navigation.title")
     .navigationBarBackButtonHidden()
   }
 }

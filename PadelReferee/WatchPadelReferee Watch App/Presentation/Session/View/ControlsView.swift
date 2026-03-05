@@ -27,7 +27,7 @@ struct ControlsView: View {
         }
         .tint(.cyan)
         .font(.title2)
-        Text("Undo point")
+        Text("controls.undo")
           .padding(.bottom, 15)
         
         Button {
@@ -38,7 +38,7 @@ struct ControlsView: View {
         }
         .tint(.red)
         .font(.title2)
-        Text("End")
+        Text("controls.end")
       } //: VSTACK
       
       VStack {
@@ -52,7 +52,7 @@ struct ControlsView: View {
         }
         .tint(.green)
         .font(.title2)
-        Text("Restart")
+        Text("controls.restart")
           .padding(.bottom, 15)
         
         Button {
@@ -65,7 +65,7 @@ struct ControlsView: View {
         }
         .tint(.yellow)
         .font(.title2)
-        Text(viewModel.screenState.phase == .playing ? "Pause" : "Resume")
+        Text(viewModel.screenState.phase == .playing ? LocalizedStringKey("controls.pause") : LocalizedStringKey("controls.resume"))
       } //: VSTACK
     } //: HSTACK
     .navigationBarBackButtonHidden()

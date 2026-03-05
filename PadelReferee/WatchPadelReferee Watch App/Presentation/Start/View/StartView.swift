@@ -26,7 +26,7 @@ struct StartView: View {
             .font(.system(size: 16, weight: .bold))
             .foregroundColor(.white)
           
-          Text("Get ready to play!")
+          Text("start.subtitle")
             .font(.system(size: 12))
             .foregroundColor(.gray)
         }
@@ -38,7 +38,7 @@ struct StartView: View {
         } label: {
           HStack(spacing: 10) {
             Image(systemName: "play.fill")
-            Text("Start Match")
+            Text("start.button")
           }
           .font(.system(size: 14, weight: .semibold))
           .foregroundColor(.black)

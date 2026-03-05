@@ -18,7 +18,7 @@ struct NewSessionView: View {
   var body: some View {
     VStack {
       DatePicker(
-        "Duration",
+        "new-session.navigation.title",
         selection: $selectedDuration,
         displayedComponents: .hourAndMinute
       )
@@ -28,12 +28,12 @@ struct NewSessionView: View {
         viewModel.startTimer()
         router.navigate(to: .session)
       } label: {
-        Text("Start Match")
+        Text("new-session.button")
           .foregroundStyle(.black)
       }
       .buttonStyle(.borderedProminent)
     } //: VSTACK
-    .navigationTitle("Duration")
+    .navigationTitle("new-session.navigation.title")
     .padding(.horizontal)
   }
   

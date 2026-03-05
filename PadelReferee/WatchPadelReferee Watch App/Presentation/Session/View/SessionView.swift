@@ -75,7 +75,7 @@ private extension SessionView {
       .buttonStyle(.plain)
       
       VStack {
-        Text("OPPONENT")
+        Text("session.opponent")
           .font(.system(size: 14, weight: .semibold, design: .rounded))
           .foregroundColor(.green)
         
@@ -128,7 +128,7 @@ private extension SessionView {
           set3Games: viewModel.playerGames(inSet: 2),
           currentSetIndex: viewModel.currentSetIndex,
         )
-        Text("YOUR TEAM")
+        Text("session.your-team")
           .font(.system(size: 14, weight: .semibold, design: .rounded))
           .foregroundColor(.white)
       } //: VSTACK

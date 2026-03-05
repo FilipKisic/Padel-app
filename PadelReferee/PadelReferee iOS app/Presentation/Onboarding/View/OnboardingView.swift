@@ -53,7 +53,7 @@ struct OnboardingView: View {
         isOnboarded = true
         router.navigate(to: .sessions)
       } label: {
-        Text("Continue")
+        Text("onboarding.button.title")
           .font(.headline)
           .foregroundColor(.black)
           .frame(maxWidth: .infinity)

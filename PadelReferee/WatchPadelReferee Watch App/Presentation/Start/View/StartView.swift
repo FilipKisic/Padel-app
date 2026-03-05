@@ -22,7 +22,7 @@ struct StartView: View {
             .font(.system(size: 40))
             .foregroundColor(.green)
           
-          Text("Padel+")
+          Text("start.title")
             .font(.system(size: 16, weight: .bold))
             .foregroundColor(.white)
           

@@ -15,8 +15,6 @@ struct SessionView: View {
   // MARK: - BODY
   var body: some View {
     VStack(spacing: 0) {
-      Spacer()
-      
       opponentScoreDisplay()
         .padding(.top, 20)
       
@@ -26,7 +24,7 @@ struct SessionView: View {
       
       timer()
     } //: VSTACK
-    .ignoresSafeArea()
+    .scenePadding()
     .onChange(of: viewModel.isMatchOver) { _, isMatchOver in
       if isMatchOver {
         router.navigate(to: .summary)
@@ -38,29 +36,6 @@ struct SessionView: View {
 
 // MARK: - VIEW EXTENSIONS
 private extension SessionView {
-  @ViewBuilder
-  func undoControl() -> some View {
-    HStack {
-      Button {
-        viewModel.undo()
-      } label: {
-        Image(systemName: "arrow.uturn.backward")
-          .font(.system(size: 16, weight: .semibold))
-          .foregroundColor(.red)
-          .frame(width: 24, height: 24)
-      }
-      .buttonStyle(.plain)
-      .padding(5)
-      .background(.darkGray)
-      .clipShape(.circle)
-      .disabled(!viewModel.canUndo)
-      .offset(x: -10, y: 7)
-      
-      Spacer()
-    } //: HSTACK
-    .padding(.horizontal, 24)
-  }
-  
   @ViewBuilder
   func opponentScoreDisplay() -> some View {
     HStack {
@@ -88,7 +63,6 @@ private extension SessionView {
         )
       } //: VSTACK
     } //: HSTACK
-    .padding(.horizontal)
   }
   
   @ViewBuilder
@@ -105,7 +79,6 @@ private extension SessionView {
       } //: HSTACK
     } //: VSTACK
     .frame(height: 35)
-    .padding(.horizontal)
   }
   
   @ViewBuilder
@@ -133,7 +106,6 @@ private extension SessionView {
           .foregroundColor(.white)
       } //: VSTACK
     } //: HSTACK
-    .padding(.horizontal)
   }
   
   @ViewBuilder
@@ -144,7 +116,6 @@ private extension SessionView {
       .onTapGesture {
         viewModel.toggleTimer()
       }
-      .padding(.bottom, 10)
   }
 }
 

@@ -34,7 +34,7 @@ struct NewSessionView: View {
       .buttonStyle(.borderedProminent)
     } //: VSTACK
     .navigationTitle("new-session.navigation.title")
-    .padding(.horizontal)
+    .scenePadding()
   }
   
   // MARK: - FUNCTIONS

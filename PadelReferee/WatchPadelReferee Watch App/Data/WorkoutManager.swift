@@ -60,6 +60,9 @@ class WorkoutManager: NSObject, ObservableObject {
       return
     }
     
+    session?.delegate = self
+    builder?.delegate = self
+    
     builder?.dataSource = HKLiveWorkoutDataSource(
       healthStore: healthStore!,
       workoutConfiguration: configuration

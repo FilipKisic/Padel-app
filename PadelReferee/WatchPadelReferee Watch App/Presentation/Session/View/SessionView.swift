@@ -33,9 +33,6 @@ struct SessionView: View {
         router.navigate(to: .summary) //TODO: Replace with sheet
       }
     }
-    .onAppear {
-      workoutManager.startSession()
-    }
   }
 }
 

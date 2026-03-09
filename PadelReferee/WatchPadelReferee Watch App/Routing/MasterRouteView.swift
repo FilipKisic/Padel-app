@@ -36,6 +36,7 @@ struct MasterRouteView<Content: View>: View {
       sessionViewModel.setDuration(minutes: watchConnectivity.iOSDurationMinutes)
       router.navigateToRoot()
       router.navigate(to: .session)
+      workoutManager.startSession()
       sessionViewModel.startTimer(notifyPeer: false)
       watchConnectivity.iOSSessionStarted = false
     }

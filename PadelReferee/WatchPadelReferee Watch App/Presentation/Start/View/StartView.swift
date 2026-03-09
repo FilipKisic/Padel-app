@@ -10,6 +10,7 @@ import SwiftUI
 struct StartView: View {
   // MARK: - PROPERTIES
   @EnvironmentObject private var router: Router
+  @EnvironmentObject private var workoutManager: WorkoutManager
   
   // MARK: - BODY
   var body: some View {
@@ -43,6 +44,9 @@ struct StartView: View {
         .buttonStyle(.borderedProminent)
       } //: VSTACK
       .scenePadding()
+      .onAppear {
+        workoutManager.requestAuthorization()
+      }
   }
 }
 

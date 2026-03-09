@@ -11,6 +11,7 @@ struct MasterRouteView<Content: View>: View {
   // MARK: - PROPERTIES
   @StateObject private var router = Router()
   @StateObject private var sessionViewModel = SessionViewModel()
+  @StateObject private var workoutManager = WorkoutManager()
 
   @ObservedObject private var watchConnectivity = WatchConnectivityManager.shared
 
@@ -29,6 +30,7 @@ struct MasterRouteView<Content: View>: View {
     } //: NAVIGATION STACK
     .environmentObject(router)
     .environmentObject(sessionViewModel)
+    .environmentObject(workoutManager)
     .onReceive(watchConnectivity.$iOSSessionStarted) { started in
       guard started else { return }
       sessionViewModel.setDuration(minutes: watchConnectivity.iOSDurationMinutes)

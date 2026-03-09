@@ -11,6 +11,7 @@ struct SessionView: View {
   // MARK: - PROPERTIES
   @EnvironmentObject private var viewModel: SessionViewModel
   @EnvironmentObject private var router: Router
+  @EnvironmentObject private var workoutManager: WorkoutManager
   
   // MARK: - BODY
   var body: some View {
@@ -25,12 +26,16 @@ struct SessionView: View {
       timer()
     } //: VSTACK
     .scenePadding()
+    .navigationBarBackButtonHidden()
     .onChange(of: viewModel.isMatchOver) { _, isMatchOver in
       if isMatchOver {
-        router.navigate(to: .summary)
+        workoutManager.endSession()
+        router.navigate(to: .summary) //TODO: Replace with sheet
       }
     }
-    .navigationBarBackButtonHidden()
+    .onAppear {
+      workoutManager.startSession()
+    }
   }
 }
 

@@ -10,6 +10,7 @@ import SwiftUI
 struct SummaryView: View {
   @EnvironmentObject private var viewModel: SessionViewModel
   @EnvironmentObject private var router: Router
+  @EnvironmentObject private var workoutManager: WorkoutManager
   
   // MARK: - BODY
   var body: some View {
@@ -26,6 +27,7 @@ struct SummaryView: View {
       Spacer()
       
       Button {
+        workoutManager.resetWorkout()
         router.navigateToRoot()
       } label: {
         Text("summary.rematch")

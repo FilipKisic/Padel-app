@@ -11,6 +11,8 @@ struct ControlsView: View {
   // MARK: - PROPERTIES
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var viewModel: SessionViewModel
+  @EnvironmentObject private var workoutManager: WorkoutManager
+  
   @Binding var activeTab: SessionTab
   
   // MARK: - BODY
@@ -32,6 +34,7 @@ struct ControlsView: View {
         
         Button {
           viewModel.endMatch()
+          workoutManager.endSession()
           router.navigateToRoot()
         } label: {
           Image(systemName: "xmark")
@@ -44,6 +47,9 @@ struct ControlsView: View {
       VStack {
         Button {
           viewModel.restartMatch()
+          workoutManager.endSession()
+          workoutManager.resetWorkout()
+          workoutManager.startSession()
           withAnimation {
             activeTab = .metric
           }
@@ -57,6 +63,7 @@ struct ControlsView: View {
         
         Button {
           viewModel.toggleTimer()
+          workoutManager.togglePause()
           withAnimation {
             activeTab = .metric
           }

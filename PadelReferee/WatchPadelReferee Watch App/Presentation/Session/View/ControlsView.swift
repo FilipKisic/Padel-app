@@ -47,7 +47,6 @@ struct ControlsView: View {
       VStack {
         Button {
           viewModel.restartMatch()
-          workoutManager.endSession()
           workoutManager.resetWorkout()
           workoutManager.startSession()
           withAnimation {

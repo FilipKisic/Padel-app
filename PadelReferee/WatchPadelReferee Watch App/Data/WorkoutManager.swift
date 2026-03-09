@@ -17,6 +17,14 @@ class WorkoutManager: NSObject, ObservableObject {
   @Published var activeEnergy: Double = 0
   @Published var workout: HKWorkout?
   
+  @Published var showingSummaryView = false {
+    didSet {
+      if showingSummaryView == false {
+        resetWorkout()
+      }
+    }
+  }
+  
   private var healthStore: HKHealthStore?
   private var session: HKWorkoutSession?
   var builder: HKLiveWorkoutBuilder?
@@ -83,6 +91,7 @@ class WorkoutManager: NSObject, ObservableObject {
   
   func endSession() {
     session?.end()
+    showingSummaryView = true
   }
   
   func updateForStatistics(_ statistics: HKStatistics?) {

@@ -10,65 +10,57 @@ import HealthKit
 
 struct SummaryView: View {
   @EnvironmentObject private var viewModel: SessionViewModel
-  @EnvironmentObject private var router: Router
   @EnvironmentObject private var workoutManager: WorkoutManager
+  
+  @Environment(\.dismiss) private var dismiss
   
   // MARK: - BODY
   var body: some View {
-    ScrollView {
-      VStack(spacing: 10) {
-        Image(systemName: "trophy.fill")
-          .resizable()
-          .frame(width: 40, height: 40)
-          .foregroundStyle(.yellow)
-          .padding(.top)
-
-        Text(viewModel.winner == .player ? LocalizedStringKey("summary.your-team-won") : LocalizedStringKey("summary.opponent-won"))
-          .font(.system(size: 16, weight: .semibold, design: .rounded))
-        
-        Divider()
-        
-        if let workout = workoutManager.workout {
-          SummaryMetricView(
-            title: "summary.duration",
-            value: durationString(from: workout)
-          )
+    if workoutManager.workout == nil {
+      ProgressView()
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden()
+    } else {
+      ScrollView {
+        VStack(spacing: 10) {
+          Image(systemName: "trophy.fill")
+            .resizable()
+            .frame(width: 40, height: 40)
+            .foregroundStyle(.yellow)
+            .padding(.top)
+          
+          Text(viewModel.winner == .player ? LocalizedStringKey("summary.your-team-won") : LocalizedStringKey("summary.opponent-won"))
+            .font(.system(size: 16, weight: .semibold, design: .rounded))
+          
+          Divider()
           
           SummaryMetricView(
-            title: "summary.calories",
-            value: caloriesString(from: workout)
+            title: "summary.duration",
+            value: durationFormatter.string(from: workoutManager.workout?.duration ?? .zero) ?? ""
           )
-        }
-        
-        SummaryMetricView(
-          title: "summary.avg-heart-rate",
-          value: "\(Int(workoutManager.averageHeartRate)) BPM"
-        )
-        
-        Button {
-          workoutManager.resetWorkout()
-          router.navigateToRoot()
-        } label: {
-          Text("summary.rematch")
-            .foregroundStyle(.black)
-        }
-        .buttonStyle(.borderedProminent)
-        .padding(.horizontal)
-        .padding(.top, 5)
-        
-      } //: VSTACK
-    } //: SCROLLVIEW
-    .navigationTitle("summary.navigation.title")
-    .navigationBarBackButtonHidden()
+          SummaryMetricView(
+            title: "summary.calories",
+            value: caloriesString(from: workoutManager.workout!)
+          )
+          SummaryMetricView(
+            title: "summary.avg-heart-rate",
+            value: "\(Int(workoutManager.averageHeartRate)) BPM"
+          )
+        } //: VSTACK
+      } //: SCROLLVIEW
+      .navigationTitle("summary.navigation.title")
+      .navigationBarTitleDisplayMode(.inline)
+      .navigationBarBackButtonHidden()
+    }
   }
   
   // MARK: - HELPERS
-  private func durationString(from workout: HKWorkout) -> String {
-    let duration = workout.duration
-    let minutes = Int(duration) / 60
-    let seconds = Int(duration) % 60
-    return String(format: "%d:%02d", minutes, seconds)
-  }
+  private var durationFormatter: DateComponentsFormatter = {
+    let formatter = DateComponentsFormatter()
+    formatter.allowedUnits = [.hour, .minute, .second]
+    formatter.zeroFormattingBehavior = .pad
+    return formatter
+  }()
   
   private func caloriesString(from workout: HKWorkout) -> String {
     let energy = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
@@ -88,6 +80,7 @@ struct SummaryMetricView: View {
         .foregroundStyle(.gray)
       Text(value)
         .font(.system(size: 20, weight: .medium, design: .rounded))
+      Divider()
     }
   }
 }

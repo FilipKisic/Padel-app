@@ -28,6 +28,9 @@ struct MasterRouteView<Content: View>: View {
         router.view(for: route)
       }
     } //: NAVIGATION STACK
+    .sheet(isPresented: $workoutManager.showingSummaryView) {
+      SummaryView()
+    }
     .environmentObject(router)
     .environmentObject(sessionViewModel)
     .environmentObject(workoutManager)

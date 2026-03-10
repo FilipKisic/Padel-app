@@ -11,8 +11,7 @@ import HealthKit
 struct SummaryView: View {
   @EnvironmentObject private var viewModel: SessionViewModel
   @EnvironmentObject private var workoutManager: WorkoutManager
-  
-  @Environment(\.dismiss) private var dismiss
+  @EnvironmentObject private var router: Router
   
   // MARK: - BODY
   var body: some View {
@@ -38,19 +37,29 @@ struct SummaryView: View {
             title: "summary.duration",
             value: durationFormatter.string(from: workoutManager.workout?.duration ?? .zero) ?? ""
           )
+          .accentColor(.yellow)
+          
           SummaryMetricView(
             title: "summary.calories",
             value: caloriesString(from: workoutManager.workout!)
           )
+          .accentColor(.pink)
+          
           SummaryMetricView(
             title: "summary.avg-heart-rate",
             value: "\(Int(workoutManager.averageHeartRate)) BPM"
           )
+          .accentColor(.red)
         } //: VSTACK
       } //: SCROLLVIEW
       .navigationTitle("summary.navigation.title")
       .navigationBarTitleDisplayMode(.inline)
       .navigationBarBackButtonHidden()
+      .scenePadding()
+      .ignoresSafeArea(edges: .bottom)
+      .onDisappear {
+        router.navigateToRoot()
+      }
     }
   }
   
@@ -74,12 +83,13 @@ struct SummaryMetricView: View {
   let value: String
   
   var body: some View {
-    VStack(spacing: 2) {
+    VStack(alignment: .leading) {
       Text(title)
-        .font(.system(size: 12, weight: .semibold, design: .rounded))
-        .foregroundStyle(.gray)
       Text(value)
-        .font(.system(size: 20, weight: .medium, design: .rounded))
+        .font(.system(.title2, design: .rounded)
+          .lowercaseSmallCaps()
+        )
+        .foregroundColor(.accentColor)
       Divider()
     }
   }

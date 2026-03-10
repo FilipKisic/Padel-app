@@ -50,21 +50,22 @@ class WorkoutManager: NSObject, ObservableObject {
       HKQuantityType.activitySummaryType()
     ]
     
-    healthStore?.requestAuthorization(toShare: typesToShare, read: typesToRead) { _, __ in
-      // Handle error
+    healthStore?.requestAuthorization(toShare: typesToShare, read: typesToRead) { _, _ in
+      return
     }
   }
   
   func startSession() {
+    guard let healthStore = healthStore else { return }
+    
     let configuration = HKWorkoutConfiguration()
     configuration.activityType = .other
     configuration.locationType = .indoor
     
     do {
-      session = try HKWorkoutSession(healthStore: healthStore!, configuration: configuration)
+      session = try HKWorkoutSession(healthStore: healthStore, configuration: configuration)
       builder = session?.associatedWorkoutBuilder()
     } catch {
-      // Handle error
       return
     }
     
@@ -72,13 +73,13 @@ class WorkoutManager: NSObject, ObservableObject {
     builder?.delegate = self
     
     builder?.dataSource = HKLiveWorkoutDataSource(
-      healthStore: healthStore!,
+      healthStore: healthStore,
       workoutConfiguration: configuration
     )
     
     let startDate = Date()
     session?.startActivity(with: startDate)
-    builder?.beginCollection(withStart: startDate) { _, __ in }
+    builder?.beginCollection(withStart: startDate) { _, _ in }
   }
   
   func togglePause() {
@@ -158,7 +159,7 @@ extension WorkoutManager: HKLiveWorkoutBuilderDelegate {
   
   func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
     for type in collectedTypes {
-      guard let quantityType = type as? HKQuantityType else { return }
+      guard let quantityType = type as? HKQuantityType else { continue }
       
       let statistics = workoutBuilder.statistics(for: quantityType)
       

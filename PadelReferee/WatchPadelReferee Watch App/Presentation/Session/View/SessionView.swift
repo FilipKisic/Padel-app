@@ -30,7 +30,6 @@ struct SessionView: View {
     .onChange(of: viewModel.isMatchOver) { _, isMatchOver in
       if isMatchOver {
         workoutManager.endSession()
-        router.navigate(to: .summary) //TODO: Replace with sheet
       }
     }
   }

@@ -35,7 +35,6 @@ struct ControlsView: View {
         Button {
           viewModel.endMatch()
           workoutManager.endSession()
-          router.navigateToRoot()
         } label: {
           Image(systemName: "xmark")
         }

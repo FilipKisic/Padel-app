@@ -13,7 +13,6 @@ class Router: ObservableObject {
     case start
     case newSession
     case session
-    case summary
   }
   
   // MARK: - PROPERTIES
@@ -28,8 +27,6 @@ class Router: ObservableObject {
         NewSessionView()
       case .session:
         SessionTabView()
-      case .summary:
-        SummaryView()
     }
   }
   

@@ -22,16 +22,9 @@ struct SummaryView: View {
     } else {
       ScrollView {
         VStack(spacing: 10) {
-          Image(systemName: "trophy.fill")
-            .resizable()
-            .frame(width: 40, height: 40)
-            .foregroundStyle(.yellow)
-            .padding(.top)
-          
-          Text(viewModel.winner == .player ? LocalizedStringKey("summary.your-team-won") : LocalizedStringKey("summary.opponent-won"))
-            .font(.system(size: 16, weight: .semibold, design: .rounded))
-          
-          Divider()
+          if viewModel.winner != nil {
+            winnerView()
+          }
           
           SummaryMetricView(
             title: "summary.duration",
@@ -74,6 +67,22 @@ struct SummaryView: View {
   private func caloriesString(from workout: HKWorkout) -> String {
     let energy = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
     return String(format: "%.0f kcal", energy)
+  }
+}
+
+private extension SummaryView {
+  @ViewBuilder
+  func winnerView() -> some View {
+    Image(systemName: "trophy.fill")
+      .resizable()
+      .frame(width: 40, height: 40)
+      .foregroundStyle(.yellow)
+      .padding(.top)
+    
+    Text(viewModel.winner == .player ? LocalizedStringKey("summary.your-team-won") : LocalizedStringKey("summary.opponent-won"))
+      .font(.system(size: 16, weight: .semibold, design: .rounded))
+    
+    Divider()
   }
 }
 

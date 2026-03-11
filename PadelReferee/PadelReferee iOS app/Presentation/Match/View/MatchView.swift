@@ -35,23 +35,36 @@ struct MatchView: View {
       Text("match.cancel-match.alert.description")
     }
     .onAppear {
-      guard viewModel.matchState.phase != .playing else { return }
-      viewModel.setDuration(appState.matchDuration)
-      viewModel.play()
+      startMatchOnAppear()
+      UIApplication.shared.isIdleTimerDisabled = true // Keep display ON
     }
-    .onChange(of: viewModel.matchState.phase) { _,newPhase in
-      if newPhase == .finished, let winner = viewModel.match.config.winner {
-        let session = Session(
-          date: Date(),
-          duration: viewModel.matchState.elapsedTime,
-          winner: winner,
-          sets: viewModel.match.config.sets
-        )
-        appState.setCompletedSession(session)
-        router.navigate(to: .summary)
-      }
+    .onDisappear {
+      UIApplication.shared.isIdleTimerDisabled = false
+    }
+    .onChange(of: viewModel.matchState.phase) { _, newPhase in
+      finishMatch(newPhase)
     }
     .preferredColorScheme(.dark)
+  }
+  
+  // MARK: - FUNCTIONS
+  private func startMatchOnAppear() {
+    guard viewModel.matchState.phase != .playing else { return }
+    viewModel.setDuration(appState.matchDuration)
+    viewModel.play()
+  }
+  
+  private func finishMatch(_ newPhase: MatchPhase) {
+    if newPhase == .finished, let winner = viewModel.match.config.winner {
+      let session = Session(
+        date: Date(),
+        duration: viewModel.matchState.elapsedTime,
+        winner: winner,
+        sets: viewModel.match.config.sets
+      )
+      appState.setCompletedSession(session)
+      router.navigate(to: .summary)
+    }
   }
 }
 

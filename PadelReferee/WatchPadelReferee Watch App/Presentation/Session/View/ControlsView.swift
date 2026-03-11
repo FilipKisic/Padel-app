@@ -11,16 +11,18 @@ struct ControlsView: View {
   // MARK: - PROPERTIES
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var viewModel: SessionViewModel
+  @EnvironmentObject private var workoutManager: WorkoutManager
+  
   @Binding var activeTab: SessionTab
   
   // MARK: - BODY
   var body: some View {
     HStack(spacing: 20) {
-      VStack() {
+      VStack {
         Button {
           viewModel.undo()
           withAnimation {
-            activeTab = .session
+            activeTab = .metric
           }
         } label: {
           Image(systemName: "arrow.uturn.backward")
@@ -28,11 +30,11 @@ struct ControlsView: View {
         .tint(.cyan)
         .font(.title2)
         Text("controls.undo")
-          .padding(.bottom, 15)
+          .padding(.bottom, 10)
         
         Button {
           viewModel.endMatch()
-          router.navigateToRoot()
+          workoutManager.endSession()
         } label: {
           Image(systemName: "xmark")
         }
@@ -44,8 +46,10 @@ struct ControlsView: View {
       VStack {
         Button {
           viewModel.restartMatch()
+          workoutManager.resetWorkout()
+          workoutManager.startSession()
           withAnimation {
-            activeTab = .session
+            activeTab = .metric
           }
         } label: {
           Image(systemName: "arrow.clockwise")
@@ -53,12 +57,13 @@ struct ControlsView: View {
         .tint(.green)
         .font(.title2)
         Text("controls.restart")
-          .padding(.bottom, 15)
+          .padding(.bottom, 10)
         
         Button {
           viewModel.toggleTimer()
+          workoutManager.togglePause()
           withAnimation {
-            activeTab = .session
+            activeTab = .metric
           }
         } label: {
           Image(systemName: viewModel.screenState.phase == .playing ? "pause" : "play")
@@ -68,6 +73,7 @@ struct ControlsView: View {
         Text(viewModel.screenState.phase == .playing ? LocalizedStringKey("controls.pause") : LocalizedStringKey("controls.resume"))
       } //: VSTACK
     } //: HSTACK
+    .scenePadding()
     .navigationBarBackButtonHidden()
   }
 }
@@ -75,5 +81,12 @@ struct ControlsView: View {
 // MARK: - PREVIEW
 #Preview {
   @Previewable @State var activeTab: SessionTab = .controls
-  ControlsView(activeTab: $activeTab)
+  let viewModel = SessionViewModel()
+  let router = Router()
+
+  NavigationView {
+    ControlsView(activeTab: $activeTab)
+  }
+  .environmentObject(viewModel)
+  .environmentObject(router)
 }

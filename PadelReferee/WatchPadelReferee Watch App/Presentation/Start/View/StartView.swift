@@ -10,10 +10,10 @@ import SwiftUI
 struct StartView: View {
   // MARK: - PROPERTIES
   @EnvironmentObject private var router: Router
+  @EnvironmentObject private var workoutManager: WorkoutManager
   
   // MARK: - BODY
   var body: some View {
-    NavigationStack {
       VStack(spacing: 16) {
         Spacer()
         
@@ -29,9 +29,7 @@ struct StartView: View {
           Text("start.subtitle")
             .font(.system(size: 12))
             .foregroundColor(.gray)
-        }
-        
-        Spacer()
+        } //: VSTACK
         
         Button {
           router.navigate(to: .newSession)
@@ -44,9 +42,11 @@ struct StartView: View {
           .foregroundColor(.black)
         }
         .buttonStyle(.borderedProminent)
-        .padding(.horizontal)
       } //: VSTACK
-    } //: NAVIGATION STACK
+      .scenePadding()
+      .onAppear {
+        workoutManager.requestAuthorization()
+      }
   }
 }
 

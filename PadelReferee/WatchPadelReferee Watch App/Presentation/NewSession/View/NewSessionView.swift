@@ -11,6 +11,7 @@ struct NewSessionView: View {
   // MARK: - PROPERTIES
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var viewModel: SessionViewModel
+  @EnvironmentObject private var workoutManager: WorkoutManager
   
   @State private var selectedDuration = Calendar.current.date(bySettingHour: 1, minute: 30, second: 0, of: Date())!
 
@@ -25,6 +26,7 @@ struct NewSessionView: View {
       
       Button {
         setDuration()
+        workoutManager.startSession()
         viewModel.startTimer()
         router.navigate(to: .session)
       } label: {
@@ -34,7 +36,7 @@ struct NewSessionView: View {
       .buttonStyle(.borderedProminent)
     } //: VSTACK
     .navigationTitle("new-session.navigation.title")
-    .padding(.horizontal)
+    .scenePadding()
   }
   
   // MARK: - FUNCTIONS

@@ -6,22 +6,43 @@
 //
 
 import SwiftUI
+import WatchKit
 
 struct SessionTabView: View {
   // MARK: - PROPERTIES
-  @State private var activeTab: SessionTab = .session
+  @State private var activeTab: SessionTab = .metric
   
   // MARK: - BODY
   var body: some View {
     TabView(selection: $activeTab) {
       ControlsView(activeTab: $activeTab).tag(SessionTab.controls)
-      SessionView().tag(SessionTab.session)
+      MetricTabView().tag(SessionTab.metric)
+      NowPlayingView().tag(SessionTab.nowPlaying)
     }
   }
 }
 
 enum SessionTab {
-  case controls, session
+  case controls, metric, nowPlaying
+}
+
+struct MetricTabView: View {
+  // MARK: - PROPERTIES
+  @State private var metricActiveTab: MetricTab = .score
+  
+  // MARK: - BODY
+  var body: some View {
+    TabView(selection: $metricActiveTab) {
+      SessionView().tag(MetricTab.score)
+      HealthMetricView().tag(MetricTab.health)
+    }
+    .tabViewStyle(.carousel)
+    .navigationBarBackButtonHidden()
+  }
+}
+
+enum MetricTab {
+  case score, health
 }
 
 // MARK: - PREVIEW

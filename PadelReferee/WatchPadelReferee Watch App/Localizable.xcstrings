@@ -55,7 +55,29 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Undo point"
+            "value" : "Undo"
+          }
+        }
+      }
+    },
+    "label.metrics.average-hr" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AVERAGE HR"
+          }
+        }
+      }
+    },
+    "label.metrics.bpm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " BPM"
           }
         }
       }
@@ -133,6 +155,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Padel+"
+          }
+        }
+      }
+    },
+    "summary.activity-rings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activity Rings"
+          }
+        }
+      }
+    },
+    "summary.avg-heart-rate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avg Heart Rate"
+          }
+        }
+      }
+    },
+    "summary.calories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calories"
+          }
+        }
+      }
+    },
+    "summary.duration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
           }
         }
       }

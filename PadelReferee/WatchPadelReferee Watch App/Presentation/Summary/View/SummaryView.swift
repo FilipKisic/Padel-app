@@ -26,23 +26,29 @@ struct SummaryView: View {
             winnerView()
           }
           
-          SummaryMetricView(
-            title: "summary.duration",
-            value: durationFormatter.string(from: workoutManager.workout?.duration ?? .zero) ?? ""
-          )
-          .accentColor(.yellow)
-          
-          SummaryMetricView(
-            title: "summary.calories",
-            value: caloriesString(from: workoutManager.workout!)
-          )
-          .accentColor(.pink)
-          
-          SummaryMetricView(
-            title: "summary.avg-heart-rate",
-            value: "\(Int(workoutManager.averageHeartRate)) BPM"
-          )
-          .accentColor(.red)
+          VStack(alignment: .leading) {
+            SummaryMetricView(
+              title: "summary.duration",
+              value: durationFormatter.string(from: workoutManager.workout?.duration ?? .zero) ?? ""
+            )
+            .accentColor(.yellow)
+            
+            SummaryMetricView(
+              title: "summary.calories",
+              value: caloriesString(from: workoutManager.workout!)
+            )
+            .accentColor(.pink)
+            
+            SummaryMetricView(
+              title: "summary.avg-heart-rate",
+              value: "\(Int(workoutManager.averageHeartRate)) BPM"
+            )
+            .accentColor(.red)
+            
+            Text("summary.activity-rings")
+            ActivityRingsView(healthStore: workoutManager.healthStore)
+              .frame(width: 50, height: 50)
+          }
         } //: VSTACK
       } //: SCROLLVIEW
       .navigationTitle("summary.navigation.title")
@@ -52,6 +58,7 @@ struct SummaryView: View {
       .ignoresSafeArea(edges: .bottom)
       .onDisappear {
         router.navigateToRoot()
+        workoutManager.resetWorkout()
       }
     }
   }

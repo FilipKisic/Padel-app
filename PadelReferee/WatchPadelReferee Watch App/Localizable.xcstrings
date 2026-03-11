@@ -159,6 +159,50 @@
         }
       }
     },
+    "summary.activity-rings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activity Rings"
+          }
+        }
+      }
+    },
+    "summary.avg-heart-rate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avg Heart Rate"
+          }
+        }
+      }
+    },
+    "summary.calories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calories"
+          }
+        }
+      }
+    },
+    "summary.duration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
+          }
+        }
+      }
+    },
     "summary.navigation.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -199,39 +243,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your team won!"
-          }
-        }
-      }
-    },
-    "summary.duration" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duration"
-          }
-        }
-      }
-    },
-    "summary.calories" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Calories"
-          }
-        }
-      }
-    },
-    "summary.avg-heart-rate" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Avg Heart Rate"
           }
         }
       }

@@ -17,32 +17,19 @@ class WorkoutManager: NSObject, ObservableObject {
   @Published var activeEnergy: Double = 0
   @Published var workout: HKWorkout?
   
-  @Published var showingSummaryView = false {
-    didSet {
-      if showingSummaryView == false {
-        resetWorkout()
-      }
-    }
-  }
+  @Published var showingSummaryView = false
   
-  private var healthStore: HKHealthStore?
+  let healthStore = HKHealthStore()
   private var session: HKWorkoutSession?
   var builder: HKLiveWorkoutBuilder?
   
-  // MARK: - CONSTRUCTOR
-  public override init() {
-    guard HKHealthStore.isHealthDataAvailable() else {
-      super.init()
-      return
-    }
-    
-    healthStore = HKHealthStore()
-    super.init()
-  }
-  
   // MARK: - METHODS
   func requestAuthorization() {
-    let typesToShare: Set = [ HKQuantityType.workoutType() ]
+    let typesToShare: Set<HKSampleType> = [
+      HKQuantityType.workoutType(),
+      HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)!,
+      HKQuantityType.quantityType(forIdentifier: .heartRate)!
+    ]
     
     let typesToRead: Set = [
       HKQuantityType.quantityType(forIdentifier: .heartRate)!,
@@ -50,16 +37,20 @@ class WorkoutManager: NSObject, ObservableObject {
       HKQuantityType.activitySummaryType()
     ]
     
-    healthStore?.requestAuthorization(toShare: typesToShare, read: typesToRead) { _, _ in
+    healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { _, _ in
       return
     }
   }
   
   func startSession() {
-    guard let healthStore = healthStore else { return }
+    if session != nil {
+      session?.end()
+      session = nil
+      builder = nil
+    }
     
     let configuration = HKWorkoutConfiguration()
-    configuration.activityType = .other
+    configuration.activityType = .tennis
     configuration.locationType = .indoor
     
     do {
@@ -69,13 +60,13 @@ class WorkoutManager: NSObject, ObservableObject {
       return
     }
     
-    session?.delegate = self
-    builder?.delegate = self
-    
     builder?.dataSource = HKLiveWorkoutDataSource(
       healthStore: healthStore,
       workoutConfiguration: configuration
     )
+    
+    session?.delegate = self
+    builder?.delegate = self
     
     let startDate = Date()
     session?.startActivity(with: startDate)
@@ -83,10 +74,15 @@ class WorkoutManager: NSObject, ObservableObject {
   }
   
   func togglePause() {
-    if isRunning {
-      session?.pause()
-    } else {
-      session?.resume()
+    guard let session = session else { return }
+    
+    switch session.state {
+    case .running:
+      session.pause()
+    case .paused:
+      session.resume()
+    default:
+      break
     }
   }
   
@@ -119,6 +115,8 @@ class WorkoutManager: NSObject, ObservableObject {
     builder = nil
     session = nil
     workout = nil
+    //isRunning = false
+    //showingSummaryView = false
     averageHeartRate = 0
     heartRate = 0
     activeEnergy = 0

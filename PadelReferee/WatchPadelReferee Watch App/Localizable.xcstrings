@@ -60,13 +60,13 @@
         }
       }
     },
-    "label.metrics.average-hr" : {
+    "label.metrics.average" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AVERAGE HR"
+            "value" : "AVERAGE"
           }
         }
       }
@@ -78,6 +78,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : " BPM"
+          }
+        }
+      }
+    },
+    "label.metrics.hr" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HR"
           }
         }
       }
@@ -232,6 +243,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rematch"
+          }
+        }
+      }
+    },
+    "summary.saving" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saving session"
           }
         }
       }

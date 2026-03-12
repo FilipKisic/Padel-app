@@ -49,10 +49,12 @@ enum MetricTab {
 #Preview {
   let router = Router()
   let viewModel = SessionViewModel()
+  let workoutManager = WorkoutManager()
   
   NavigationView {
     SessionTabView()
   }
   .environmentObject(router)
   .environmentObject(viewModel)
+  .environmentObject(workoutManager)
 }

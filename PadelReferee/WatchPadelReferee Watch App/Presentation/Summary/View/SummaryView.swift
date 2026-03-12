@@ -16,7 +16,7 @@ struct SummaryView: View {
   // MARK: - BODY
   var body: some View {
     if workoutManager.workout == nil {
-      ProgressView()
+      ProgressView("summary.saving")
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden()
     } else {

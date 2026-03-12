@@ -52,5 +52,12 @@ struct StartView: View {
 
 // MARK: - PREVIEW
 #Preview {
-  StartView()
+  let router = Router()
+  let workoutManager = WorkoutManager()
+  
+  NavigationView {
+    StartView()
+  }
+  .environmentObject(router)
+  .environmentObject(workoutManager)
 }

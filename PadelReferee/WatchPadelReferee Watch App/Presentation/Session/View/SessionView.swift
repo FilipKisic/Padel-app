@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WatchKit
 
 struct SessionView: View {
   // MARK: - PROPERTIES
@@ -17,13 +18,11 @@ struct SessionView: View {
   var body: some View {
     VStack(spacing: 0) {
       opponentScoreDisplay()
-        .padding(.top, 20)
+        .padding(.top, 25)
       
       servingIndicator()
       
       playerScoreDisplay()
-      
-      timer()
     } //: VSTACK
     .scenePadding()
     .navigationBarBackButtonHidden()
@@ -44,7 +43,7 @@ private extension SessionView {
         viewModel.scorePoint(for: .opponent)
       } label: {
         Text(viewModel.opponentScore)
-          .font(.system(size: 58, weight: .medium, design: .rounded))
+          .font(.system(size: scoreFontSize, weight: .medium, design: .rounded))
           .foregroundColor(.green)
           .frame(maxWidth: .infinity, alignment: .leading)
       }
@@ -52,7 +51,7 @@ private extension SessionView {
       
       VStack {
         Text("session.opponent")
-          .font(.system(size: 14, weight: .semibold, design: .rounded))
+          .font(.system(size: playerLabelFontSize, weight: .semibold, design: .rounded))
           .foregroundColor(.green)
         
         SetScoresView(
@@ -89,7 +88,7 @@ private extension SessionView {
         viewModel.scorePoint(for: .player)
       } label: {
         Text(viewModel.playerScore)
-          .font(.system(size: 58, weight: .medium, design: .rounded))
+          .font(.system(size: scoreFontSize, weight: .medium, design: .rounded))
           .foregroundColor(.white)
           .frame(maxWidth: .infinity, alignment: .leading)
       }
@@ -103,20 +102,28 @@ private extension SessionView {
           currentSetIndex: viewModel.currentSetIndex,
         )
         Text("session.your-team")
-          .font(.system(size: 14, weight: .semibold, design: .rounded))
+          .font(.system(size: playerLabelFontSize, weight: .semibold, design: .rounded))
           .foregroundColor(.white)
       } //: VSTACK
     } //: HSTACK
   }
   
-  @ViewBuilder
-  func timer() -> some View {
-    Text(viewModel.formattedTime)
-      .font(.system(size: 25, weight: .medium, design: .rounded))
-      .foregroundColor(viewModel.isTimeLow ? .red : .white)
-      .onTapGesture {
-        viewModel.toggleTimer()
-      }
+  var scoreFontSize: CGFloat {
+    switch WKInterfaceDevice.current().watchSize {
+      case .mm38, .mm40, .unknown:
+        return 56
+      case .mm44, .mm49:
+        return 58
+    }
+  }
+  
+  var playerLabelFontSize: CGFloat {
+    switch WKInterfaceDevice.current().watchSize {
+      case .mm38, .mm40, .unknown:
+        return 13
+      case .mm44, .mm49:
+        return 14
+    }
   }
 }
 

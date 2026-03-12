@@ -15,6 +15,20 @@ struct SessionHistoryView: View {
   
   // MARK: - BODY
   var body: some View {
+    if #available(iOS 26.0, *) {
+      wholeViewGlassUI()
+    } else {
+      wholeViewStandard()
+    }
+  }
+}
+
+// MARK: - EXTENSIONS
+private extension SessionHistoryView {
+  
+  @available(iOS 26.0, *)
+  @ViewBuilder
+  func wholeViewGlassUI() -> some View {
     ZStack {
       if viewModel.state.sessionHistory.isEmpty {
         emptyStateView()
@@ -24,6 +38,7 @@ struct SessionHistoryView: View {
     }
     .safeAreaBar(edge: .bottom, content: {
       startNewSessionButtonView()
+        .scenePadding()
     })
     .navigationTitle("sessions.title")
     .navigationBarBackButtonHidden()
@@ -35,10 +50,39 @@ struct SessionHistoryView: View {
       }
     }
   }
-}
-
-// MARK: - EXTENSIONS
-private extension SessionHistoryView {
+  
+  @ViewBuilder
+  func wholeViewStandard() -> some View {
+    ZStack {
+      if viewModel.state.sessionHistory.isEmpty {
+        emptyStateView()
+      } else {
+        sessionListStateView()
+      }
+    }
+    .navigationTitle("sessions.title")
+    .navigationBarBackButtonHidden()
+    .toolbar {
+      ToolbarItem(placement: .topBarTrailing) {
+        Button {
+          router.navigate(to: .newSession)
+        } label: {
+          Image(systemName: "plus")
+            .font(.title2)
+        }
+        .buttonStyle(.borderedProminent)
+        .clipShape(.circle)
+      }
+    }
+    .preferredColorScheme(.dark)
+    .onAppear {
+      if let completedSession = appState.completedSession {
+        viewModel.addSession(completedSession)
+        appState.reset()
+      }
+    }
+  }
+  
   @ViewBuilder
   func emptyStateView() -> some View {
     VStack() {
@@ -82,19 +126,19 @@ private extension SessionHistoryView {
     .listStyle(.inset)
   }
   
+  @available(iOS 26.0, *)
   @ViewBuilder
   func startNewSessionButtonView() -> some View {
-    Button {
-      router.navigate(to: .newSession)
-    } label: {
-      Text("sessions.button.title")
-        .font(.headline)
-        .foregroundColor(.white)
-        .frame(maxWidth: .infinity)
-        .padding()
-    }
-    .glassEffect(.regular.tint(.accentColor.opacity(0.7)).interactive())
-    .padding()
+      Button {
+        router.navigate(to: .newSession)
+      } label: {
+        Text("sessions.button.title")
+          .font(.headline)
+          .foregroundColor(.white)
+          .frame(maxWidth: .infinity)
+          .padding()
+      }
+      .glassEffect(.regular.tint(.accentColor.opacity(0.7)).interactive())
   }
 }
 
@@ -157,13 +201,15 @@ private extension SessionHistoryView {
   )
   let viewModel = SessionsViewModel()
   let appState = AppState()
+  let router = Router()
   
   viewModel.state.sessionHistory = [session1, session2, session3, session4, session5]
   return ZStack {
-    NavigationView {
+    NavigationStack {
       SessionHistoryView()
     }
   }
   .environmentObject(viewModel)
   .environmentObject(appState)
+  .environmentObject(router)
 }

@@ -48,6 +48,7 @@ struct SummaryView: View {
       }
     }
     .preferredColorScheme(.dark)
+
   }
 }
 
@@ -117,19 +118,33 @@ private extension SummaryView {
   
   @ViewBuilder
   func finishButton() -> some View {
-    Button {
-      router.navigateToRoot()
-    } label: {
-      Text("summary.button.title")
-        .font(.headline)
-        .foregroundColor(.white)
-        .frame(maxWidth: .infinity)
-        .padding()
-        .cornerRadius(12)
+    if #available(iOS 26.0, *) {
+      Button {
+        router.navigateToRoot()
+      } label: {
+        Text("summary.button.title")
+          .font(.headline)
+          .foregroundColor(.white)
+          .frame(maxWidth: .infinity)
+          .padding()
+          .cornerRadius(12)
+      }
+      .glassEffect(.regular.tint(.accentColor.opacity(0.8)).interactive())
+      .scenePadding()
+    } else {
+      Button {
+        router.navigateToRoot()
+      } label: {
+        Text("summary.button.title")
+          .font(.headline)
+          .foregroundColor(.white)
+          .frame(maxWidth: .infinity)
+          .padding(.vertical, 10)
+      }
+      .buttonStyle(.borderedProminent)
+      .tint(.accent)
+      .scenePadding()
     }
-    .glassEffect(.regular.tint(.accentColor.opacity(0.8)).interactive())
-    .padding(.horizontal)
-    .padding(.bottom, 40)
   }
 }
 

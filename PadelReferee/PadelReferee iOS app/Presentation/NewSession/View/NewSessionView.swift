@@ -30,11 +30,13 @@ struct NewSessionView: View {
         startNewSessionButton()
       } //: VSTACK
     }
+    .scenePadding()
     .navigationTitle("new-session.title")
     .preferredColorScheme(.dark)
   }
 }
 
+// MARK: - EXTENSIONS
 private extension NewSessionView {
   @ViewBuilder
   func timePicker() -> some View {
@@ -81,25 +83,39 @@ private extension NewSessionView {
       }
     }
     .cornerRadius(20)
-    .padding()
   }
   
   @ViewBuilder
   func startNewSessionButton() -> some View {
-    Button{
-      appState.setMatchDuration(viewModel.selectedDuration)
-      router.navigate(to: .match)
-    } label: {
-      Text("new-session.button.title")
-        .font(.headline)
-        .foregroundColor(.plainText)
-        .frame(maxWidth: .infinity)
-        .padding()
-        .cornerRadius(12)
+    if #available(iOS 26.0, *) {
+      Button{
+        appState.setMatchDuration(viewModel.selectedDuration)
+        router.navigate(to: .match)
+      } label: {
+        Text("new-session.button.title")
+          .font(.headline)
+          .foregroundColor(.plainText)
+          .frame(maxWidth: .infinity)
+          .padding()
+          .cornerRadius(12)
+      }
+      .glassEffect(.regular.tint(.accentColor.opacity(0.7)).interactive())
+      .disabled(!viewModel.isValidDuration)
+    } else {
+      Button{
+        appState.setMatchDuration(viewModel.selectedDuration)
+        router.navigate(to: .match)
+      } label: {
+        Text("new-session.button.title")
+          .font(.headline)
+          .foregroundColor(.plainText)
+          .frame(maxWidth: .infinity)
+          .padding(.vertical, 10)
+      }
+      .buttonStyle(.borderedProminent)
+      .tint(.accent)
+      .disabled(!viewModel.isValidDuration)
     }
-    .glassEffect(.regular.tint(.accentColor.opacity(0.7)).interactive())
-    .disabled(!viewModel.isValidDuration)
-    .padding()
   }
 }
 

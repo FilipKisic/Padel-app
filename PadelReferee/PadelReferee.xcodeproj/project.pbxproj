@@ -57,9 +57,22 @@
 		12798CE22F4B786B0089B3EB /* WatchPadelReferee Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchPadelReferee Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1211D3BB2F6BED3700C1BC44 /* Exceptions for "PadelReferee iOS app" folder in "PadelReferee iOS app" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 123F7E6A2F2BA43400CFDE71 /* PadelReferee iOS app */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		123F7E6C2F2BA43400CFDE71 /* PadelReferee iOS app */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1211D3BB2F6BED3700C1BC44 /* Exceptions for "PadelReferee iOS app" folder in "PadelReferee iOS app" target */,
+			);
 			path = "PadelReferee iOS app";
 			sourceTree = "<group>";
 		};

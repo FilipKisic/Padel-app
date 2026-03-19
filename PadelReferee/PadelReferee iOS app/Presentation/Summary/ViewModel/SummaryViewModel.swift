@@ -11,7 +11,7 @@ import Combine
 class SummaryViewModel: ObservableObject {
   @Published var state: SummaryState = .showing
   
-  @Published var winner: Team = .player
+  @Published var winner: Team?
   @Published var elapsedTime: TimeInterval = 0
   @Published var sets: [SetScore] = []
   
@@ -28,7 +28,8 @@ class SummaryViewModel: ObservableObject {
     return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
   }
   
-  var winnerText: String {
-    winner == .player ? "session.your-team.won.message" : "session.opponent.won.message"
+  var winnerText: String? {
+    guard let winner else { return nil }
+    return winner == .player ? "session.your-team.won.message" : "session.opponent.won.message"
   }
 }

@@ -115,8 +115,6 @@ class WorkoutManager: NSObject, ObservableObject {
     builder = nil
     session = nil
     workout = nil
-    //isRunning = false
-    //showingSummaryView = false
     averageHeartRate = 0
     heartRate = 0
     activeEnergy = 0

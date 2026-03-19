@@ -6,38 +6,23 @@
 //
 
 import Foundation
-import Combine
+import SwiftData
 
-class SessionsViewModel: ObservableObject {
-  @Published var state: SessionHistoryState
+@Observable
+class SessionsViewModel {
+  private var modelContext: ModelContext?
   
-  private let userDefaultsKey = "savedSessions"
-  
-  init(state: SessionHistoryState = SessionHistoryState()) {
-    self.state = state
-    loadSessions()
+  func configure(with modelContext: ModelContext) {
+    self.modelContext = modelContext
   }
   
   func addSession(_ session: Session) {
-    state.sessionHistory.insert(session, at: 0)
-    saveSessions()
+    modelContext?.insert(session)
+    try? modelContext?.save()
   }
   
   func deleteSession(_ session: Session) {
-    state.sessionHistory.removeAll { $0.id == session.id }
-    saveSessions()
-  }
-  
-  private func loadSessions() {
-    if let data = UserDefaults.standard.data(forKey: userDefaultsKey),
-       let decoded = try? JSONDecoder().decode([Session].self, from: data) {
-      state.sessionHistory = decoded
-    }
-  }
-  
-  private func saveSessions() {
-    if let encoded = try? JSONEncoder().encode(state.sessionHistory) {
-      UserDefaults.standard.set(encoded, forKey: userDefaultsKey)
-    }
+    modelContext?.delete(session)
+    try? modelContext?.save()
   }
 }

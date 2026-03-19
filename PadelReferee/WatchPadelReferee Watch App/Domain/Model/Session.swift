@@ -1,8 +1,8 @@
 //
-//  SessionModel.swift
-//  PadelReferee iOS app
+//  Session.swift
+//  WatchPadelReferee Watch App
 //
-//  Created by Filip Kisić on 29.01.2026.
+//  Created by Filip Kisić on 16.03.2026.
 //
 
 import Foundation

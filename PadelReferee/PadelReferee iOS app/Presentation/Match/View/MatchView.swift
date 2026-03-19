@@ -27,8 +27,17 @@ struct MatchView: View {
     .navigationBarBackButtonHidden(true)
     .alert("match.cancel-match.alert.title", isPresented: $viewModel.matchState.showCancelAlert) {
       Button("match.cancel-match.alert.button.confirm.title", role: .destructive) {
+        if !appState.isWatchSession {
+          let session = Session(
+            date: Date(),
+            duration: viewModel.matchState.elapsedTime,
+            winner: nil,
+            sets: viewModel.match.config.sets
+          )
+          appState.setCompletedSession(session)
+        }
         viewModel.confirmCancel()
-        router.navigateToRoot()
+        router.navigate(to: .summary)
       }
       Button("match.cancel-match.alert.button.cancel.title", role: .cancel) { }
     } message: {
@@ -55,11 +64,15 @@ struct MatchView: View {
   }
   
   private func finishMatch(_ newPhase: MatchPhase) {
-    if newPhase == .finished, let winner = viewModel.match.config.winner {
+    if newPhase == .finished {
+      if appState.isWatchSession {
+        router.navigateToRoot()
+        return
+      }
       let session = Session(
         date: Date(),
         duration: viewModel.matchState.elapsedTime,
-        winner: winner,
+        winner: viewModel.match.config.winner,
         sets: viewModel.match.config.sets
       )
       appState.setCompletedSession(session)

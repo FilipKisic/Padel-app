@@ -31,22 +31,46 @@ private extension SessionCard {
   @ViewBuilder
   func leftColumn() -> some View {
     VStack(alignment: .leading) {
-      Image(systemName: "trophy.circle.fill")
-        .font(.system(size: 45))
-        .symbolRenderingMode(.hierarchical)
-        .foregroundColor(.accentColor)
+      if session.isCompleted {
+        Image(systemName: "trophy.circle.fill")
+          .font(.system(size: 45))
+          .symbolRenderingMode(.hierarchical)
+          .foregroundColor(.accentColor)
+      } else {
+        Image(systemName: "figure.racquetball")
+          .font(.system(size: 40))
+          .symbolRenderingMode(.hierarchical)
+          .foregroundColor(.gray)
+      }
       
       Spacer()
       
-      Text(session.winner == .player ? "session.your-team.won.message" : "session.opponent.won.message")
-        .font(.title2)
-        .bold()
+      if let winner = session.winner {
+        Text(winner == .player ? "session.your-team.won.message" : "session.opponent.won.message")
+          .font(.title2)
+          .bold()
+      } else {
+        Text("session.ended-early.message")
+          .font(.title2)
+          .bold()
+          .foregroundStyle(.secondary)
+      }
       
       Spacer()
       
-      Text(session.formattedDate)
-        .font(.subheadline)
-        .foregroundStyle(Color.gray)
+      HStack(spacing: 12) {
+        Label(session.formattedDuration, systemImage: "clock")
+        if session.calories > 0 {
+          Label(String(format: "%.0f", session.calories), systemImage: "flame.fill")
+            .foregroundStyle(.pink)
+        }
+        if session.averageHeartRate > 0 {
+          Label("\(Int(session.averageHeartRate))", systemImage: "heart.fill")
+            .foregroundStyle(.red)
+        }
+      }
+      .font(.caption)
+      .foregroundStyle(.gray)
     } //: VSTACK
   }
   
@@ -102,10 +126,10 @@ private extension SessionCard {
 }
 
 #Preview {
-  let session = Session(
+  let sessionPlayerWon = Session(
     id: UUID(),
     date: Date(),
-    duration: 3600,
+    duration: 3520,
     winner: .player,
     sets: [
       SetScore(playerGames: 6, opponentGames: 4),
@@ -113,6 +137,34 @@ private extension SessionCard {
       SetScore(playerGames: 7, opponentGames: 5)
     ]
   )
-  SessionCard(session: session)
+  
+  let sessionOpponentWon = Session(
+    id: UUID(),
+    date: Date(),
+    duration: 2320,
+    winner: .opponent,
+    sets: [
+      SetScore(playerGames: 6, opponentGames: 2),
+      SetScore(playerGames: 2, opponentGames: 6),
+      SetScore(playerGames: 6, opponentGames: 4)
+    ],
+    averageHeartRate: 69,
+  )
+  let sessionUnfinished = Session(
+    id: UUID(),
+    date: Date(),
+    duration: 1218,
+    winner: nil,
+    sets: [
+      SetScore(playerGames: 6, opponentGames: 4),
+      SetScore(playerGames: 0, opponentGames: 0),
+      SetScore(playerGames: 0, opponentGames: 0)
+    ]
+  )
+  SessionCard(session: sessionPlayerWon)
+    .colorScheme(.dark)
+  SessionCard(session: sessionOpponentWon)
+    .colorScheme(.dark)
+  SessionCard(session: sessionUnfinished)
     .colorScheme(.dark)
 }

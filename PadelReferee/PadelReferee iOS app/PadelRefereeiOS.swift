@@ -20,9 +20,8 @@ struct PadelRefereeiOS: App {
     PhoneConnectivityManager.shared.startSession()
     
     let schema = Schema([Session.self, SetScoreData.self])
-    let config = ModelConfiguration(
-      cloudKitDatabase: .automatic
-    )
+    let config = ModelConfiguration(cloudKitDatabase: .automatic)
+    
     do {
       container = try ModelContainer(for: schema, configurations: [config])
     } catch {

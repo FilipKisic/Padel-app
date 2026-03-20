@@ -48,7 +48,7 @@ struct SummaryView: View {
       }
     }
     .preferredColorScheme(.dark)
-
+    
   }
 }
 
@@ -175,8 +175,6 @@ private extension SummaryView {
   let viewModel = SummaryViewModel()
   let router = Router()
   let appState = AppState()
-  
-  //viewModel.loadSession(session)
   
   NavigationView {
     SummaryView()

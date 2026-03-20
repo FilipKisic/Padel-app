@@ -48,21 +48,31 @@ struct SummaryView: View {
       }
     }
     .preferredColorScheme(.dark)
-
+    
   }
 }
 
 private extension SummaryView {
   @ViewBuilder
   func winnerPodium() -> some View {
-    Image(systemName: "trophy.fill")
-      .font(.system(size: 100))
-      .foregroundColor(.yellow)
-      .shadow(color: .yellow.opacity(0.5), radius: 20)
-    
-    Text(LocalizedStringKey(viewModel.winnerText))
-      .font(.system(size: 42, weight: .bold, design: .rounded))
-      .foregroundColor(.primary)
+    if let winnerText = viewModel.winnerText {
+      Image(systemName: "trophy.fill")
+        .font(.system(size: 100))
+        .foregroundColor(.yellow)
+        .shadow(color: .yellow.opacity(0.5), radius: 20)
+      
+      Text(LocalizedStringKey(winnerText))
+        .font(.system(size: 42, weight: .bold, design: .rounded))
+        .foregroundColor(.primary)
+    } else {
+      Image(systemName: "figure.racquetball")
+        .font(.system(size: 80))
+        .foregroundColor(.gray)
+      
+      Text("session.ended-early.message")
+        .font(.system(size: 32, weight: .bold, design: .rounded))
+        .foregroundColor(.secondary)
+    }
   }
   
   @ViewBuilder
@@ -165,8 +175,6 @@ private extension SummaryView {
   let viewModel = SummaryViewModel()
   let router = Router()
   let appState = AppState()
-  
-  //viewModel.loadSession(session)
   
   NavigationView {
     SummaryView()

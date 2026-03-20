@@ -11,7 +11,6 @@ struct MasterRouteView<Content: View>: View {
   // MARK: - PROPERTIES
   @StateObject private var router = Router()
   @StateObject private var appState = AppState()
-  @StateObject private var sessionsViewModel = SessionsViewModel()
   @StateObject private var newSessionViewModel = NewSessionViewModel()
   @StateObject private var matchViewModel = MatchViewModel()
   @StateObject private var summaryViewModel = SummaryViewModel()
@@ -34,7 +33,6 @@ struct MasterRouteView<Content: View>: View {
     } //: NAVIGATION STACK
     .environmentObject(router)
     .environmentObject(appState)
-    .environmentObject(sessionsViewModel)
     .environmentObject(newSessionViewModel)
     .environmentObject(matchViewModel)
     .environmentObject(summaryViewModel)
@@ -42,6 +40,7 @@ struct MasterRouteView<Content: View>: View {
       guard started else { return }
       let duration = TimeInterval(phoneConnectivity.watchDurationMinutes * 60)
       appState.setMatchDuration(duration)
+      appState.isWatchSession = true
       matchViewModel.handleWatchSessionStarted(durationMinutes: phoneConnectivity.watchDurationMinutes)
       router.navigateToRoot()
       router.navigate(to: .match)

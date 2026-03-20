@@ -31,22 +31,53 @@ private extension SessionCard {
   @ViewBuilder
   func leftColumn() -> some View {
     VStack(alignment: .leading) {
-      Image(systemName: "trophy.circle.fill")
-        .font(.system(size: 45))
-        .symbolRenderingMode(.hierarchical)
-        .foregroundColor(.accentColor)
+      if session.winner == .player {
+        Image(systemName: "trophy.circle.fill")
+          .font(.system(size: 45))
+          .symbolRenderingMode(.hierarchical)
+          .foregroundColor(.accentColor)
+      } else {
+        Image(systemName: "figure.racquetball.circle.fill")
+          .font(.system(size: 45))
+          .symbolRenderingMode(.hierarchical)
+          .foregroundColor(session.isCompleted ? .accentColor : .gray)
+      }
       
       Spacer()
       
-      Text(session.winner == .player ? "session.your-team.won.message" : "session.opponent.won.message")
-        .font(.title2)
-        .bold()
+      if let winner = session.winner {
+        Text(winner == .player ? "session.your-team.won.message" : "session.opponent.won.message")
+          .font(.title2)
+          .bold()
+          .foregroundStyle(winner == .player ? Color.white : .accentColor)
+      } else {
+        Text("session.ended-early.message")
+          .font(.title2)
+          .bold()
+          .foregroundStyle(.secondary)
+      }
       
       Spacer()
       
-      Text(session.formattedDate)
-        .font(.subheadline)
-        .foregroundStyle(Color.gray)
+      HStack(spacing: 20) {
+        Label(session.formattedDuration, systemImage: "clock")
+          .labelStyle(CustomLabel(spacing: 5))
+        
+        if session.calories > 0 {
+          Label(String(format: "%.0f", session.calories), systemImage: "flame.fill")
+            .foregroundStyle(.pink)
+            .labelStyle(CustomLabel(spacing: 5))
+        }
+          
+        if session.averageHeartRate > 0 {
+          Label("\(Int(session.averageHeartRate))", systemImage: "heart.fill")
+            .foregroundStyle(.red)
+            .labelStyle(CustomLabel(spacing: 5))
+        }
+      } //: HSTACK
+      .font(.footnote)
+      .fontWeight(.semibold)
+      .foregroundStyle(.gray)
     } //: VSTACK
   }
   
@@ -99,20 +130,73 @@ private extension SessionCard {
         .bold()
     } //: VSTACK
   }
+  
+  @ViewBuilder
+  func metricsRow() -> some View {
+    HStack {
+      
+    } //: HSTACK
+  }
+}
+
+// MARK: - CUSTOM LABEL
+struct CustomLabel: LabelStyle {
+  var spacing: Double = 0.0
+  
+  func makeBody(configuration: Configuration) -> some View {
+    HStack(spacing: spacing) {
+      configuration.icon
+      configuration.title
+    }
+  }
 }
 
 #Preview {
-  let session = Session(
+  let sessionPlayerWon = Session(
     id: UUID(),
     date: Date(),
-    duration: 3600,
+    duration: 3520,
     winner: .player,
     sets: [
+      SetScore(playerGames: 6, opponentGames: 3),
+      SetScore(playerGames: 3, opponentGames: 8),
+      SetScore(playerGames: 7, opponentGames: 1)
+    ],
+    calories: 527,
+    averageHeartRate: 132,
+  )
+  
+  let sessionOpponentWon = Session(
+    id: UUID(),
+    date: Date(),
+    duration: 2320,
+    winner: .opponent,
+    sets: [
+      SetScore(playerGames: 6, opponentGames: 2),
+      SetScore(playerGames: 2, opponentGames: 6),
+      SetScore(playerGames: 6, opponentGames: 4)
+    ],
+    calories: 2,
+    averageHeartRate: 69,
+  )
+  let sessionUnfinished = Session(
+    id: UUID(),
+    date: Date(),
+    duration: 1218,
+    winner: nil,
+    sets: [
       SetScore(playerGames: 6, opponentGames: 4),
-      SetScore(playerGames: 3, opponentGames: 6),
-      SetScore(playerGames: 7, opponentGames: 5)
+      SetScore(playerGames: 0, opponentGames: 0),
+      SetScore(playerGames: 0, opponentGames: 0)
     ]
   )
-  SessionCard(session: session)
+  SessionCard(session: sessionPlayerWon)
     .colorScheme(.dark)
+    .scenePadding()
+  SessionCard(session: sessionOpponentWon)
+    .colorScheme(.dark)
+    .scenePadding()
+  SessionCard(session: sessionUnfinished)
+    .colorScheme(.dark)
+    .scenePadding()
 }

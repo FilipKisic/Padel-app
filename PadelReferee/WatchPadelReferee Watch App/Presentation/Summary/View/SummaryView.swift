@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 import HealthKit
 
 struct SummaryView: View {
   @EnvironmentObject private var viewModel: SessionViewModel
   @EnvironmentObject private var workoutManager: WorkoutManager
   @EnvironmentObject private var router: Router
+  @Environment(\.modelContext) private var modelContext
   
   // MARK: - BODY
   var body: some View {
@@ -57,13 +59,12 @@ struct SummaryView: View {
       .scenePadding()
       .ignoresSafeArea(edges: .bottom)
       .onDisappear {
-        router.navigateToRoot()
-        workoutManager.resetWorkout()
+        saveSession()
       }
     }
   }
   
-  // MARK: - HELPERS
+  // MARK: - FUNCTIONS
   private var durationFormatter: DateComponentsFormatter = {
     let formatter = DateComponentsFormatter()
     formatter.allowedUnits = [.hour, .minute, .second]
@@ -74,6 +75,21 @@ struct SummaryView: View {
   private func caloriesString(from workout: HKWorkout) -> String {
     let energy = workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
     return String(format: "%.0f kcal", energy)
+  }
+  
+  private func saveSession() {
+    let session = Session(
+      date: Date(),
+      duration: workoutManager.workout?.duration ?? 0,
+      winner: viewModel.winner,
+      sets: viewModel.match.state.sets,
+      calories: workoutManager.activeEnergy,
+      averageHeartRate: workoutManager.averageHeartRate
+    )
+    modelContext.insert(session)
+    try? modelContext.save()
+    router.navigateToRoot()
+    workoutManager.resetWorkout()
   }
 }
 

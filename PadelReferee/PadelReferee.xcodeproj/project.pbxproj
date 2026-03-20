@@ -57,9 +57,22 @@
 		12798CE22F4B786B0089B3EB /* WatchPadelReferee Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchPadelReferee Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1211D3BB2F6BED3700C1BC44 /* Exceptions for "PadelReferee iOS app" folder in "PadelReferee iOS app" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 123F7E6A2F2BA43400CFDE71 /* PadelReferee iOS app */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		123F7E6C2F2BA43400CFDE71 /* PadelReferee iOS app */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1211D3BB2F6BED3700C1BC44 /* Exceptions for "PadelReferee iOS app" folder in "PadelReferee iOS app" target */,
+			);
 			path = "PadelReferee iOS app";
 			sourceTree = "<group>";
 		};
@@ -400,7 +413,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JKVW4Y7PD6;
+				DEVELOPMENT_TEAM = CHGH3X7JXF;
 				INFOPLIST_KEY_CFBundleDisplayName = "Padel+";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
@@ -418,7 +431,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JKVW4Y7PD6;
+				DEVELOPMENT_TEAM = CHGH3X7JXF;
 				INFOPLIST_KEY_CFBundleDisplayName = "Padel+";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
@@ -437,11 +450,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "PadelReferee iOS app/PadelReferee iOS app.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JKVW4Y7PD6;
+				DEVELOPMENT_TEAM = CHGH3X7JXF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "PadelReferee iOS app/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Padel+";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -477,11 +492,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "PadelReferee iOS app/PadelReferee iOS app.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JKVW4Y7PD6;
+				DEVELOPMENT_TEAM = CHGH3X7JXF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "PadelReferee iOS app/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Padel+";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -521,7 +538,7 @@
 				CODE_SIGN_ENTITLEMENTS = "WatchPadelReferee Watch App/WatchPadelReferee Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JKVW4Y7PD6;
+				DEVELOPMENT_TEAM = CHGH3X7JXF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Padel+";
@@ -557,7 +574,7 @@
 				CODE_SIGN_ENTITLEMENTS = "WatchPadelReferee Watch App/WatchPadelReferee Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JKVW4Y7PD6;
+				DEVELOPMENT_TEAM = CHGH3X7JXF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Padel+";

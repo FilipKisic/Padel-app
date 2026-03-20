@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SessionHistoryView: View {
   // MARK: - PROPERTIES
-  @EnvironmentObject private var viewModel: SessionsViewModel
+  @Query(sort: \Session.date, order: .reverse) private var sessions: [Session]
+  @Environment(\.modelContext) private var modelContext
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var appState: AppState
   
@@ -30,7 +32,7 @@ private extension SessionHistoryView {
   @ViewBuilder
   func wholeViewGlassUI() -> some View {
     ZStack {
-      if viewModel.state.sessionHistory.isEmpty {
+      if sessions.isEmpty {
         emptyStateView()
       } else {
         sessionListStateView()
@@ -44,17 +46,14 @@ private extension SessionHistoryView {
     .navigationBarBackButtonHidden()
     .preferredColorScheme(.dark)
     .onAppear {
-      if let completedSession = appState.completedSession {
-        viewModel.addSession(completedSession)
-        appState.reset()
-      }
+      saveCompletedSessionIfNeeded()
     }
   }
   
   @ViewBuilder
   func wholeViewStandard() -> some View {
     ZStack {
-      if viewModel.state.sessionHistory.isEmpty {
+      if sessions.isEmpty {
         emptyStateView()
       } else {
         sessionListStateView()
@@ -76,10 +75,15 @@ private extension SessionHistoryView {
     }
     .preferredColorScheme(.dark)
     .onAppear {
-      if let completedSession = appState.completedSession {
-        viewModel.addSession(completedSession)
-        appState.reset()
-      }
+      saveCompletedSessionIfNeeded()
+    }
+  }
+  
+  func saveCompletedSessionIfNeeded() {
+    if let completedSession = appState.completedSession {
+      modelContext.insert(completedSession)
+      try? modelContext.save()
+      appState.reset()
     }
   }
   
@@ -111,11 +115,12 @@ private extension SessionHistoryView {
   @ViewBuilder
   func sessionListStateView() -> some View {
     List {
-      ForEach(viewModel.state.sessionHistory) { session in
+      ForEach(sessions) { session in
         SessionCard(session: session)
           .swipeActions(edge: .trailing) {
             Button(role: .destructive) {
-              viewModel.deleteSession(session)
+              modelContext.delete(session)
+              try? modelContext.save()
             } label: {
               Label("label.delete", systemImage: "trash")
             }
@@ -144,72 +149,15 @@ private extension SessionHistoryView {
 
 // MARK: - PREVIEW
 #Preview {
-  let session1 = Session(
-    id: UUID(),
-    date: Date(),
-    duration: 3600,
-    winner: .player,
-    sets: [
-      SetScore(playerGames: 6, opponentGames: 4),
-      SetScore(playerGames: 3, opponentGames: 6),
-      SetScore(playerGames: 7, opponentGames: 5)
-    ]
-  )
-  let session2 = Session(
-    id: UUID(),
-    date: Date(),
-    duration: 3600,
-    winner: .player,
-    sets: [
-      SetScore(playerGames: 6, opponentGames: 4),
-      SetScore(playerGames: 3, opponentGames: 6),
-      SetScore(playerGames: 7, opponentGames: 5)
-    ]
-  )
-  let session3 = Session(
-    id: UUID(),
-    date: Date(),
-    duration: 3600,
-    winner: .player,
-    sets: [
-      SetScore(playerGames: 6, opponentGames: 4),
-      SetScore(playerGames: 3, opponentGames: 6),
-      SetScore(playerGames: 7, opponentGames: 5)
-    ]
-  )
-  let session4 = Session(
-    id: UUID(),
-    date: Date(),
-    duration: 3600,
-    winner: .player,
-    sets: [
-      SetScore(playerGames: 6, opponentGames: 4),
-      SetScore(playerGames: 3, opponentGames: 6),
-      SetScore(playerGames: 7, opponentGames: 5)
-    ]
-  )
-  let session5 = Session(
-    id: UUID(),
-    date: Date(),
-    duration: 3600,
-    winner: .player,
-    sets: [
-      SetScore(playerGames: 6, opponentGames: 4),
-      SetScore(playerGames: 3, opponentGames: 6),
-      SetScore(playerGames: 7, opponentGames: 5)
-    ]
-  )
-  let viewModel = SessionsViewModel()
   let appState = AppState()
   let router = Router()
   
-  viewModel.state.sessionHistory = [session1, session2, session3, session4, session5]
   return ZStack {
     NavigationStack {
       SessionHistoryView()
     }
   }
-  .environmentObject(viewModel)
+  .modelContainer(for: [Session.self, SetScoreData.self], inMemory: true)
   .environmentObject(appState)
   .environmentObject(router)
 }

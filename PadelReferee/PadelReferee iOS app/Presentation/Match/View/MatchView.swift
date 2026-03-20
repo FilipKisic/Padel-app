@@ -27,8 +27,7 @@ struct MatchView: View {
     .navigationBarBackButtonHidden(true)
     .alert("match.cancel-match.alert.title", isPresented: $viewModel.matchState.showCancelAlert) {
       Button("match.cancel-match.alert.button.confirm.title", role: .destructive) {
-        viewModel.confirmCancel()
-        router.navigateToRoot()
+        cancelMatch()
       }
       Button("match.cancel-match.alert.button.cancel.title", role: .cancel) { }
     } message: {
@@ -48,6 +47,20 @@ struct MatchView: View {
   }
   
   // MARK: - FUNCTIONS
+  private func cancelMatch() {
+    if !appState.isWatchSession {
+      let session = Session(
+        date: Date(),
+        duration: viewModel.matchState.elapsedTime,
+        winner: nil,
+        sets: viewModel.match.config.sets
+      )
+      appState.setCompletedSession(session)
+    }
+    viewModel.confirmCancel()
+    router.navigate(to: .summary)
+  }
+  
   private func startMatchOnAppear() {
     guard viewModel.matchState.phase != .playing else { return }
     viewModel.setDuration(appState.matchDuration)
@@ -55,11 +68,15 @@ struct MatchView: View {
   }
   
   private func finishMatch(_ newPhase: MatchPhase) {
-    if newPhase == .finished, let winner = viewModel.match.config.winner {
+    if newPhase == .finished {
+      if appState.isWatchSession {
+        router.navigateToRoot()
+        return
+      }
       let session = Session(
         date: Date(),
         duration: viewModel.matchState.elapsedTime,
-        winner: winner,
+        winner: viewModel.match.config.winner,
         sets: viewModel.match.config.sets
       )
       appState.setCompletedSession(session)
@@ -346,7 +363,7 @@ private extension MatchView {
         ZStack(alignment: .bottom) {
           RoundedRectangle(cornerRadius: 20)
             .fill(.yellow.opacity(0.2))
-
+          
           RoundedRectangle(cornerRadius: 20)
             .fill(.yellow)
             .frame(height: geo.size.height * (1 - viewModel.progressPercentage))

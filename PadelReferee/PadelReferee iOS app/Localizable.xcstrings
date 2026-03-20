@@ -247,6 +247,17 @@
         }
       }
     },
+    "session.ended-early.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Session ended"
+          }
+        }
+      }
+    },
     "sessions.button.title" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -49,15 +49,11 @@ struct MatchView: View {
   // MARK: - FUNCTIONS
   private func cancelMatch() {
     if !appState.isWatchSession {
-      let session = Session(
-        date: Date(),
-        duration: viewModel.matchState.elapsedTime,
-        winner: nil,
-        sets: viewModel.match.config.sets
-      )
+      let session = viewModel.finishMatch()
       appState.setCompletedSession(session)
     }
     viewModel.confirmCancel()
+    print("cancelMatch called")
     router.navigate(to: .summary)
   }
   
@@ -73,13 +69,10 @@ struct MatchView: View {
         router.navigateToRoot()
         return
       }
-      let session = Session(
-        date: Date(),
-        duration: viewModel.matchState.elapsedTime,
-        winner: viewModel.match.config.winner,
-        sets: viewModel.match.config.sets
-      )
+      
+      let session = viewModel.finishMatch()
       appState.setCompletedSession(session)
+      print("finishMatch called")
       router.navigate(to: .summary)
     }
   }

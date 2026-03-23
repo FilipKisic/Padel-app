@@ -57,7 +57,6 @@ class MatchGameService {
     }
   }
   
-  //TODO: Test this method
   func isSetWon(setScore: SetScore, by team: Team) -> Bool {
     let playerScore = setScore.playerGames
     let opponentScore = setScore.opponentGames
@@ -112,7 +111,6 @@ class MatchGameService {
       } else if otherTeamPoint == .advantage {
         config.playerPoint = .forty
         config.opponentPoint = .forty
-        //TODO: Maybe set isDeuce to true again here
       } else {
         if team == .player {
           config.playerPoint = .advantage
@@ -216,6 +214,15 @@ class MatchGameService {
     } else {
       state.currentSetIndex += 1
       state.sets.append(SetScore())
+    }
+  }
+  
+  func finishMatch(config: inout MatchConfig) {
+    if config.sets.count < 3 {
+      let emptySetsToAdd = 3 - config.sets.count
+      for _ in 0..<emptySetsToAdd {
+        config.sets.append(SetScore(playerGames: 0, opponentGames: 0))
+      }
     }
   }
   

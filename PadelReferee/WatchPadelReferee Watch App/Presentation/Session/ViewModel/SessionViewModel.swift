@@ -113,6 +113,7 @@ class SessionViewModel: ObservableObject {
   func endMatch() {
     timerService.stop()
     screenState.phase = .paused
+    gameService.finishMatch(state: &match.state)
     connectivity.sendSessionEnded()
   }
 
@@ -137,6 +138,7 @@ class SessionViewModel: ObservableObject {
 
   private func finishMatch() {
     screenState.phase = .finished
+    gameService.finishMatch(state: &match.state)
     timerService.stop()
   }
 

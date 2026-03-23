@@ -200,6 +200,15 @@ class MatchGameService {
       state.sets.append(SetScore())
     }
   }
+  
+  func finishMatch(state: inout MatchState) {
+    if state.sets.count < 3 {
+      let emptySetsToAdd = 3 - state.sets.count
+      for _ in 0..<emptySetsToAdd {
+        state.sets.append(SetScore(playerGames: 0, opponentGames: 0))
+      }
+    }
+  }
 
   // MARK: - HISTORY MANAGEMENT
   func saveHistory(history: inout [HistoryEntry], state: MatchState, remainingTime: TimeInterval) {

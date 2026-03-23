@@ -173,10 +173,18 @@ class MatchViewModel: ObservableObject {
     connectivity.sendSessionEnded()
   }
   
-  // MARK: - Private
-  private func finishMatch() {
+  func finishMatch() -> Session {
     matchState.phase = .finished
     timerService.stop()
+    gameService.finishMatch(config: &match.config)
+    
+    let session = Session(
+      date: Date(),
+      duration: matchState.elapsedTime,
+      winner: match.config.winner,
+      sets: match.config.sets
+    )
+    return session
   }
   
   // MARK: - Display Helpers

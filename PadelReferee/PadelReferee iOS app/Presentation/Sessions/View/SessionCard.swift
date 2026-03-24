@@ -33,34 +33,41 @@ private extension SessionCard {
     VStack(alignment: .leading) {
       if session.winner == .player {
         Image(systemName: "trophy.circle.fill")
-          .font(.system(size: 45))
+          .font(.system(size: 40))
           .symbolRenderingMode(.hierarchical)
           .foregroundColor(.accentColor)
       } else {
         Image(systemName: "figure.racquetball.circle.fill")
-          .font(.system(size: 45))
+          .font(.system(size: 40))
           .symbolRenderingMode(.hierarchical)
           .foregroundColor(session.isCompleted ? .accentColor : .gray)
       }
       
       Spacer()
       
-      if let winner = session.winner {
-        Text(winner == .player ? "session.your-team.won.message" : "session.opponent.won.message")
-          .font(.title2)
-          .bold()
-          .foregroundStyle(winner == .player ? Color.white : .accentColor)
-      } else {
-        Text("session.ended-early.message")
-          .font(.title2)
-          .bold()
-          .foregroundStyle(.secondary)
-      }
+      VStack(alignment: .leading) {
+        if let winner = session.winner {
+          Text(winner == .player ? "session.your-team.won.message" : "session.opponent.won.message")
+            .font(.title2)
+            .bold()
+            .foregroundStyle(winner == .player ? Color.white : .accentColor)
+        } else {
+          Text("session.ended-early.message")
+            .font(.title2)
+            .bold()
+            .foregroundStyle(.secondary)
+        }
+        Text(session.formattedDate)
+          .font(.footnote)
+          .fontWeight(.semibold)
+          .foregroundStyle(.gray)
+      } //: VSTACK
       
       Spacer()
       
       HStack(spacing: 20) {
-        Label(session.formattedDuration, systemImage: "clock")
+        Label(session.formattedDuration, systemImage: "timer")
+          .foregroundStyle(.yellow)
           .labelStyle(CustomLabel(spacing: 5))
         
         if session.calories > 0 {
@@ -68,7 +75,7 @@ private extension SessionCard {
             .foregroundStyle(.pink)
             .labelStyle(CustomLabel(spacing: 5))
         }
-          
+        
         if session.averageHeartRate > 0 {
           Label("\(Int(session.averageHeartRate))", systemImage: "heart.fill")
             .foregroundStyle(.red)
@@ -77,7 +84,6 @@ private extension SessionCard {
       } //: HSTACK
       .font(.footnote)
       .fontWeight(.semibold)
-      .foregroundStyle(.gray)
     } //: VSTACK
   }
   
@@ -88,27 +94,42 @@ private extension SessionCard {
         .textCase(.uppercase)
         .font(.caption)
         .bold()
+        .fontDesign(.rounded)
         .foregroundStyle(.accent)
       
-      HStack (spacing: 20) {
-        Text("1")
-          .font(.subheadline)
-          .foregroundStyle(.gray)
-        Text("2")
-          .font(.subheadline)
-          .foregroundStyle(.gray)
-        Text("3")
-          .font(.subheadline)
-          .foregroundStyle(.gray)
-      } //: HSTACK
-      
       HStack {
-        ForEach(session.sets, id: \.self) { set in
-          Text("\(set.opponentGames)")
+        VStack {
+          Text("1")
+            .font(.subheadline)
+            .foregroundStyle(.gray)
+          Text("\(session.sets[0].opponentGames)")
             .font(.title)
             .bold()
+            .fontDesign(.rounded)
             .foregroundStyle(.accent)
-        }
+        } //: VSTACK
+        
+        VStack {
+          Text("2")
+            .font(.subheadline)
+            .foregroundStyle(.gray)
+          Text("\(session.sets[1].opponentGames)")
+            .font(.title)
+            .bold()
+            .fontDesign(.rounded)
+            .foregroundStyle(.accent)
+        } //: VSTACK
+        
+        VStack {
+          Text("3")
+            .font(.subheadline)
+            .foregroundStyle(.gray)
+          Text("\(session.sets[2].opponentGames)")
+            .font(.title)
+            .bold()
+            .fontDesign(.rounded)
+            .foregroundStyle(.accent)
+        } //: VSTACK
       } //: HSTACK
       
       RoundedRectangle(cornerRadius: 5)
@@ -120,6 +141,7 @@ private extension SessionCard {
         ForEach(session.sets, id: \.self) {set in
           Text("\(set.playerGames)")
             .font(.title)
+            .fontDesign(.rounded)
             .bold()
         }
       } //: HSTACK
@@ -144,7 +166,7 @@ struct CustomLabel: LabelStyle {
   var spacing: Double = 0.0
   
   func makeBody(configuration: Configuration) -> some View {
-    HStack(spacing: spacing) {
+    HStack(alignment: .firstTextBaseline, spacing: spacing) {
       configuration.icon
       configuration.title
     }

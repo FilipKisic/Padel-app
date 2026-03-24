@@ -22,7 +22,7 @@ struct HealthMetricView: View {
   // MARK: - BODY
   var body: some View {
     TimelineView(MetricsTimelineSchedule(from: workoutManager.builder?.startDate ?? Date())) { context in
-      VStack(alignment: .leading) {
+      VStack(alignment: .leading, spacing: -5) {
         Text(viewModel.formattedTime)
           .foregroundStyle(.yellow)
         
@@ -31,10 +31,6 @@ struct HealthMetricView: View {
             workoutManager.heartRate
               .formatted(.number.precision(.fractionLength(0)))
           )
-          
-          Text("label.metrics.bpm")
-            .font(.system(.title2, design: .rounded))
-            .bold()
           
           Image(systemName: "heart.fill")
             .foregroundStyle(.red)
@@ -50,14 +46,14 @@ struct HealthMetricView: View {
             .measurement(
               width: .abbreviated,
               usage: .workout,
-              numberFormatStyle: .number,
+              numberFormatStyle: .number.precision(.fractionLength(0)),
             )
           )
         )
         
         averageHeartRate()
       } //: VSTACK
-      .font(.system(.title, design: .rounded, weight: .medium))
+      .font(.system(size: 34, weight: .medium, design: .rounded))
       .frame(maxWidth: .infinity, alignment: .leading)
       .ignoresSafeArea(edges: .bottom)
       .scenePadding()
@@ -110,8 +106,8 @@ private extension HealthMetricView {
           )
       )
       Text("label.metrics.bpm")
-        .font(.system(.title2, design: .rounded))
-        .bold()
+        .font(.system(size: 26, weight: .semibold, design: .rounded ))
+      
       VStack(alignment: .leading) {
         Text("label.metrics.average")
           .font(
@@ -124,7 +120,7 @@ private extension HealthMetricView {
             .leading(.tight)
           )
       } //: VSTACK
-      .offset(x: 0, y: -topOffset * 1.85)
+      .offset(x: 3, y: -topOffset * 1.85)
     } //: HSTACK
   }
 }

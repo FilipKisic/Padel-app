@@ -14,7 +14,8 @@ struct MatchState: Equatable {
   var opponentTiebreakPoints: Int = 0
   var sets: [SetScore] = [SetScore()]
   var currentSetIndex: Int = 0
-  var servePosition: ServePosition = .topLeft
+  var servePosition: ServePosition = .bottomRight
+  var servingPlayerIndex: Int = 0
   var isDeuce: Bool = false
   var isTiebreak: Bool = false
   var isMatchOver: Bool = false

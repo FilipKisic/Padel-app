@@ -98,38 +98,18 @@ private extension SessionCard {
         .foregroundStyle(.accent)
       
       HStack {
-        VStack {
-          Text("1")
-            .font(.subheadline)
-            .foregroundStyle(.gray)
-          Text("\(session.sets[0].opponentGames)")
-            .font(.title)
-            .bold()
-            .fontDesign(.rounded)
-            .foregroundStyle(.accent)
-        } //: VSTACK
-        
-        VStack {
-          Text("2")
-            .font(.subheadline)
-            .foregroundStyle(.gray)
-          Text("\(session.sets[1].opponentGames)")
-            .font(.title)
-            .bold()
-            .fontDesign(.rounded)
-            .foregroundStyle(.accent)
-        } //: VSTACK
-        
-        VStack {
-          Text("3")
-            .font(.subheadline)
-            .foregroundStyle(.gray)
-          Text("\(session.sets[2].opponentGames)")
-            .font(.title)
-            .bold()
-            .fontDesign(.rounded)
-            .foregroundStyle(.accent)
-        } //: VSTACK
+        ForEach(Array(session.sets.enumerated()), id: \.offset) { index, set in
+          VStack {
+            Text("\(index + 1)")
+              .font(.subheadline)
+              .foregroundStyle(.gray)
+            Text("\(set.opponentGames)")
+              .font(.title)
+              .bold()
+              .fontDesign(.rounded)
+              .foregroundStyle(.accent)
+          } //: VSTACK
+        }
       } //: HSTACK
       
       RoundedRectangle(cornerRadius: 5)
@@ -138,7 +118,7 @@ private extension SessionCard {
         .padding(.vertical, 5)
       
       HStack {
-        ForEach(session.sets, id: \.self) {set in
+        ForEach(Array(session.sets.enumerated()), id: \.offset) { _, set in
           Text("\(set.playerGames)")
             .font(.title)
             .fontDesign(.rounded)

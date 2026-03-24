@@ -15,6 +15,7 @@ class WatchMessage {
   private var sets: [[String : Any]]?
   private var currentSetIndex: Int?
   private var servePosition: Int?
+  private var servingPlayerIndex: Int?
   private var isDeuce: Bool?
   private var isTiebreak: Bool?
   private var isMatchOver: Bool?
@@ -38,6 +39,7 @@ class WatchMessage {
     self.opponentTiebreakPoints = config.opponentTiebreakPoints
     self.currentSetIndex = config.currentSetIndex
     self.servePosition = config.servePosition.rawValue
+    self.servingPlayerIndex = config.servingPlayerIndex
     self.isDeuce = config.isDeuce
     self.isTiebreak = config.isTiebreak
     self.isMatchOver = config.isMatchOver
@@ -74,6 +76,7 @@ class WatchMessage {
     if let opponentTiebreakPoints { message["opponentTiebreakPoints"] = opponentTiebreakPoints }
     if let currentSetIndex { message["currentSetIndex"] = currentSetIndex }
     if let servePosition { message["servePosition"] = servePosition }
+    if let servingPlayerIndex { message["servingPlayerIndex"] = servingPlayerIndex }
     if let isDeuce { message["isDeuce"] = isDeuce }
     if let isTiebreak { message["isTiebreak"] = isTiebreak }
     if let isMatchOver { message["isMatchOver"] = isMatchOver }
@@ -102,6 +105,7 @@ class WatchMessage {
       let currentSetIndex = message["currentSetIndex"] as? Int,
       let servePositionRaw = message["servePosition"] as? Int,
       let servePosition = ServePosition(rawValue: servePositionRaw),
+      let servingPlayerIndex = message["servingPlayerIndex"] as? Int,
       let isDeuce = message["isDeuce"] as? Bool,
       let isTiebreak = message["isTiebreak"] as? Bool,
       let isMatchOver = message["isMatchOver"] as? Bool,
@@ -129,6 +133,7 @@ class WatchMessage {
       sets: sets,
       currentSetIndex: currentSetIndex,
       servePosition: servePosition,
+      servingPlayerIndex: servingPlayerIndex,
       isDeuce: isDeuce,
       isTiebreak: isTiebreak,
       isMatchOver: isMatchOver,

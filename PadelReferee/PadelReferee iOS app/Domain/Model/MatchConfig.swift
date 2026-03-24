@@ -15,6 +15,7 @@ struct MatchConfig: Equatable {
   var sets: [SetScore]
   var currentSetIndex: Int
   var servePosition: ServePosition
+  var servingPlayerIndex: Int
   var isDeuce: Bool
   var isTiebreak: Bool
   var isMatchOver: Bool
@@ -27,7 +28,8 @@ struct MatchConfig: Equatable {
     opponentTiebreakPoints: Int = 0,
     sets: [SetScore] = [SetScore()],
     currentSetIndex: Int = 0,
-    servePosition: ServePosition = .topLeft,
+    servePosition: ServePosition = .bottomRight,
+    servingPlayerIndex: Int = 0,
     isDeuce: Bool = false,
     isTiebreak: Bool = false,
     isMatchOver: Bool = false,
@@ -40,6 +42,7 @@ struct MatchConfig: Equatable {
     self.sets = sets
     self.currentSetIndex = currentSetIndex
     self.servePosition = servePosition
+    self.servingPlayerIndex = servingPlayerIndex
     self.isDeuce = isDeuce
     self.isTiebreak = isTiebreak
     self.isMatchOver = isMatchOver

@@ -88,7 +88,6 @@ struct SummaryView: View {
     )
     modelContext.insert(session)
     try? modelContext.save()
-    router.navigateToRoot()
     workoutManager.resetWorkout()
   }
 }

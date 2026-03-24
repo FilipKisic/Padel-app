@@ -31,22 +31,24 @@ class MatchGameService {
   }
 
   // MARK: - SERVE POSITION LOGIC
-  func nextServePosition(from position: ServePosition) -> ServePosition {
-    switch position {
-      case .topLeft: return .topRight
-      case .topRight: return .bottomLeft
-      case .bottomLeft: return .bottomRight
-      case .bottomRight: return .topLeft
+  /// Maps servingPlayerIndex (0–3) and court side to a quadrant.
+  /// Players 0,2 = bottom row (your team), players 1,3 = top row (opponents).
+  /// Right = deuce court, Left = ad court.
+  func servePositionFor(playerIndex: Int, isServingFromRight: Bool) -> ServePosition {
+    let isBottomRow = playerIndex % 2 == 0
+    if isBottomRow {
+      return isServingFromRight ? .bottomRight : .bottomLeft
+    } else {
+      return isServingFromRight ? .topRight : .topLeft
     }
   }
-
-  func previousServePosition(from position: ServePosition) -> ServePosition {
-    switch position {
-      case .topLeft: return .bottomRight
-      case .topRight: return .topLeft
-      case .bottomLeft: return .topRight
-      case .bottomRight: return .bottomLeft
-    }
+  
+  func nextServingPlayerIndex(from index: Int) -> Int {
+    (index + 1) % 4
+  }
+  
+  func previousServingPlayerIndex(from index: Int) -> Int {
+    (index + 3) % 4
   }
 
   // MARK: - SET SCORE LOGIC
@@ -100,6 +102,7 @@ class MatchGameService {
     if state.isDeuce {
       if scoringTeamPoint == .advantage {
         winGame(state: &state, for: team)
+        return
       } else if otherTeamPoint == .advantage {
         state.playerPoint = .forty
         state.opponentPoint = .forty
@@ -110,6 +113,9 @@ class MatchGameService {
           state.opponentPoint = .advantage
         }
       }
+      // Alternate serve side within game
+      let isRight = state.servePosition == .topRight || state.servePosition == .bottomRight
+      state.servePosition = servePositionFor(playerIndex: state.servingPlayerIndex, isServingFromRight: !isRight)
       return
     }
 
@@ -120,6 +126,9 @@ class MatchGameService {
         state.opponentPoint = .advantage
       }
       state.isDeuce = true
+      // Alternate serve side within game
+      let isRight = state.servePosition == .topRight || state.servePosition == .bottomRight
+      state.servePosition = servePositionFor(playerIndex: state.servingPlayerIndex, isServingFromRight: !isRight)
       return
     }
 
@@ -135,6 +144,10 @@ class MatchGameService {
       if state.playerPoint == .forty && state.opponentPoint == .forty {
         state.isDeuce = true
       }
+      
+      // Alternate serve side within game
+      let isRight = state.servePosition == .topRight || state.servePosition == .bottomRight
+      state.servePosition = servePositionFor(playerIndex: state.servingPlayerIndex, isServingFromRight: !isRight)
     }
   }
 
@@ -145,10 +158,16 @@ class MatchGameService {
       state.opponentTiebreakPoints += 1
     }
 
-    // Change serve every 2 points (after first point, then every 2)
+    // Tiebreak serve rotation: server changes after 1st point, then every 2 points
     let totalPoints = state.playerTiebreakPoints + state.opponentTiebreakPoints
     if totalPoints == 1 || (totalPoints > 1 && (totalPoints - 1) % 2 == 0) {
-      state.servePosition = nextServePosition(from: state.servePosition)
+      state.servingPlayerIndex = nextServingPlayerIndex(from: state.servingPlayerIndex)
+      // New server starts from right (deuce) court
+      state.servePosition = servePositionFor(playerIndex: state.servingPlayerIndex, isServingFromRight: true)
+    } else {
+      // Alternate side within current server's points
+      let isRight = state.servePosition == .topRight || state.servePosition == .bottomRight
+      state.servePosition = servePositionFor(playerIndex: state.servingPlayerIndex, isServingFromRight: !isRight)
     }
 
     let playerScore = state.playerTiebreakPoints
@@ -170,9 +189,10 @@ class MatchGameService {
     state.opponentTiebreakPoints = 0
     state.isDeuce = false
 
-    // Serve changes every game (not during tiebreak, where it rotates per point)
+    // Rotate to next server for the next game
     if !state.isTiebreak {
-      state.servePosition = nextServePosition(from: state.servePosition)
+      state.servingPlayerIndex = nextServingPlayerIndex(from: state.servingPlayerIndex)
+      state.servePosition = servePositionFor(playerIndex: state.servingPlayerIndex, isServingFromRight: true)
     }
 
     if isSetWon(setScore: state.currentSet, by: team) {

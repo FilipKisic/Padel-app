@@ -7,6 +7,8 @@
 
 import SwiftUI
 import SwiftData
+import CoreData
+import Combine
 
 struct SessionHistoryView: View {
   // MARK: - PROPERTIES
@@ -48,6 +50,11 @@ private extension SessionHistoryView {
     .onAppear {
       saveCompletedSessionIfNeeded()
     }
+    .onReceive(NotificationCenter.default.publisher(
+      for: NSPersistentCloudKitContainer.eventChangedNotification
+    ).receive(on: DispatchQueue.main)) { notification in
+      handleCloudKitEvent(notification)
+    }
   }
   
   @ViewBuilder
@@ -76,6 +83,11 @@ private extension SessionHistoryView {
     .preferredColorScheme(.dark)
     .onAppear {
       saveCompletedSessionIfNeeded()
+    }
+    .onReceive(NotificationCenter.default.publisher(
+      for: NSPersistentCloudKitContainer.eventChangedNotification
+    ).receive(on: DispatchQueue.main)) { notification in
+      handleCloudKitEvent(notification)
     }
   }
   
@@ -129,6 +141,22 @@ private extension SessionHistoryView {
       }
     } //: LIST VIEW
     .listStyle(.inset)
+  }
+  
+  func handleCloudKitEvent(_ notification: Notification) {
+    guard let event = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event else {
+      return
+    }
+    if event.endDate != nil && event.type == .import {
+      refreshSessions()
+    }
+  }
+  
+  func refreshSessions() {
+      let descriptor = FetchDescriptor<Session>(
+        sortBy: [SortDescriptor(\.date, order: .reverse)]
+      )
+      _ = try? modelContext.fetch(descriptor)
   }
   
   @available(iOS 26.0, *)

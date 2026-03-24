@@ -16,6 +16,7 @@ struct SessionHistoryView: View {
   @Environment(\.modelContext) private var modelContext
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var appState: AppState
+  @State private var isSyncing = false
   
   // MARK: - BODY
   var body: some View {
@@ -46,6 +47,13 @@ private extension SessionHistoryView {
     })
     .navigationTitle("sessions.title")
     .navigationBarBackButtonHidden()
+    .toolbar {
+      ToolbarItem(placement: .topBarTrailing) {
+        if isSyncing {
+          ProgressView()
+        }
+      }
+    }
     .preferredColorScheme(.dark)
     .onAppear {
       saveCompletedSessionIfNeeded()
@@ -69,6 +77,11 @@ private extension SessionHistoryView {
     .navigationTitle("sessions.title")
     .navigationBarBackButtonHidden()
     .toolbar {
+      ToolbarItem(placement: .topBarTrailing) {
+        if isSyncing {
+          ProgressView()
+        }
+      }
       ToolbarItem(placement: .topBarTrailing) {
         Button {
           router.navigate(to: .newSession)
@@ -147,8 +160,13 @@ private extension SessionHistoryView {
     guard let event = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event else {
       return
     }
-    if event.endDate != nil && event.type == .import {
-      refreshSessions()
+    if event.type == .import {
+      if event.endDate == nil {
+        isSyncing = true
+      } else {
+        isSyncing = false
+        refreshSessions()
+      }
     }
   }
   

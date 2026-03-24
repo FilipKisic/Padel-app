@@ -63,13 +63,12 @@ class MatchGameService {
     let playerScore = setScore.playerGames
     let opponentScore = setScore.opponentGames
 
+    // Tiebreak set: whoever reaches 7 games wins (win-by-2 is enforced at the point level)
     if setScore.isTiebreak {
-      let maxScore = max(playerScore, opponentScore)
-      let minScore = min(playerScore, opponentScore)
-      if maxScore >= 7 && (maxScore - minScore) >= 2 {
-        return team == .player ? playerScore > opponentScore : opponentScore > playerScore
+      switch team {
+        case .player: return playerScore == 7
+        case .opponent: return opponentScore == 7
       }
-      return false
     }
 
     switch team {

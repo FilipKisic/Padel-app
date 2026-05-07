@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Padel+.storekit">
+   </FileRef>
+   <FileRef
       location = "group:PadelReferee/PadelReferee.xcodeproj">
    </FileRef>
 </Workspace>

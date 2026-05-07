@@ -21,7 +21,6 @@ struct PadelRefereeiOS: App {
     
     let schema = Schema([Session.self, SetScoreData.self])
     let config = ModelConfiguration(cloudKitDatabase: .automatic)
-    
     do {
       container = try ModelContainer(for: schema, configurations: [config])
     } catch {

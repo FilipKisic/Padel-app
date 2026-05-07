@@ -10,13 +10,16 @@ import Combine
 
 class WatchConnectivityManager: NSObject, ObservableObject {
   static let shared = WatchConnectivityManager()
-  
+
+  private static let isLockedKey = "watchIsLocked"
+
   // MARK: - Published state from iOS
   @Published var receivedMatchState: MatchState?
   @Published var receivedIsRunning: Bool?
   @Published var iOSSessionStarted: Bool = false
   @Published var iOSDurationMinutes: Int = 90
   @Published var peerSessionEnded: Bool = false
+  @Published var isLocked: Bool = UserDefaults.standard.bool(forKey: WatchConnectivityManager.isLockedKey)
   
   // MARK: - Session
   func startSession() {
@@ -87,28 +90,35 @@ class WatchConnectivityManager: NSObject, ObservableObject {
     guard let type = WatchMessage.messageType(from: message) else { return }
     
     switch type {
-    case .scoreUpdate:
-      if let matchState = WatchMessage.decodeMatchState(from: message) {
-        Task { @MainActor in
-          self.receivedMatchState = matchState
+      case .scoreUpdate:
+        if let matchState = WatchMessage.decodeMatchState(from: message) {
+          Task { @MainActor in
+            self.receivedMatchState = matchState
+          }
         }
-      }
-    case .timerUpdate:
-      if let isRunning = WatchMessage.decodeIsRunning(from: message) {
-        Task { @MainActor in
-          self.receivedIsRunning = isRunning
+      case .timerUpdate:
+        if let isRunning = WatchMessage.decodeIsRunning(from: message) {
+          Task { @MainActor in
+            self.receivedIsRunning = isRunning
+          }
         }
-      }
-    case .sessionStarted:
-      let duration = WatchMessage.decodeDurationMinutes(from: message)
-      Task { @MainActor in
-        self.iOSDurationMinutes = duration
-        self.iOSSessionStarted = true
-      }
-    case .sessionEnded:
-      Task { @MainActor in
-        self.peerSessionEnded = true
-      }
+      case .sessionStarted:
+        let duration = WatchMessage.decodeDurationMinutes(from: message)
+        Task { @MainActor in
+          self.iOSDurationMinutes = duration
+          self.iOSSessionStarted = true
+        }
+      case .sessionEnded:
+        Task { @MainActor in
+          self.peerSessionEnded = true
+        }
+      case .accessLocked:
+        if let locked = WatchMessage.decodeIsLocked(from: message) {
+          Task { @MainActor in
+            self.isLocked = locked
+            UserDefaults.standard.set(locked, forKey: WatchConnectivityManager.isLockedKey)
+          }
+        }
     }
   }
 }
@@ -116,10 +126,14 @@ class WatchConnectivityManager: NSObject, ObservableObject {
 // MARK: - WCSessionDelegate
 extension WatchConnectivityManager: WCSessionDelegate {
   func session(
-    _ session: WCSession,
-    activationDidCompleteWith activationState: WCSessionActivationState,
-    error: Error?
-  ) {}
+  _ session: WCSession,
+  activationDidCompleteWith activationState: WCSessionActivationState,
+  error: Error?
+  ) {
+    let context = session.applicationContext
+    guard !context.isEmpty else { return }
+    handleMessage(context)
+  }
   
   func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
     handleMessage(message)

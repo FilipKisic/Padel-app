@@ -73,6 +73,16 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
       .serialize()
     send(message)
   }
+
+  // MARK: - Send lock status to Watch
+  func sendLockStatus(isLocked: Bool) {
+    let message = WatchMessage
+      .build()
+      .withType(.accessLocked)
+      .withIsLocked(isLocked)
+      .serialize()
+    send(message)
+  }
   
   // MARK: - Private
   private func send(_ message: [String: Any]) {
@@ -117,6 +127,9 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
       
       case .sessionEnded:
       self.peerSessionEnded = true
+
+      case .accessLocked:
+      break
     }
   }
 }

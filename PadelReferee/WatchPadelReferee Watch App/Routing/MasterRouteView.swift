@@ -34,6 +34,7 @@ struct MasterRouteView<Content: View>: View {
     .environmentObject(router)
     .environmentObject(sessionViewModel)
     .environmentObject(workoutManager)
+    .environmentObject(watchConnectivity)
     .onReceive(watchConnectivity.$iOSSessionStarted) { started in
       guard started else { return }
       sessionViewModel.setDuration(minutes: watchConnectivity.iOSDurationMinutes)

@@ -11,6 +11,7 @@ struct MasterRouteView<Content: View>: View {
   // MARK: - PROPERTIES
   @StateObject private var router = Router()
   @StateObject private var appState = AppState()
+  @StateObject private var iapService = IAPService()
   @StateObject private var newSessionViewModel = NewSessionViewModel()
   @StateObject private var matchViewModel = MatchViewModel()
   @StateObject private var summaryViewModel = SummaryViewModel()
@@ -33,6 +34,7 @@ struct MasterRouteView<Content: View>: View {
     } //: NAVIGATION STACK
     .environmentObject(router)
     .environmentObject(appState)
+    .environmentObject(iapService)
     .environmentObject(newSessionViewModel)
     .environmentObject(matchViewModel)
     .environmentObject(summaryViewModel)
@@ -48,8 +50,20 @@ struct MasterRouteView<Content: View>: View {
     }
     .onReceive(phoneConnectivity.$peerSessionEnded) { ended in
       guard ended else { return }
+      let session = matchViewModel.buildCancelledSession()
+      appState.setCompletedSession(session)
       router.navigateToRoot()
       phoneConnectivity.peerSessionEnded = false
+    }
+    .onChange(of: appState.hasExceededFreeLimit) { _, exceeded in
+      guard !iapService.isPremium else { return }
+      phoneConnectivity.sendLockStatus(isLocked: exceeded)
+    }
+    .onChange(of: iapService.isPremium) { _, isPremium in
+      phoneConnectivity.sendLockStatus(isLocked: !isPremium && appState.hasExceededFreeLimit)
+    }
+    .onAppear {
+      phoneConnectivity.sendLockStatus(isLocked: appState.hasExceededFreeLimit && !iapService.isPremium)
     }
   }
 }

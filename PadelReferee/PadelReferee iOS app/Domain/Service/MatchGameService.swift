@@ -236,11 +236,8 @@ class MatchGameService {
   }
   
   func finishMatch(config: inout MatchConfig) {
-    if config.sets.count < 3 {
-      let emptySetsToAdd = 3 - config.sets.count
-      for _ in 0..<emptySetsToAdd {
-        config.sets.append(SetScore(playerGames: 0, opponentGames: 0))
-      }
+    while config.sets.count < 3 {
+      config.sets.append(SetScore(playerGames: 0, opponentGames: 0, isTiebreak: false))
     }
   }
   

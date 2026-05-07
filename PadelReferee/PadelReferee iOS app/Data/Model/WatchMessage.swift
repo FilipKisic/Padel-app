@@ -22,6 +22,7 @@ class WatchMessage {
   private var winner: String?
   private var durationMinutes: Int?
   private var isRunning: Bool?
+  private var isLocked: Bool?
   
   static func build() -> WatchMessage {
     return WatchMessage()
@@ -64,6 +65,11 @@ class WatchMessage {
     self.isRunning = running
     return self
   }
+
+  func withIsLocked(_ locked: Bool) -> WatchMessage {
+    self.isLocked = locked
+    return self
+  }
   
   func serialize() -> [String: Any] {
     var message: [String: Any] = [
@@ -84,6 +90,7 @@ class WatchMessage {
     if let sets { message["sets"] = sets }
     if let durationMinutes { message["durationMinutes"] = durationMinutes }
     if let isRunning { message["isRunning"] = isRunning }
+    if let isLocked { message["isLocked"] = isLocked }
     
     return message
   }
@@ -148,6 +155,10 @@ class WatchMessage {
   static func decodeIsRunning(from message: [String: Any]) -> Bool? {
     message["isRunning"] as? Bool ?? false
   }
+
+  static func decodeIsLocked(from message: [String: Any]) -> Bool? {
+    message["isLocked"] as? Bool
+  }
   
 }
 
@@ -156,4 +167,5 @@ enum WatchMessageType: String {
   case sessionStarted
   case timerUpdate
   case sessionEnded
+  case accessLocked
 }

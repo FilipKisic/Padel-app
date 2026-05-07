@@ -66,13 +66,19 @@ struct MatchView: View {
   private func finishMatch(_ newPhase: MatchPhase) {
     if newPhase == .finished {
       if appState.isWatchSession {
+        let session = Session(
+          date: Date(),
+          duration: viewModel.matchState.elapsedTime,
+          winner: viewModel.match.config.winner,
+          sets: viewModel.match.config.sets
+        )
+        appState.setCompletedSession(session)
         router.navigateToRoot()
         return
       }
-      
+
       let session = viewModel.finishMatch()
       appState.setCompletedSession(session)
-      print("finishMatch called")
       router.navigate(to: .summary)
     }
   }

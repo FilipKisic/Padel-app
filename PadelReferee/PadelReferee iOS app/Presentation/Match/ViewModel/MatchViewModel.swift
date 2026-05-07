@@ -186,6 +186,17 @@ class MatchViewModel: ObservableObject {
     )
     return session
   }
+
+  func buildCancelledSession() -> Session {
+    timerService.stop()
+    gameService.finishMatch(config: &match.config)
+    return Session(
+      date: Date(),
+      duration: matchState.elapsedTime,
+      winner: match.config.winner,
+      sets: match.config.sets
+    )
+  }
   
   // MARK: - Display Helpers
   var formattedRemainingTime: String {

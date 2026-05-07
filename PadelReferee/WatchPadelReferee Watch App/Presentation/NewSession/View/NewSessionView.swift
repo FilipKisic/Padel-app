@@ -12,8 +12,10 @@ struct NewSessionView: View {
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var viewModel: SessionViewModel
   @EnvironmentObject private var workoutManager: WorkoutManager
-  
+  @EnvironmentObject private var connectivity: WatchConnectivityManager
+
   @State private var selectedDuration = Calendar.current.date(bySettingHour: 1, minute: 30, second: 0, of: Date())!
+  @State private var showLockedAlert = false
 
   // MARK: - BODY
   var body: some View {
@@ -25,10 +27,14 @@ struct NewSessionView: View {
       )
       
       Button {
-        setDuration()
-        workoutManager.startSession()
-        viewModel.startTimer()
-        router.navigate(to: .session)
+        if connectivity.isLocked {
+          showLockedAlert = true
+        } else {
+          setDuration()
+          workoutManager.startSession()
+          viewModel.startTimer()
+          router.navigate(to: .session)
+        }
       } label: {
         Text("new-session.button")
           .foregroundStyle(.black)
@@ -37,6 +43,11 @@ struct NewSessionView: View {
     } //: VSTACK
     .navigationTitle("new-session.navigation.title")
     .scenePadding()
+    .alert("paywall.watch.alert.title", isPresented: $showLockedAlert) {
+      Button("paywall.watch.alert.button", role: .cancel) { }
+    } message: {
+      Text("paywall.watch.alert.message")
+    }
   }
   
   // MARK: - FUNCTIONS

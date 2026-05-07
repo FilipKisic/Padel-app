@@ -104,6 +104,39 @@
         }
       }
     },
+    "paywall.watch.alert.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free Time Used Up"
+          }
+        }
+      }
+    },
+    "paywall.watch.alert.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You've used your 3 free hours. To continue, complete the purchase on your iPhone."
+          }
+        }
+      }
+    },
+    "paywall.watch.alert.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Got it"
+          }
+        }
+      }
+    },
     "new-session.navigation.title" : {
       "extractionState" : "manual",
       "localizations" : {

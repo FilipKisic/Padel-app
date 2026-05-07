@@ -12,9 +12,11 @@ struct NewSessionView: View {
   @EnvironmentObject private var viewModel: NewSessionViewModel
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var appState: AppState
+  @EnvironmentObject private var iapService: IAPService
   
   @State var isExpanded = false
   @State var viewHeight: CGFloat = .zero
+  @State private var showPaywall = false
   
   // MARK: - TEST
   @State private var duration = Date.now
@@ -33,11 +35,26 @@ struct NewSessionView: View {
     .scenePadding()
     .navigationTitle("new-session.title")
     .preferredColorScheme(.dark)
+    .sheet(isPresented: $showPaywall) {
+      PaywallView(isPresented: $showPaywall)
+        .environmentObject(iapService)
+        .environmentObject(appState)
+    }
   }
 }
 
 // MARK: - EXTENSIONS
 private extension NewSessionView {
+  func handleStartSession() {
+    print("\(iapService.isPremium) - \(!appState.hasExceededFreeLimit)")
+    if iapService.isPremium || !appState.hasExceededFreeLimit {
+      appState.setMatchDuration(viewModel.selectedDuration)
+      router.navigate(to: .match)
+    } else {
+      showPaywall = true
+    }
+  }
+  
   @ViewBuilder
   func timePicker() -> some View {
     VStack() {
@@ -88,9 +105,8 @@ private extension NewSessionView {
   @ViewBuilder
   func startNewSessionButton() -> some View {
     if #available(iOS 26.0, *) {
-      Button{
-        appState.setMatchDuration(viewModel.selectedDuration)
-        router.navigate(to: .match)
+      Button {
+        handleStartSession()
       } label: {
         Text("new-session.button.title")
           .font(.headline)
@@ -102,9 +118,8 @@ private extension NewSessionView {
       .glassEffect(.regular.tint(.accentColor.opacity(0.7)).interactive())
       .disabled(!viewModel.isValidDuration)
     } else {
-      Button{
-        appState.setMatchDuration(viewModel.selectedDuration)
-        router.navigate(to: .match)
+      Button {
+        handleStartSession()
       } label: {
         Text("new-session.button.title")
           .font(.headline)
@@ -156,6 +171,7 @@ private struct ViewHeightKey: PreferenceKey {
   let viewModel = NewSessionViewModel()
   let router = Router()
   let appState = AppState()
+  let iapService = IAPService()
   
   NavigationView {
     NewSessionView()
@@ -163,5 +179,6 @@ private struct ViewHeightKey: PreferenceKey {
   .environmentObject(viewModel)
   .environmentObject(router)
   .environmentObject(appState)
+  .environmentObject(iapService)
   .preferredColorScheme(.dark)
 }

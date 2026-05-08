@@ -14,7 +14,7 @@ class AppState: ObservableObject {
   @Published var isWatchSession: Bool = false
   @Published private(set) var totalPlayedSeconds: Double
 
-  let freeTimeLimit: TimeInterval = 10 // 3 * 3600 = 3 hours
+  let freeTimeLimit: TimeInterval = 30 // 3 * 3600 = 3 hours
 
   private static let totalPlayedSecondsKey = "totalPlayedSeconds"
 

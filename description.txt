@@ -1,0 +1,36 @@
+Padel Plus — Match Tracker & Referee
+
+Padel Plus is the easy way to referee and track your padel matches. Whether you're playing a casual game or a competitive set, Padel Plus keeps score, tracks your health, and gives you a professional courtside experience — right from your wrist.
+
+Score from your Apple Watch
+Keep your phone in your pocket or by courtside and track every point directly from your Apple Watch. Tap to award points, undo mistakes, and watch the score update in real time. No need to touch your phone mid-game.
+
+No Apple Watch? No problem.
+Padel Plus works just as well on iPhone alone. Input points manually and follow the match from your iPhone.
+
+Courtside scoreboard on your iPhone
+Rotate your iPhone to landscape and it transforms into a full-screen scoreboard — just like the big displays on the court. Perfect for placing your phone where everyone at the court can see the score at a glance.
+
+Health tracking powered by HealthKit
+Every match is a workout. Padel Plus integrates with Apple HealthKit to track your heart rate, calories burned, and average BPM during play — automatically recorded alongside your match data. All recorded data can be viewed in Apple Ftiness app too.
+
+Complete match summary
+When the final point is played, get a detailed summary of the match: time played, sets won, and the final score — all in one clean view.
+
+Full match history
+Every match you play is saved and available in your history to review past results.
+
+Seamless iCloud sync
+Your match history syncs automatically across your iPhone and Apple Watch via iCloud. Switch devices without losing a single result.
+
+Free to start. Yours to keep.
+Padel Plus gives you 3 free in-match hours to experience everything the app has to offer. When you're ready to play without limits, unlock full access with a single one-time purchase of €4.99 — no subscription, no recurring fees, forever.
+
+What's included
+• Apple Watch companion app for point-by-point input
+• Real-time score sync between Watch and iPhone
+• Landscape scoreboard mode on iPhone
+• HealthKit integration — heart rate, calories, BPM
+• Post-match summary with full stats
+• Complete match history with iCloud sync
+• 3 hours free · Unlimited access for a one-time €4.99

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct OnboardingView: View {
   // MARK: - PROPERTIES
-  @EnvironmentObject private var router: Router
   @AppStorage("isOnboarded") var isOnboarded: Bool = false
   
   // MARK: - BODY
@@ -70,7 +69,6 @@ private extension OnboardingView {
     if #available(iOS 26.0, *) {
       Button {
         isOnboarded = true
-        router.navigate(to: .sessions)
       } label: {
         Text("onboarding.button.title")
           .font(.headline)
@@ -83,7 +81,6 @@ private extension OnboardingView {
     } else {
       Button {
         isOnboarded = true
-        router.navigate(to: .sessions)
       } label: {
         Text("onboarding.button.title")
           .font(.headline)
@@ -99,10 +96,7 @@ private extension OnboardingView {
 
 // MARK: - PREVIEW
 #Preview {
-  let router = Router()
-  
   NavigationView {
     OnboardingView()
   }
-  .environmentObject(router)
 }

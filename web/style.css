@@ -32,6 +32,14 @@ a   { text-decoration: none; }
 
 .accent { color: var(--green); }
 
+/* Reusable gradient text */
+.gradient-text {
+  background: linear-gradient(180deg, #ffffff 0%, rgba(245,245,247,0.55) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 /* =============================================
    HERO
    ============================================= */
@@ -45,10 +53,14 @@ a   { text-decoration: none; }
 }
 
 .hero__eyebrow {
-  font-size: clamp(14px, 2vw, 17px);
-  font-weight: 500;
-  color: var(--muted);
-  letter-spacing: 0.01em;
+  font-size: clamp(40px, 6vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  background: linear-gradient(180deg, #ffffff 0%, rgba(245,245,247,0.5) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 14px;
 }
 
@@ -58,11 +70,17 @@ a   { text-decoration: none; }
   letter-spacing: -0.04em;
   line-height: 1;
   margin-bottom: 48px;
+  background: linear-gradient(180deg, var(--green) 0%, #1a7a2e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 }
 
 .hero__icon-wrap {
   position: relative;
-  margin-bottom: 56px;
+  margin-bottom: 0;
+  padding-bottom: 56px;
 }
 
 .hero__icon-wrap::before {
@@ -70,7 +88,7 @@ a   { text-decoration: none; }
   position: absolute;
   inset: -40px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(57,211,83,0.25) 0%, transparent 70%);
+  //background: radial-gradient(circle, rgba(57,211,83,0.25) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -87,10 +105,10 @@ a   { text-decoration: none; }
   width: auto;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
-.badge:hover { transform: scale(1.05); opacity: 0.85; }
+.badge:hover { transform: scale(1.05); opacity: 1; }
 .badge--large { height: 56px; }
 
-.hero__cta { display: inline-block; }
+.hero__cta { display: inline-block; margin-top: 40px; }
 
 /* =============================================
    DIVIDER
@@ -177,7 +195,10 @@ a   { text-decoration: none; }
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.1;
-  color: var(--text);
+  background: linear-gradient(180deg, #ffffff 0%, rgba(245,245,247,0.5) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .feature__desc {
@@ -213,12 +234,25 @@ a   { text-decoration: none; }
   letter-spacing: -0.04em;
   line-height: 1.1;
   margin-bottom: 24px;
+  background: linear-gradient(180deg, #ffffff 0%, rgba(245,245,247,0.5) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .pricing__note {
   font-size: 16px;
   color: var(--muted);
   font-weight: 400;
+}
+
+/* Keep accent spans visible inside gradient text parents */
+.pricing__title .accent,
+.hero__title .accent {
+  background: linear-gradient(180deg, var(--green) 0%, #1a7a2e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* =============================================

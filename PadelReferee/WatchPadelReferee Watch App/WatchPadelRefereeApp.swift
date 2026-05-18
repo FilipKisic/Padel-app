@@ -16,9 +16,7 @@ struct WatchPadelReferee_Watch_AppApp: App {
     WatchConnectivityManager.shared.startSession()
     
     let schema = Schema([Session.self, SetScoreData.self])
-    let config = ModelConfiguration(
-      cloudKitDatabase: .automatic
-    )
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
     do {
       container = try ModelContainer(for: schema, configurations: [config])
     } catch {

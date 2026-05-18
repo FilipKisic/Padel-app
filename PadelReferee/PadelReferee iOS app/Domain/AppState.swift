@@ -14,7 +14,7 @@ class AppState: ObservableObject {
   @Published var isWatchSession: Bool = false
   @Published private(set) var totalPlayedSeconds: Double
 
-  let freeTimeLimit: TimeInterval = 30 // 3 * 3600 = 3 hours
+  let freeTimeLimit: TimeInterval = 3 * 3600 // 3 * 3600 = 3 hours
 
   private static let totalPlayedSecondsKey = "totalPlayedSeconds"
   private let iCloud = NSUbiquitousKeyValueStore.default
@@ -24,8 +24,6 @@ class AppState: ObservableObject {
     // Sync iCloud store on launch so we have the latest remote value
     iCloud.synchronize()
 
-    // Take the maximum of both stores — reinstalling the app can only reset
-    // UserDefaults, never iCloud, so the higher value is always the truth.
     let localValue  = local.double(forKey: AppState.totalPlayedSecondsKey)
     let iCloudValue = iCloud.double(forKey: AppState.totalPlayedSecondsKey)
     totalPlayedSeconds = max(localValue, iCloudValue)
@@ -39,7 +37,6 @@ class AppState: ObservableObject {
       iCloud.synchronize()
     }
 
-    // Listen for iCloud changes pushed from other devices
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(iCloudDidChange(_:)),
@@ -69,7 +66,6 @@ class AppState: ObservableObject {
   }
 
   // MARK: - Private
-
   private func persist(_ value: Double) {
     local.set(value, forKey: AppState.totalPlayedSecondsKey)
     iCloud.set(value, forKey: AppState.totalPlayedSecondsKey)

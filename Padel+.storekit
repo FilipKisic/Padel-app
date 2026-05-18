@@ -15,7 +15,7 @@
   ],
   "products" : [
     {
-      "displayPrice" : "3.99",
+      "displayPrice" : "4.99",
       "familyShareable" : false,
       "internalID" : "6766948753",
       "localizations" : [
@@ -39,7 +39,7 @@
     "_disableDialogs" : false,
     "_failTransactionsEnabled" : false,
     "_lastSynchronizedDate" : 799825407.71770203,
-    "_locale" : "en_US",
+    "_locale" : "hr_HR",
     "_renewalBillingIssuesEnabled" : false,
     "_storefront" : "HRV",
     "_storeKitErrors" : [

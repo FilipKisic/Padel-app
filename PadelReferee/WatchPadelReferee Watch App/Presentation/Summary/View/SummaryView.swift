@@ -6,14 +6,13 @@
 //
 
 import SwiftUI
-import SwiftData
 import HealthKit
 
 struct SummaryView: View {
   @EnvironmentObject private var viewModel: SessionViewModel
   @EnvironmentObject private var workoutManager: WorkoutManager
   @EnvironmentObject private var router: Router
-  @Environment(\.modelContext) private var modelContext
+
   
   // MARK: - BODY
   var body: some View {
@@ -78,17 +77,8 @@ struct SummaryView: View {
   }
   
   private func saveSession() {
-    let session = Session(
-      date: Date(),
-      duration: workoutManager.workout?.duration ?? 0,
-      winner: viewModel.winner,
-      sets: viewModel.match.state.sets,
-      calories: workoutManager.activeEnergy,
-      averageHeartRate: workoutManager.averageHeartRate
-    )
-    modelContext.insert(session)
-    try? modelContext.save()
     workoutManager.resetWorkout()
+    router.navigateToRoot()
   }
 }
 

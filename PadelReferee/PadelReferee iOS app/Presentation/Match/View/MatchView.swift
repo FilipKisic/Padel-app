@@ -333,7 +333,7 @@ private extension MatchView {
         .font(.system(size: 48, weight: .medium, design: .rounded))
         .foregroundStyle(.accent)
       
-      Text("AD")
+      Text(viewModel.displayScore(for: .opponent))
         .font(.system(size: 230, weight: .bold, design: .rounded))
         .foregroundColor(.accent)
         .frame(height: 240)

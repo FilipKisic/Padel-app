@@ -66,13 +66,8 @@ struct MatchView: View {
   private func finishMatch(_ newPhase: MatchPhase) {
     if newPhase == .finished {
       if appState.isWatchSession {
-        let session = Session(
-          date: Date(),
-          duration: viewModel.matchState.elapsedTime,
-          winner: viewModel.match.config.winner,
-          sets: viewModel.match.config.sets
-        )
-        appState.setCompletedSession(session)
+        // Health data arrives via sessionEnded from Watch.
+        // MasterRouteView.onReceive($peerSessionEnded) creates the session with health data.
         router.navigateToRoot()
         return
       }
@@ -338,8 +333,8 @@ private extension MatchView {
         .font(.system(size: 48, weight: .medium, design: .rounded))
         .foregroundStyle(.accent)
       
-      Text(viewModel.displayScore(for: .opponent))
-        .font(.system(size: 242, weight: .bold, design: .rounded))
+      Text("AD")
+        .font(.system(size: 230, weight: .bold, design: .rounded))
         .foregroundColor(.accent)
         .frame(height: 240)
       
@@ -383,7 +378,7 @@ private extension MatchView {
         .font(.system(size: 48, weight: .medium, design: .rounded))
       
       Text(viewModel.displayScore(for: .player))
-        .font(.system(size: 242, weight: .bold, design: .rounded))
+        .font(.system(size: 230, weight: .bold, design: .rounded))
         .frame(height: 240)
       
       HStack(spacing: 8) {

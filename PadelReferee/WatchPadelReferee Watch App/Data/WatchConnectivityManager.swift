@@ -61,10 +61,12 @@ class WatchConnectivityManager: NSObject, ObservableObject {
   }
   
   // MARK: - Send session ended to iOS
-  func sendSessionEnded() {
+  func sendSessionEnded(calories: Double = 0, averageHeartRate: Double = 0) {
     let message = WatchMessage
       .build()
       .withType(.sessionEnded)
+      .withCalories(calories)
+      .withAverageHeartRate(averageHeartRate)
       .serialize()
     send(message)
   }

@@ -33,7 +33,10 @@ struct ControlsView: View {
           .padding(.bottom, 10)
         
         Button {
-          viewModel.endMatch()
+          viewModel.endMatch(
+            calories: workoutManager.activeEnergy,
+            averageHeartRate: workoutManager.averageHeartRate
+          )
           workoutManager.endSession()
           router.navigateToRoot()
         } label: {

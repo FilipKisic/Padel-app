@@ -19,6 +19,8 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
   @Published var receivedMatchConfig: MatchConfig?
   @Published var receivedIsRunning: Bool?
   @Published var peerSessionEnded: Bool = false
+  @Published var watchCalories: Double = 0
+  @Published var watchAverageHeartRate: Double = 0
   
   // MARK: - Session
   func startSession() {
@@ -126,6 +128,8 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
       }
       
       case .sessionEnded:
+      self.watchCalories = WatchMessage.decodeCalories(from: message)
+      self.watchAverageHeartRate = WatchMessage.decodeAverageHeartRate(from: message)
       self.peerSessionEnded = true
 
       case .accessLocked:

@@ -50,7 +50,9 @@ struct MasterRouteView<Content: View>: View {
     }
     .onReceive(phoneConnectivity.$peerSessionEnded) { ended in
       guard ended else { return }
-      let session = matchViewModel.buildCancelledSession()
+      var session = matchViewModel.buildCancelledSession()
+      session.calories = phoneConnectivity.watchCalories
+      session.averageHeartRate = phoneConnectivity.watchAverageHeartRate
       appState.setCompletedSession(session)
       router.navigateToRoot()
       phoneConnectivity.peerSessionEnded = false

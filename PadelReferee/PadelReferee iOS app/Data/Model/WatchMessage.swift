@@ -159,6 +159,14 @@ class WatchMessage {
   static func decodeIsLocked(from message: [String: Any]) -> Bool? {
     message["isLocked"] as? Bool
   }
+
+  static func decodeCalories(from message: [String: Any]) -> Double {
+    message["calories"] as? Double ?? 0
+  }
+
+  static func decodeAverageHeartRate(from message: [String: Any]) -> Double {
+    message["averageHeartRate"] as? Double ?? 0
+  }
   
 }
 

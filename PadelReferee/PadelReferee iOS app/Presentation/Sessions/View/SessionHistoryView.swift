@@ -58,6 +58,9 @@ private extension SessionHistoryView {
     .onAppear {
       saveCompletedSessionIfNeeded()
     }
+    .onChange(of: appState.completedSession) { _, _ in
+      saveCompletedSessionIfNeeded()
+    }
     .onReceive(NotificationCenter.default.publisher(
       for: NSPersistentCloudKitContainer.eventChangedNotification
     ).receive(on: DispatchQueue.main)) { notification in
@@ -95,6 +98,9 @@ private extension SessionHistoryView {
     }
     .preferredColorScheme(.dark)
     .onAppear {
+      saveCompletedSessionIfNeeded()
+    }
+    .onChange(of: appState.completedSession) { _, _ in
       saveCompletedSessionIfNeeded()
     }
     .onReceive(NotificationCenter.default.publisher(

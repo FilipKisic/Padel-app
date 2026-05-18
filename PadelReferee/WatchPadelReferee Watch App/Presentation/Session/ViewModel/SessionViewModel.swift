@@ -110,11 +110,15 @@ class SessionViewModel: ObservableObject {
     connectivity.sendTimerState(isRunning: false)
   }
 
-  func endMatch() {
+  func endMatch(calories: Double = 0, averageHeartRate: Double = 0) {
     timerService.stop()
     screenState.phase = .paused
     gameService.finishMatch(state: &match.state)
-    connectivity.sendSessionEnded()
+    connectivity.sendSessionEnded(calories: calories, averageHeartRate: averageHeartRate)
+  }
+
+  func sendEndedHealthData(calories: Double, averageHeartRate: Double) {
+    connectivity.sendSessionEnded(calories: calories, averageHeartRate: averageHeartRate)
   }
 
   func toggleTimer() {

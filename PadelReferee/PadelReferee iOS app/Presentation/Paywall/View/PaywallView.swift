@@ -28,13 +28,15 @@ struct PaywallView: View {
         
         VStack(spacing: 20) {
           Text("paywall.title")
-            .font(.largeTitle.bold())
+            .font(.title.bold())
             .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
           
           Text("paywall.description")
             .multilineTextAlignment(.center)
             .foregroundStyle(.secondary)
             .padding(.horizontal)
+            .fixedSize(horizontal: false, vertical: true)
         } //: VSTACK
         
         freeTimeCard()

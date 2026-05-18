@@ -23,6 +23,8 @@ class WatchMessage {
   private var durationMinutes: Int?
   private var isRunning: Bool?
   private var isLocked: Bool?
+  private var calories: Double?
+  private var averageHeartRate: Double?
   
   static func build() -> WatchMessage {
     return WatchMessage()
@@ -71,6 +73,16 @@ class WatchMessage {
     return self
   }
 
+  func withCalories(_ calories: Double) -> WatchMessage {
+    self.calories = calories
+    return self
+  }
+
+  func withAverageHeartRate(_ rate: Double) -> WatchMessage {
+    self.averageHeartRate = rate
+    return self
+  }
+
   func serialize() -> [String: Any] {
     var message: [String: Any] = [
       "type": type?.rawValue ?? WatchMessageType.scoreUpdate.rawValue
@@ -91,6 +103,8 @@ class WatchMessage {
     if let durationMinutes { message["durationMinutes"] = durationMinutes }
     if let isRunning { message["isRunning"] = isRunning }
     if let isLocked { message["isLocked"] = isLocked }
+    if let calories { message["calories"] = calories }
+    if let averageHeartRate { message["averageHeartRate"] = averageHeartRate }
     
     return message
   }
@@ -158,6 +172,14 @@ class WatchMessage {
 
   static func decodeIsLocked(from message: [String: Any]) -> Bool? {
     message["isLocked"] as? Bool
+  }
+
+  static func decodeCalories(from message: [String: Any]) -> Double {
+    message["calories"] as? Double ?? 0
+  }
+
+  static func decodeAverageHeartRate(from message: [String: Any]) -> Double {
+    message["averageHeartRate"] as? Double ?? 0
   }
   
 }

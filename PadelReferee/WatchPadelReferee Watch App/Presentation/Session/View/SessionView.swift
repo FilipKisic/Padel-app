@@ -28,6 +28,10 @@ struct SessionView: View {
     .navigationBarBackButtonHidden()
     .onChange(of: viewModel.isMatchOver) { _, isMatchOver in
       if isMatchOver {
+        viewModel.sendEndedHealthData(
+          calories: workoutManager.activeEnergy,
+          averageHeartRate: workoutManager.averageHeartRate
+        )
         workoutManager.endSession()
       }
     }

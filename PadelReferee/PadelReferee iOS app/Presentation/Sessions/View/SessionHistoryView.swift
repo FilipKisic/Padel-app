@@ -59,7 +59,7 @@ private extension SessionHistoryView {
       saveCompletedSessionIfNeeded()
     }
     .onChange(of: appState.completedSession) { _, _ in
-      saveCompletedSessionIfNeeded()
+      if router.path.isEmpty { saveCompletedSessionIfNeeded() }
     }
     .onReceive(NotificationCenter.default.publisher(
       for: NSPersistentCloudKitContainer.eventChangedNotification
@@ -101,7 +101,7 @@ private extension SessionHistoryView {
       saveCompletedSessionIfNeeded()
     }
     .onChange(of: appState.completedSession) { _, _ in
-      saveCompletedSessionIfNeeded()
+      if router.path.isEmpty { saveCompletedSessionIfNeeded() }
     }
     .onReceive(NotificationCenter.default.publisher(
       for: NSPersistentCloudKitContainer.eventChangedNotification

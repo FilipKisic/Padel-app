@@ -4,7 +4,7 @@
 //
 //  Created by Filip Kisić on 06.02.2026.
 //
-
+ 
 import Foundation
 import Combine
 
@@ -14,7 +14,7 @@ class AppState: ObservableObject {
   @Published var isWatchSession: Bool = false
   @Published private(set) var totalPlayedSeconds: Double
 
-  let freeTimeLimit: TimeInterval = 3 * 3600 // 3 * 3600 = 3 hours
+  let freeTimeLimit: TimeInterval = 3 * 3600 //3 hours
 
   private static let totalPlayedSecondsKey = "totalPlayedSeconds"
   private let iCloud = NSUbiquitousKeyValueStore.default

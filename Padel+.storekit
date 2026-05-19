@@ -39,9 +39,9 @@
     "_disableDialogs" : false,
     "_failTransactionsEnabled" : false,
     "_lastSynchronizedDate" : 799825407.71770203,
-    "_locale" : "hr_HR",
+    "_locale" : "de_DE",
     "_renewalBillingIssuesEnabled" : false,
-    "_storefront" : "HRV",
+    "_storefront" : "DEU",
     "_storeKitErrors" : [
 
     ],

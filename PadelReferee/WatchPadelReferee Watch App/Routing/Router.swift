@@ -11,7 +11,8 @@ class Router: ObservableObject {
   // MARK: - ALL ROUTES
   enum Route: Hashable {
     case start
-    case newSession
+    case duration
+    case servePosition
     case session
   }
   
@@ -23,8 +24,10 @@ class Router: ObservableObject {
     switch route {
       case .start:
         StartView()
-      case .newSession:
+      case .duration:
         NewSessionView()
+      case .servePosition:
+        ServePositionSetupView()
       case .session:
         SessionTabView()
     }

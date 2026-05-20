@@ -82,6 +82,13 @@ class SessionViewModel: ObservableObject {
     screenState = SessionScreenState()
     timerService.reset()
     hasNotifiedSessionStart = false
+    connectivity.receivedMatchState = nil
+  }
+
+  func setInitialServePosition(_ position: ServePosition) {
+    match.state.servePosition = position
+    match.state.servingPlayerIndex = (position == .topLeft || position == .topRight) ? 1 : 0
+    objectWillChange.send()
   }
 
   // MARK: - TIMER
@@ -93,7 +100,7 @@ class SessionViewModel: ObservableObject {
       if !hasNotifiedSessionStart {
         hasNotifiedSessionStart = true
         let durationMinutes = Int(match.totalDuration / 60)
-        connectivity.sendSessionStarted(durationMinutes: durationMinutes)
+        connectivity.sendSessionStarted(durationMinutes: durationMinutes, servePosition: match.state.servePosition)
       } else {
         connectivity.sendTimerState(isRunning: true)
       }

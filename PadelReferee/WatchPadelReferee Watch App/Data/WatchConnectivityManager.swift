@@ -18,6 +18,7 @@ class WatchConnectivityManager: NSObject, ObservableObject {
   @Published var receivedIsRunning: Bool?
   @Published var iOSSessionStarted: Bool = false
   @Published var iOSDurationMinutes: Int = 90
+  @Published var iOSInitialServePosition: ServePosition = .bottomRight
   @Published var peerSessionEnded: Bool = false
   @Published var isLocked: Bool = UserDefaults.standard.bool(forKey: WatchConnectivityManager.isLockedKey)
   
@@ -29,11 +30,12 @@ class WatchConnectivityManager: NSObject, ObservableObject {
   }
   
   // MARK: - Send session started to iOS
-  func sendSessionStarted(durationMinutes: Int) {
+  func sendSessionStarted(durationMinutes: Int, servePosition: ServePosition) {
     let message = WatchMessage
       .build()
       .withType(.sessionStarted)
       .withDurationMinutes(durationMinutes)
+      .withServePosition(servePosition)
       .serialize()
     
     send(message)
@@ -106,8 +108,10 @@ class WatchConnectivityManager: NSObject, ObservableObject {
         }
       case .sessionStarted:
         let duration = WatchMessage.decodeDurationMinutes(from: message)
+        let servePosition = WatchMessage.decodeServePosition(from: message) ?? .bottomRight
         Task { @MainActor in
           self.iOSDurationMinutes = duration
+          self.iOSInitialServePosition = servePosition
           self.iOSSessionStarted = true
         }
       case .sessionEnded:
@@ -132,7 +136,7 @@ extension WatchConnectivityManager: WCSessionDelegate {
   activationDidCompleteWith activationState: WCSessionActivationState,
   error: Error?
   ) {
-    let context = session.applicationContext
+    let context = session.receivedApplicationContext
     guard !context.isEmpty else { return }
     handleMessage(context)
   }

@@ -38,6 +38,7 @@ struct MasterRouteView<Content: View>: View {
     .onReceive(watchConnectivity.$iOSSessionStarted) { started in
       guard started else { return }
       sessionViewModel.setDuration(minutes: watchConnectivity.iOSDurationMinutes)
+      sessionViewModel.setInitialServePosition(watchConnectivity.iOSInitialServePosition)
       router.navigateToRoot()
       router.navigate(to: .session)
       workoutManager.startSession()

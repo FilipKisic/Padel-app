@@ -10,6 +10,7 @@ import Combine
 
 class AppState: ObservableObject {
   @Published var matchDuration: TimeInterval = 0
+  @Published var initialServePosition: ServePosition = .bottomRight
   @Published var completedSession: Session?
   @Published var isWatchSession: Bool = false
   @Published private(set) var totalPlayedSeconds: Double
@@ -53,6 +54,10 @@ class AppState: ObservableObject {
     matchDuration = duration
   }
 
+  func setInitialServePosition(_ position: ServePosition) {
+    initialServePosition = position
+  }
+
   func setCompletedSession(_ session: Session) {
     completedSession = session
     totalPlayedSeconds += session.duration
@@ -61,6 +66,7 @@ class AppState: ObservableObject {
 
   func reset() {
     matchDuration = 0
+    initialServePosition = .bottomRight
     completedSession = nil
     isWatchSession = false
   }

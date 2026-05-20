@@ -31,17 +31,15 @@ struct NewSessionView: View {
           showLockedAlert = true
         } else {
           setDuration()
-          workoutManager.startSession()
-          viewModel.startTimer()
-          router.navigate(to: .session)
+          router.navigate(to: .servePosition)
         }
       } label: {
-        Text("new-session.button")
+        Text("label.next")
           .foregroundStyle(.black)
       }
       .buttonStyle(.borderedProminent)
     } //: VSTACK
-    .navigationTitle("new-session.navigation.title")
+    .navigationTitle("new-session.duration.title")
     .scenePadding()
     .alert("paywall.watch.alert.title", isPresented: $showLockedAlert) {
       Button("paywall.watch.alert.button", role: .cancel) { }

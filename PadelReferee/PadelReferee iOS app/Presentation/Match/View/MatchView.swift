@@ -60,6 +60,7 @@ struct MatchView: View {
   private func startMatchOnAppear() {
     guard viewModel.matchState.phase != .playing else { return }
     viewModel.setDuration(appState.matchDuration)
+    viewModel.setInitialServePosition(appState.initialServePosition)
     viewModel.play()
   }
   

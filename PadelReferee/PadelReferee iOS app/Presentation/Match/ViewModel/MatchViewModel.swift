@@ -85,12 +85,18 @@ class MatchViewModel: ObservableObject {
     // Re-subscribe since match object changed
     setupConnectivitySubscription()
   }
+
+  func setInitialServePosition(_ position: ServePosition) {
+    match.config.servePosition = position
+    match.config.servingPlayerIndex = (position == .topLeft || position == .topRight) ? 1 : 0
+  }
   
-  func handleWatchSessionStarted(durationMinutes: Int) {
+  func handleWatchSessionStarted(durationMinutes: Int, servePosition: ServePosition) {
     let duration = TimeInterval(durationMinutes * 60)
     connectivity.receivedIsRunning = nil
     connectivity.receivedMatchConfig = nil
     setDuration(duration)
+    setInitialServePosition(servePosition)
     play(notifyPeer: false)
   }
   
@@ -114,7 +120,7 @@ class MatchViewModel: ObservableObject {
       if !hasNotifiedSessionStart {
         hasNotifiedSessionStart = true
         let durationMinutes = Int(match.totalDuration / 60)
-        connectivity.sendSessionStarted(durationMinutes: durationMinutes)
+        connectivity.sendSessionStarted(durationMinutes: durationMinutes, servePosition: match.config.servePosition)
       } else {
         connectivity.sendTimerState(isRunning: true)
       }

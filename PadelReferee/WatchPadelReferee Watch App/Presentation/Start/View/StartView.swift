@@ -32,7 +32,7 @@ struct StartView: View {
         } //: VSTACK
         
         Button {
-          router.navigate(to: .newSession)
+          router.navigate(to: .duration)
         } label: {
           HStack(spacing: 10) {
             Image(systemName: "play.fill")

@@ -60,6 +60,11 @@ class WatchMessage {
     self.durationMinutes = minutes
     return self
   }
+
+  func withServePosition(_ position: ServePosition) -> WatchMessage {
+    self.servePosition = position.rawValue
+    return self
+  }
   
   func withIsRunning(_ running: Bool) -> WatchMessage {
     self.isRunning = running
@@ -150,6 +155,11 @@ class WatchMessage {
   
   static func decodeDurationMinutes(from message: [String: Any]) -> Int {
     message["durationMinutes"] as? Int ?? 90
+  }
+
+  static func decodeServePosition(from message: [String: Any]) -> ServePosition? {
+    guard let raw = message["servePosition"] as? Int else { return nil }
+    return ServePosition(rawValue: raw)
   }
   
   static func decodeIsRunning(from message: [String: Any]) -> Bool? {

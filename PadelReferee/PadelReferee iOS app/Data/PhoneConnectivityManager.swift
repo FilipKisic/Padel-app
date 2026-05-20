@@ -16,6 +16,7 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
   // MARK: - Published state from Watch
   @Published var watchSessionStarted: Bool = false
   @Published var watchDurationMinutes: Int = 90
+  @Published var watchInitialServePosition: ServePosition = .bottomRight
   @Published var receivedMatchConfig: MatchConfig?
   @Published var receivedIsRunning: Bool?
   @Published var peerSessionEnded: Bool = false
@@ -42,11 +43,12 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
   }
   
   // MARK: - Send session started to Watch
-  func sendSessionStarted(durationMinutes: Int) {
+  func sendSessionStarted(durationMinutes: Int, servePosition: ServePosition = .bottomRight) {
     let message = WatchMessage
       .build()
       .withType(.sessionStarted)
       .withDurationMinutes(durationMinutes)
+      .withServePosition(servePosition)
       .serialize()
     
     send(message)
@@ -115,6 +117,7 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
     switch type {
       case .sessionStarted:
       self.watchDurationMinutes = WatchMessage.decodeDurationMinutes(from: message)
+      self.watchInitialServePosition = WatchMessage.decodeServePosition(from: message) ?? .bottomRight
       self.watchSessionStarted = true
       
       case .scoreUpdate:

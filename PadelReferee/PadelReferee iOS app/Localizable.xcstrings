@@ -134,6 +134,61 @@
         }
       }
     },
+    "new-session.position.bottom-left" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bottom Left"
+          }
+        }
+      }
+    },
+    "new-session.position.bottom-right" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bottom Right"
+          }
+        }
+      }
+    },
+    "new-session.position.top-left" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top Left"
+          }
+        }
+      }
+    },
+    "new-session.position.top-right" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top Right"
+          }
+        }
+      }
+    },
+    "new-session.serve" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "First serve position"
+          }
+        }
+      }
+    },
     "new-session.title" : {
       "extractionState" : "manual",
       "localizations" : {

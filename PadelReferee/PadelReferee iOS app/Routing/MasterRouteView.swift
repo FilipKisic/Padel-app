@@ -42,8 +42,9 @@ struct MasterRouteView<Content: View>: View {
       guard started else { return }
       let duration = TimeInterval(phoneConnectivity.watchDurationMinutes * 60)
       appState.setMatchDuration(duration)
+      appState.setInitialServePosition(phoneConnectivity.watchInitialServePosition)
       appState.isWatchSession = true
-      matchViewModel.handleWatchSessionStarted(durationMinutes: phoneConnectivity.watchDurationMinutes)
+      matchViewModel.handleWatchSessionStarted(durationMinutes: phoneConnectivity.watchDurationMinutes, servePosition: phoneConnectivity.watchInitialServePosition)
       router.navigateToRoot()
       router.navigate(to: .match)
       phoneConnectivity.watchSessionStarted = false

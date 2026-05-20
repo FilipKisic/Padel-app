@@ -10,6 +10,7 @@ import Combine
 
 class NewSessionViewModel: ObservableObject {
   @Published var state: NewSessionState
+  @Published var selectedServePosition: ServePosition = .bottomRight
   
   init(state: NewSessionState = NewSessionState()) {
     self.state = state

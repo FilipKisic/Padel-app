@@ -35,7 +35,10 @@ struct SummaryView: View {
           .padding(.vertical, 30)
         
         finalScore()
-        
+
+        healthMetrics()
+          .padding(.vertical, 20)
+
         Spacer()
         
         finishButton()
@@ -45,6 +48,11 @@ struct SummaryView: View {
     .onAppear {
       if let completedSession = appState.completedSession {
         viewModel.loadSession(completedSession)
+      }
+    }
+    .onChange(of: appState.isWaitingForHealthData) { _, waiting in
+      if !waiting, let session = appState.completedSession {
+        viewModel.updateHealthData(calories: session.calories, averageHeartRate: session.averageHeartRate)
       }
     }
     .preferredColorScheme(.dark)
@@ -124,6 +132,45 @@ private extension SummaryView {
         } //: FOR EACH
       } //: HSTACK
     } //: VSTACK
+  }
+
+  @ViewBuilder
+  func healthMetrics() -> some View {
+    if appState.isWaitingForHealthData {
+      VStack(spacing: 8) {
+        ProgressView()
+          .tint(.secondary)
+        Text("summary.health-data.loading")
+          .font(.caption)
+          .foregroundColor(.secondary)
+      }
+      .padding(.vertical, 10)
+    } else if viewModel.calories > 0 || viewModel.averageHeartRate > 0 {
+      HStack(spacing: 50) {
+        VStack(spacing: 6) {
+          Image(systemName: "flame.fill")
+            .foregroundColor(.orange)
+            .font(.title2)
+          Text(String(format: "%.0f", viewModel.calories))
+            .font(.system(size: 26, weight: .medium, design: .rounded))
+            .foregroundColor(.plainText)
+          Text("summary.calories")
+            .font(.caption)
+            .foregroundColor(.secondary)
+        }
+        VStack(spacing: 6) {
+          Image(systemName: "heart.fill")
+            .foregroundColor(.red)
+            .font(.title2)
+          Text(String(format: "%.0f", viewModel.averageHeartRate))
+            .font(.system(size: 26, weight: .medium, design: .rounded))
+            .foregroundColor(.plainText)
+          Text("summary.heart-rate")
+            .font(.caption)
+            .foregroundColor(.secondary)
+        }
+      }
+    }
   }
   
   @ViewBuilder

@@ -47,6 +47,11 @@ struct MasterRouteView<Content: View>: View {
     }
     .onReceive(watchConnectivity.$peerSessionEnded) { ended in
       guard ended else { return }
+      sessionViewModel.sendEndedHealthData(
+        calories: workoutManager.activeEnergy,
+        averageHeartRate: workoutManager.averageHeartRate
+      )
+      workoutManager.endSession()
       router.navigateToRoot()
       watchConnectivity.peerSessionEnded = false
     }

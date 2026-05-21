@@ -51,11 +51,21 @@ struct MasterRouteView<Content: View>: View {
     }
     .onReceive(phoneConnectivity.$peerSessionEnded) { ended in
       guard ended else { return }
-      var session = matchViewModel.buildCancelledSession()
-      session.calories = phoneConnectivity.watchCalories
-      session.averageHeartRate = phoneConnectivity.watchAverageHeartRate
-      appState.setCompletedSession(session)
-      router.navigateToRoot()
+      if appState.isWaitingForHealthData {
+        // iOS ended first — Watch is confirming with health data; update in place
+        appState.updateCompletedSessionHealthData(
+          calories: phoneConnectivity.watchCalories,
+          averageHeartRate: phoneConnectivity.watchAverageHeartRate
+        )
+      } else {
+        // Watch ended first — build full session with health data and show summary
+        var session = matchViewModel.buildCancelledSession()
+        session.calories = phoneConnectivity.watchCalories
+        session.averageHeartRate = phoneConnectivity.watchAverageHeartRate
+        appState.setCompletedSession(session)
+        router.navigateToRoot()
+        router.navigate(to: .summary)
+      }
       phoneConnectivity.peerSessionEnded = false
     }
     .onChange(of: appState.hasExceededFreeLimit) { _, exceeded in

@@ -30,6 +30,11 @@ final class PhoneConnectivityManager: NSObject, ObservableObject {
     session.delegate = self
     session.activate()
   }
+
+  var isWatchAvailable: Bool {
+    let session = WCSession.default
+    return session.activationState == .activated && session.isPaired && session.isWatchAppInstalled
+  }
   
   // MARK: - Send match state to Watch
   func sendMatchState(_ config: MatchConfig) {

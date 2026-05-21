@@ -31,7 +31,11 @@ struct MatchView: View {
       }
       Button("match.cancel-match.alert.button.cancel.title", role: .cancel) { }
     } message: {
-      Text("match.cancel-match.alert.description")
+      if appState.isWatchSession {
+        Text("match.cancel-match.alert.watch.description")
+      } else {
+        Text("match.cancel-match.alert.description")
+      }
     }
     .onAppear {
       startMatchOnAppear()
@@ -48,12 +52,12 @@ struct MatchView: View {
   
   // MARK: - FUNCTIONS
   private func cancelMatch() {
-    if !appState.isWatchSession {
-      let session = viewModel.finishMatch()
-      appState.setCompletedSession(session)
-    }
+    let session = viewModel.finishMatch()
+    appState.setCompletedSession(session)
     viewModel.confirmCancel()
-    print("cancelMatch called")
+    if PhoneConnectivityManager.shared.isWatchAvailable {
+      appState.startWaitingForHealthData()
+    }
     router.navigate(to: .summary)
   }
   
@@ -66,15 +70,11 @@ struct MatchView: View {
   
   private func finishMatch(_ newPhase: MatchPhase) {
     if newPhase == .finished {
-      if appState.isWatchSession {
-        // Health data arrives via sessionEnded from Watch.
-        // MasterRouteView.onReceive($peerSessionEnded) creates the session with health data.
-        router.navigateToRoot()
-        return
-      }
-
       let session = viewModel.finishMatch()
       appState.setCompletedSession(session)
+      if PhoneConnectivityManager.shared.isWatchAvailable {
+        appState.startWaitingForHealthData()
+      }
       router.navigate(to: .summary)
     }
   }

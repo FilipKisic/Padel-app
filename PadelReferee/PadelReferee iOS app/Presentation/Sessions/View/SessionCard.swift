@@ -65,7 +65,7 @@ private extension SessionCard {
       
       Spacer()
       
-      HStack(spacing: 20) {
+      HStack(alignment: .firstTextBaseline, spacing: 20) {
         Label(session.formattedDuration, systemImage: "timer")
           .foregroundStyle(.yellow)
           .labelStyle(CustomLabel(spacing: 5))

@@ -101,6 +101,17 @@
         }
       }
     },
+    "match.cancel-match.alert.watch.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Health data from your Apple Watch workout won't be saved to the app."
+          }
+        }
+      }
+    },
     "match.cancel-match.alert.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -464,6 +475,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Time played"
+          }
+        }
+      }
+    },
+    "summary.calories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calories"
+          }
+        }
+      }
+    },
+    "summary.heart-rate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avg. Heart Rate"
+          }
+        }
+      }
+    },
+    "summary.health-data.loading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retrieving health data from Apple Watch..."
           }
         }
       }

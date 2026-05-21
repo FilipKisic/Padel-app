@@ -13,6 +13,9 @@ class AppState: ObservableObject {
   @Published var initialServePosition: ServePosition = .bottomRight
   @Published var completedSession: Session?
   @Published var isWatchSession: Bool = false
+  @Published var isWaitingForHealthData: Bool = false
+
+  private var healthDataTimeoutTimer: Timer?
   @Published private(set) var totalPlayedSeconds: Double
 
   let freeTimeLimit: TimeInterval = 3 * 3600 //3 hours
@@ -64,11 +67,30 @@ class AppState: ObservableObject {
     persist(totalPlayedSeconds)
   }
 
+  func startWaitingForHealthData() {
+    isWaitingForHealthData = true
+    healthDataTimeoutTimer?.invalidate()
+    healthDataTimeoutTimer = Timer.scheduledTimer(withTimeInterval: 8.0, repeats: false) { [weak self] _ in
+      DispatchQueue.main.async { self?.isWaitingForHealthData = false }
+    }
+  }
+
+  func updateCompletedSessionHealthData(calories: Double, averageHeartRate: Double) {
+    completedSession?.calories = calories
+    completedSession?.averageHeartRate = averageHeartRate
+    healthDataTimeoutTimer?.invalidate()
+    healthDataTimeoutTimer = nil
+    isWaitingForHealthData = false
+  }
+
   func reset() {
     matchDuration = 0
     initialServePosition = .bottomRight
     completedSession = nil
     isWatchSession = false
+    healthDataTimeoutTimer?.invalidate()
+    healthDataTimeoutTimer = nil
+    isWaitingForHealthData = false
   }
 
   // MARK: - Private

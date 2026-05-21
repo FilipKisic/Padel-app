@@ -10,15 +10,24 @@ import Combine
 
 class SummaryViewModel: ObservableObject {
   @Published var state: SummaryState = .showing
-  
+
   @Published var winner: Team?
   @Published var elapsedTime: TimeInterval = 0
   @Published var sets: [SetScore] = []
-  
+  @Published var calories: Double = 0
+  @Published var averageHeartRate: Double = 0
+
   func loadSession(_ session: Session) {
     self.winner = session.winner
     self.elapsedTime = session.duration
     self.sets = session.sets
+    self.calories = session.calories
+    self.averageHeartRate = session.averageHeartRate
+  }
+
+  func updateHealthData(calories: Double, averageHeartRate: Double) {
+    self.calories = calories
+    self.averageHeartRate = averageHeartRate
   }
   
   var formattedElapsedTime: String {

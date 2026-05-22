@@ -29,6 +29,27 @@ struct SummaryView: View {
     } //: VSTACK
     .navigationBarBackButtonHidden(true)
     .scenePadding()
+    .overlay {
+      if appState.isWaitingForHealthData {
+        ZStack {
+          Rectangle()
+            .ignoresSafeArea(.all)
+            .foregroundStyle(.ultraThinMaterial)
+          
+          VStack {
+            ProgressView()
+              .scaleEffect(1.2)
+              .padding()
+            
+            Text("summary.health-data.loading")
+              .frame(width: 250)
+              .multilineTextAlignment(.center)
+          } //: VSTACK
+        } //: ZSTACK
+        .transition(.opacity)
+      }
+    }
+    .animation(.easeInOut(duration: 0.4), value: appState.isWaitingForHealthData)
     .onAppear {
       if let completedSession = appState.completedSession {
         viewModel.loadSession(completedSession)
@@ -178,46 +199,6 @@ private extension SummaryView {
     .padding()
     .background(.card)
     .cornerRadius(20)
-  }
-  
-  @ViewBuilder
-  func healthMetrics() -> some View {
-    if appState.isWaitingForHealthData {
-      VStack(spacing: 8) {
-        ProgressView()
-          .tint(.secondary)
-        Text("summary.health-data.loading")
-          .font(.caption)
-          .foregroundColor(.secondary)
-      } //: VSTACK
-      .padding(.vertical, 10)
-    } else if viewModel.calories > 0 || viewModel.averageHeartRate > 0 {
-      HStack(spacing: 50) {
-        VStack(spacing: 6) {
-          Image(systemName: "flame.fill")
-            .foregroundColor(.orange)
-            .font(.title2)
-          Text(String(format: "%.0f", viewModel.calories))
-            .font(.system(size: 26, weight: .medium, design: .rounded))
-            .foregroundColor(.plainText)
-          Text("summary.calories")
-            .font(.caption)
-            .foregroundColor(.secondary)
-        } //: VSTACK
-        
-        VStack(spacing: 6) {
-          Image(systemName: "heart.fill")
-            .foregroundColor(.red)
-            .font(.title2)
-          Text(String(format: "%.0f", viewModel.averageHeartRate))
-            .font(.system(size: 26, weight: .medium, design: .rounded))
-            .foregroundColor(.plainText)
-          Text("summary.heart-rate")
-            .font(.caption)
-            .foregroundColor(.secondary)
-        } //: VSTACK
-      } //: HSTACK
-    }
   }
   
   @ViewBuilder

@@ -21,7 +21,7 @@ struct SessionCard: View {
     .frame(height: 130)
     .padding()
     .background(.card)
-    .cornerRadius(10)
+    .cornerRadius(20)
     .preferredColorScheme(.dark)
   }
 }

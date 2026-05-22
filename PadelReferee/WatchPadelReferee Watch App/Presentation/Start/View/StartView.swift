@@ -18,9 +18,9 @@ struct StartView: View {
         Spacer()
         
         VStack(spacing: 5) {
-          Image(systemName: "figure.racquetball")
-            .font(.system(size: 40))
-            .foregroundColor(.green)
+          Image("PadelPlusLogo")
+            .resizable()
+            .frame(width: 40, height: 40)
           
           Text("start.title")
             .font(.system(size: 16, weight: .bold))

@@ -15,36 +15,20 @@ struct SummaryView: View {
   
   // MARK: - BODY
   var body: some View {
-    ZStack(alignment: .bottom) {
-      LinearGradient(
-        colors: [
-          Color.accentColor.opacity(0.8),
-          Color.accentColor.opacity(0.3),
-          Color(uiColor: .systemBackground)
-        ],
-        startPoint: .top,
-        endPoint: .bottom
-      )
-      .ignoresSafeArea()
+    VStack(alignment: .leading, spacing: 0) {
+      winnerPodium()
+        .padding(.bottom, 30)
       
-      VStack(spacing: 0) {
-        winnerPodium()
-          .padding(.vertical, 30)
-        
-        timePlayed()
-          .padding(.vertical, 30)
-        
-        finalScore()
-
-        healthMetrics()
-          .padding(.vertical, 20)
-
-        Spacer()
-        
-        finishButton()
-      } //: VSTACK
-    } //: ZSTACK
+      healthSummary()
+        .padding(.bottom, 10)
+      
+      setScoreSummary()
+      Spacer()
+      
+      finishButton()
+    } //: VSTACK
     .navigationBarBackButtonHidden(true)
+    .scenePadding()
     .onAppear {
       if let completedSession = appState.completedSession {
         viewModel.loadSession(completedSession)
@@ -63,77 +47,139 @@ struct SummaryView: View {
 private extension SummaryView {
   @ViewBuilder
   func winnerPodium() -> some View {
-    if let winnerText = viewModel.winnerText {
-      Image(systemName: "trophy.fill")
-        .font(.system(size: 100))
-        .foregroundColor(.yellow)
-        .shadow(color: .yellow.opacity(0.5), radius: 20)
-      
-      Text(LocalizedStringKey(winnerText))
-        .font(.system(size: 42, weight: .bold, design: .rounded))
-        .foregroundColor(.primary)
-    } else {
-      Image(systemName: "figure.racquetball")
-        .font(.system(size: 80))
-        .foregroundColor(.gray)
-      
-      Text("session.ended-early.message")
-        .font(.system(size: 32, weight: .bold, design: .rounded))
-        .foregroundColor(.secondary)
-    }
+    HStack(spacing: 10) {
+      if let winnerText = viewModel.winnerText {
+        Circle()
+          .frame(width: 80, height: 80)
+          .foregroundStyle(.card)
+          .overlay {
+            Image(systemName: "trophy.fill")
+              .font(.system(size: 40))
+              .foregroundColor(.yellow)
+              .shadow(color: .yellow.opacity(0.5), radius: 20)
+          }
+        
+        Text(LocalizedStringKey(winnerText))
+          .font(.system(size: 24, weight: .bold, design: .rounded))
+          .foregroundColor(.primary)
+        
+        Spacer()
+      } else {
+        Circle()
+          .frame(width: 80, height: 80)
+          .foregroundStyle(.card)
+          .overlay {
+            Image(systemName: "figure.racquetball")
+              .font(.system(size: 40))
+              .foregroundColor(.gray)
+          }
+        
+        Text("session.ended-early.message")
+          .font(.system(size: 24, weight: .bold, design: .rounded))
+          .foregroundColor(.secondary)
+        
+        Spacer()
+      }
+    } //: HSTACK
   }
   
   @ViewBuilder
-  func timePlayed() -> some View {
-    VStack(spacing: 10) {
+  func healthSummary() -> some View {
+    Text("summary.session-details")
+      .font(.system(size: 24, weight: .semibold, design: .rounded))
+    
+    VStack(alignment: .leading, spacing: 0) {
       Text("summary.time-played")
-        .font(.headline)
-        .fontDesign(.rounded)
-        .foregroundColor(.secondary)
-      
       Text(viewModel.formattedElapsedTime)
-        .font(.system(size: 36, weight: .medium, design: .rounded))
-        .foregroundColor(.plainText)
-    } //: VSTACK
-  }
-  
-  @ViewBuilder
-  func finalScore() -> some View {
-    VStack(spacing: 16) {
-      Text("summary.final-score")
-        .font(.headline)
-        .foregroundColor(.secondary)
+        .font(.system(size: 28, weight: .semibold, design: .rounded))
+        .foregroundStyle(.yellow)
       
-      HStack(spacing: 24) {
-        ForEach(Array(viewModel.sets.enumerated()), id: \.offset) { index, set in
-          VStack(spacing: 8) {
-            Text("Set \(index + 1)")
-              .font(.caption)
-              .foregroundColor(.secondary)
-            
-            VStack(spacing: 4) {
-              Text("\(set.opponentGames)")
-                .font(.title)
-                .fontWeight(.bold)
-                .foregroundColor(.accentColor)
-              
-              Divider()
-                .frame(width: 40)
-              
-              Text("\(set.playerGames)")
-                .font(.title)
-                .fontWeight(.bold)
-                .foregroundColor(.plainText)
-            }
-            .padding()
-            .background(.button)
-            .cornerRadius(12)
-          } //: VSTACK
-        } //: FOR EACH
+      Divider()
+        .padding(.vertical, 10)
+      
+      HStack {
+        VStack(alignment: .leading) {
+          Text("summary.calories")
+          Text(viewModel.calories.formatted(.number.precision(.fractionLength(0))) + "kcal")
+            .font(.system(size: 28, weight: .semibold, design: .rounded)
+              .lowercaseSmallCaps()
+            )
+            .foregroundStyle(.pink)
+        } //: VSTACK
+        
+        Spacer()
+        
+        VStack(alignment: .leading) {
+          Text("summary.heart-rate")
+          Text(viewModel.averageHeartRate.formatted(.number.precision(.fractionLength(0))) + "bpm")
+            .font(.system(size: 28, weight: .semibold, design: .rounded)
+              .lowercaseSmallCaps()
+            )
+            .foregroundStyle(.red)
+        } //: VSTACK
       } //: HSTACK
     } //: VSTACK
+    .padding()
+    .background(.card)
+    .cornerRadius(20)
   }
-
+  
+  @ViewBuilder
+  func setScoreSummary() -> some View {
+    VStack(alignment: .leading, spacing: 0) {
+      HStack {
+        Text("summary.teams")
+        
+        Spacer()
+        
+        Text("summary.set.first")
+          .font(.subheadline)
+          .foregroundStyle(.gray)
+        
+        Text("summary.set.second")
+          .foregroundStyle(.gray)
+          .font(.subheadline)
+        
+        Text("summary.set.third")
+          .font(.subheadline)
+          .foregroundStyle(.gray)
+      } //: HSTACK
+      
+      HStack(spacing: 15) {
+        Text("label.opponent")
+          .font(.system(size: 28, weight: .semibold, design: .rounded).lowercaseSmallCaps())
+        
+        Spacer()
+        
+        ForEach(Array(viewModel.sets.enumerated()), id: \.offset) { index, set in
+          Text("\(set.opponentGames)")
+            .font(.system(size: 28, weight: .semibold, design: .rounded))
+        }
+        .padding(.trailing, 10)
+      } //: HSTACK
+      .foregroundStyle(.accent)
+      
+      Divider()
+        .padding(.vertical, 10)
+      
+      HStack(spacing: 15) {
+        Text("label.your-team")
+          .font(.system(size: 28, weight: .semibold, design: .rounded).lowercaseSmallCaps())
+        
+        Spacer()
+        
+        ForEach(Array(viewModel.sets.enumerated()), id: \.offset) { index, set in
+          Text("\(set.playerGames)")
+            .font(.system(size: 28, weight: .semibold, design: .rounded))
+        }
+        .padding(.trailing, 10)
+      } //: HSTACK
+    } //: VSTACK
+    .padding()
+    .background(.card)
+    .cornerRadius(20)
+  }
+  
   @ViewBuilder
   func healthMetrics() -> some View {
     if appState.isWaitingForHealthData {
@@ -143,7 +189,7 @@ private extension SummaryView {
         Text("summary.health-data.loading")
           .font(.caption)
           .foregroundColor(.secondary)
-      }
+      } //: VSTACK
       .padding(.vertical, 10)
     } else if viewModel.calories > 0 || viewModel.averageHeartRate > 0 {
       HStack(spacing: 50) {
@@ -157,7 +203,8 @@ private extension SummaryView {
           Text("summary.calories")
             .font(.caption)
             .foregroundColor(.secondary)
-        }
+        } //: VSTACK
+        
         VStack(spacing: 6) {
           Image(systemName: "heart.fill")
             .foregroundColor(.red)
@@ -168,8 +215,8 @@ private extension SummaryView {
           Text("summary.heart-rate")
             .font(.caption)
             .foregroundColor(.secondary)
-        }
-      }
+        } //: VSTACK
+      } //: HSTACK
     }
   }
   
@@ -187,7 +234,6 @@ private extension SummaryView {
           .cornerRadius(12)
       }
       .glassEffect(.regular.tint(.accentColor.opacity(0.8)).interactive())
-      .scenePadding()
     } else {
       Button {
         router.navigateToRoot()
@@ -200,7 +246,6 @@ private extension SummaryView {
       }
       .buttonStyle(.borderedProminent)
       .tint(.accent)
-      .scenePadding()
     }
   }
 }
@@ -211,13 +256,15 @@ private extension SummaryView {
   let session = Session(
     id: UUID(),
     date: Date(),
-    duration: 3600,
+    duration: 5337,
     winner: .player,
     sets: [
       SetScore(playerGames: 6, opponentGames: 4),
       SetScore(playerGames: 3, opponentGames: 6),
       SetScore(playerGames: 7, opponentGames: 5)
-    ]
+    ],
+    calories: 176,
+    averageHeartRate: 122
   )
   let viewModel = SummaryViewModel()
   let router = Router()

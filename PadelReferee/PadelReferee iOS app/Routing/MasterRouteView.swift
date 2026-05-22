@@ -59,7 +59,7 @@ struct MasterRouteView<Content: View>: View {
         )
       } else {
         // Watch ended first — build full session with health data and show summary
-        var session = matchViewModel.buildCancelledSession()
+        let session = matchViewModel.buildCancelledSession()
         session.calories = phoneConnectivity.watchCalories
         session.averageHeartRate = phoneConnectivity.watchAverageHeartRate
         appState.setCompletedSession(session)

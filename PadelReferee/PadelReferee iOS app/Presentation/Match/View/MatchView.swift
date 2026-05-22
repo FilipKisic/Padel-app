@@ -143,7 +143,6 @@ private extension MatchView {
   @ViewBuilder
   func opponentGameAndSetScore() -> some View {
     HStack(alignment: .top, spacing: 0) {
-      // Opponent Current Score
       Text(viewModel.displayScore(for: .opponent))
         .font(.system(size: 96, weight: .bold, design: .rounded))
         .foregroundColor(.accent)
@@ -190,7 +189,6 @@ private extension MatchView {
   @ViewBuilder
   func playerGameAndSetScore() -> some View {
     HStack(spacing: 0) {
-      // Opponent Current Score
       Text(viewModel.displayScore(for: .player))
         .font(.system(size: 96, weight: .bold, design: .rounded))
       

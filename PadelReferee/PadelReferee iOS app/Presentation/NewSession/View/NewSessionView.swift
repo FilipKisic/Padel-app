@@ -173,6 +173,7 @@ private extension NewSessionView {
   func startNewSessionButton() -> some View {
     if #available(iOS 26.0, *) {
       Button {
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         handleStartSession()
       } label: {
         Text("new-session.button.title")
@@ -186,6 +187,7 @@ private extension NewSessionView {
       .disabled(!viewModel.isValidDuration)
     } else {
       Button {
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         handleStartSession()
       } label: {
         Text("new-session.button.title")

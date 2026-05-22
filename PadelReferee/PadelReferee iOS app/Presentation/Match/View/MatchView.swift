@@ -27,6 +27,7 @@ struct MatchView: View {
     .navigationBarBackButtonHidden(true)
     .alert("match.cancel-match.alert.title", isPresented: $viewModel.matchState.showCancelAlert) {
       Button("match.cancel-match.alert.button.confirm.title", role: .destructive) {
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         cancelMatch()
       }
       Button("match.cancel-match.alert.button.cancel.title", role: .cancel) { }
@@ -245,6 +246,7 @@ private extension MatchView {
           
           Button {
             if viewModel.matchState.phase == .playing {
+              UIImpactFeedbackGenerator(style: .soft).impactOccurred()
               viewModel.scorePoint(for: .opponent)
             }
           } label: {
@@ -261,6 +263,7 @@ private extension MatchView {
         
         Button {
           viewModel.togglePlayPause()
+          UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         } label: {
           Image(systemName: viewModel.matchState.phase == .playing ? "pause" : "play.fill")
             .font(.system(size: 50))
@@ -279,6 +282,7 @@ private extension MatchView {
           
           Button {
             if viewModel.matchState.phase == .playing {
+              UIImpactFeedbackGenerator(style: .soft).impactOccurred()
               viewModel.scorePoint(for: .player)
             }
           } label: {
@@ -315,6 +319,7 @@ private extension MatchView {
       
       Button {
         viewModel.undo()
+        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
       }
       label: {
         Image(systemName: "arrow.uturn.backward")

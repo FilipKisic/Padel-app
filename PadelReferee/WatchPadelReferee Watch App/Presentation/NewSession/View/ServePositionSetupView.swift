@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WatchKit
 
 struct ServePositionSetupView: View {
   // MARK: - PROPERTIES
@@ -21,6 +22,7 @@ struct ServePositionSetupView: View {
       courtGrid()
       
       Button {
+        WKInterfaceDevice.current().play(.start)
         startMatch()
       } label: {
         Text("new-session.button.start")

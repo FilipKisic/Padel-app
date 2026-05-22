@@ -87,6 +87,7 @@ private extension SessionHistoryView {
       }
       ToolbarItem(placement: .topBarTrailing) {
         Button {
+          UIImpactFeedbackGenerator(style: .medium).impactOccurred()
           router.navigate(to: .newSession)
         } label: {
           Image(systemName: "plus")
@@ -187,6 +188,7 @@ private extension SessionHistoryView {
   @ViewBuilder
   func startNewSessionButtonView() -> some View {
       Button {
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         router.navigate(to: .newSession)
       } label: {
         Text("sessions.button.title")

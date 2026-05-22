@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WatchKit
 
 struct ControlsView: View {
   // MARK: - PROPERTIES
@@ -48,6 +49,7 @@ private extension ControlsView {
   @ViewBuilder
   func undoButton() -> some View {
     Button {
+      WKInterfaceDevice.current().play(.click)
       viewModel.undo()
       withAnimation {
         activeTab = .metric
@@ -70,6 +72,7 @@ private extension ControlsView {
     .font(.title2)
     .confirmationDialog("controls.end.confirm.title", isPresented: $isEndDialogPresented) {
       Button("controls.confirm", role: .destructive) {
+        WKInterfaceDevice.current().play(.stop)
         viewModel.endMatch(
           calories: workoutManager.activeEnergy,
           averageHeartRate: workoutManager.averageHeartRate
@@ -95,6 +98,7 @@ private extension ControlsView {
     .font(.title2)
     .confirmationDialog("controls.restart.confirm.title", isPresented: $isRestartDialogPresented) {
       Button("controls.confirm", role: .destructive) {
+        WKInterfaceDevice.current().play(.start)
         viewModel.restartMatch()
         workoutManager.resetWorkout()
         workoutManager.startSession()
@@ -112,6 +116,7 @@ private extension ControlsView {
   @ViewBuilder
   func togglePauseButton() -> some View {
     Button {
+      WKInterfaceDevice.current().play(.click)
       viewModel.toggleTimer()
       workoutManager.togglePause()
       withAnimation {

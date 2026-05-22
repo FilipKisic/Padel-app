@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WatchKit
 
 struct NewSessionView: View {
   // MARK: - PROPERTIES
@@ -31,6 +32,7 @@ struct NewSessionView: View {
           showLockedAlert = true
         } else {
           setDuration()
+          WKInterfaceDevice.current().play(.click)
           router.navigate(to: .servePosition)
         }
       } label: {

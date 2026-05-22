@@ -7,12 +7,12 @@
 
 import SwiftUI
 import HealthKit
+import WatchKit
 
 struct SummaryView: View {
   @EnvironmentObject private var viewModel: SessionViewModel
   @EnvironmentObject private var workoutManager: WorkoutManager
   @EnvironmentObject private var router: Router
-
   
   // MARK: - BODY
   var body: some View {

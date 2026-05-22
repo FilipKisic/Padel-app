@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WatchKit
 
 struct StartView: View {
   // MARK: - PROPERTIES
@@ -32,6 +33,7 @@ struct StartView: View {
         } //: VSTACK
         
         Button {
+          WKInterfaceDevice.current().play(.click)
           router.navigate(to: .duration)
         } label: {
           HStack(spacing: 10) {

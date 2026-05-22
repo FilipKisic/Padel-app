@@ -217,6 +217,7 @@ private extension SummaryView {
       .glassEffect(.regular.tint(.accentColor.opacity(0.8)).interactive())
     } else {
       Button {
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         router.navigateToRoot()
       } label: {
         Text("summary.button.title")

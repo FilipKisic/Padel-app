@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Padel+ Privacy Policy — we don't collect your data." />
+  <title>Privacy Policy — Padel+</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Privacy-page-specific overrides ── */
+    .policy-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 120px 24px 72px;
+      background: radial-gradient(ellipse 70% 45% at 50% -10%, rgba(57,211,83,0.15) 0%, transparent 70%);
+    }
+
+    .policy-hero__eyebrow {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 20px;
+    }
+
+    .policy-hero__title {
+      font-size: clamp(40px, 7vw, 72px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      background: linear-gradient(180deg, #ffffff 0%, rgba(245,245,247,0.55) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      padding-bottom: 0.12em;
+      margin-bottom: 20px;
+    }
+
+    .policy-hero__sub {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.65;
+    }
+
+    /* ── Content area ── */
+    .policy-content {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px 120px;
+    }
+
+    .policy-section {
+      padding: 56px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .policy-section:last-child {
+      border-bottom: none;
+    }
+
+    .policy-section__label {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 16px;
+    }
+
+    .policy-section__title {
+      font-size: clamp(22px, 3.5vw, 32px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      background: linear-gradient(180deg, #ffffff 0%, rgba(245,245,247,0.65) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .policy-section__body {
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .policy-section__body p { margin: 0; }
+
+    .policy-section__body ul {
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .policy-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .policy-card__row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .policy-card__icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .policy-card__text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ── Back link ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--green);
+      padding: 40px 24px 0;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .back-link-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 40px 24px 0;
+    }
+
+    @media (max-width: 600px) {
+      .policy-section { padding: 40px 0; }
+      .policy-card { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ░░░  BACK LINK  ░░░ -->
+  <div class="back-link-wrap">
+    <a href="index.html" class="back-link">← Back to Padel+</a>
+  </div>
+
+  <!-- ░░░  HERO  ░░░ -->
+  <section class="policy-hero">
+    <p class="policy-hero__eyebrow">Padel+</p>
+    <h1 class="policy-hero__title">Privacy Policy</h1>
+    <p class="policy-hero__sub">We built Padel+ with a simple principle: your data belongs to you and only you. We don't collect it, we don't store it on our servers, and we never share it.</p>
+  </section>
+
+  <!-- ░░░  CONTENT  ░░░ -->
+  <main class="policy-content">
+
+    <!-- The short version -->
+    <section class="policy-section">
+      <p class="policy-section__label">The short version</p>
+      <h2 class="policy-section__title">We collect absolutely nothing</h2>
+      <div class="policy-section__body">
+        <p>Padel+ has no backend server, no analytics SDK, no advertising network, and no third-party trackers. Every byte of data the app produces stays on your device and, if you have iCloud enabled, in your own private iCloud account.</p>
+      </div>
+      <br />
+      <div class="policy-card">
+        <div class="policy-card__row">
+          <span class="policy-card__icon">🚫</span>
+          <div class="policy-card__text"><strong>No accounts.</strong> You never create a profile or provide an email address.</div>
+        </div>
+        <div class="policy-card__row">
+          <span class="policy-card__icon">🚫</span>
+          <div class="policy-card__text"><strong>No analytics.</strong> We don't track how you use the app.</div>
+        </div>
+        <div class="policy-card__row">
+          <span class="policy-card__icon">🚫</span>
+          <div class="policy-card__text"><strong>No ads.</strong> We have no advertising partners and serve no ads.</div>
+        </div>
+        <div class="policy-card__row">
+          <span class="policy-card__icon">🚫</span>
+          <div class="policy-card__text"><strong>No third-party SDKs.</strong> No Crashlytics, no Firebase, no Facebook SDK.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Data stored on device -->
+    <section class="policy-section">
+      <p class="policy-section__label">On-device storage</p>
+      <h2 class="policy-section__title">What lives on your device</h2>
+      <div class="policy-section__body">
+        <p>Padel+ stores the following data locally using Apple's SwiftData framework. This data never leaves your device except through your own iCloud account (see below).</p>
+        <ul>
+          <li><strong>Match history</strong> — set scores, winner, match duration, and date for every session you record.</li>
+          <li><strong>Health metrics</strong> — calories burned and average heart rate as reported by your Apple Watch for each match. This data comes from HealthKit and is read only when a session ends; it is stored solely within the app's local database and your iCloud.</li>
+          <li><strong>App preferences</strong> — settings such as default match duration and serve position.</li>
+        </ul>
+        <p>You can delete all of this data at any time by deleting the app from your device.</p>
+      </div>
+    </section>
+
+    <!-- iCloud -->
+    <section class="policy-section">
+      <p class="policy-section__label">iCloud sync</p>
+      <h2 class="policy-section__title">Your data, synced by Apple</h2>
+      <div class="policy-section__body">
+        <p>If you have iCloud Drive enabled on your device, Padel+ uses Apple's CloudKit to keep your match history in sync across your iPhone and other devices signed in to the same Apple ID.</p>
+        <p>This sync happens directly between your devices and your personal iCloud account. We — the developers of Padel+ — have no access to your iCloud data at any point. Apple's handling of iCloud data is governed by <a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener" style="color: var(--green);">Apple's Privacy Policy</a>.</p>
+        <p>You can disable iCloud sync for Padel+ at any time in <strong>Settings → [Your Name] → iCloud → Apps Using iCloud</strong>.</p>
+      </div>
+    </section>
+
+    <!-- HealthKit -->
+    <section class="policy-section">
+      <p class="policy-section__label">HealthKit</p>
+      <h2 class="policy-section__title">Health data stays private</h2>
+      <div class="policy-section__body">
+        <p>Padel+ requests access to HealthKit solely to read workout metrics (active energy and heart rate) from your Apple Watch at the end of a match session. This data is:</p>
+        <ul>
+          <li>Read only after a session completes, never in the background.</li>
+          <li>Stored only within Padel+'s own local database and your iCloud (as described above).</li>
+          <li>Never shared with any third party.</li>
+          <li>Never written back to the Health app or used for any purpose other than displaying your match summary.</li>
+        </ul>
+        <p>Apple requires apps to obtain explicit permission before accessing HealthKit. You will be asked to grant this the first time the app needs it, and you can revoke access at any time in <strong>Settings → Privacy & Security → Health → Padel+</strong>.</p>
+      </div>
+    </section>
+
+    <!-- In-app purchase -->
+    <section class="policy-section">
+      <p class="policy-section__label">Payments</p>
+      <h2 class="policy-section__title">Purchases go through Apple</h2>
+      <div class="policy-section__body">
+        <p>Padel+ offers a one-time in-app purchase to unlock the full app. All payment processing is handled entirely by Apple's App Store and StoreKit. We never see, handle, or store your payment information. For details, refer to <a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener" style="color: var(--green);">Apple's Privacy Policy</a>.</p>
+      </div>
+    </section>
+
+    <!-- Children -->
+    <section class="policy-section">
+      <p class="policy-section__label">Children's privacy</p>
+      <h2 class="policy-section__title">Safe for everyone</h2>
+      <div class="policy-section__body">
+        <p>Because Padel+ collects no personal data whatsoever, it is safe to use by people of any age. We do not knowingly collect information from children or anyone else.</p>
+      </div>
+    </section>
+
+    <!-- Changes -->
+    <section class="policy-section">
+      <p class="policy-section__label">Updates to this policy</p>
+      <h2 class="policy-section__title">We'll tell you if anything changes</h2>
+      <div class="policy-section__body">
+        <p>If we ever change how Padel+ handles data, we will update this page and revise the "Last updated" date below. We encourage you to review this policy periodically. Continued use of the app after any changes constitutes acceptance of the updated policy.</p>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="policy-section">
+      <p class="policy-section__label">Contact</p>
+      <h2 class="policy-section__title">Questions?</h2>
+      <div class="policy-section__body">
+        <p>If you have any questions about this privacy policy, you can reach us at <a href="mailto:code.educa.hr@gmail.com" style="color: var(--green);">code.educa.hr@gmail.com</a>.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ░░░  FOOTER  ░░░ -->
+  <footer class="footer">
+    <p class="footer__legal">Last updated: May 22, 2026 © 2026 Code Educa. Apple, App Store, Apple Watch, iPhone, iCloud and HealthKit are trademarks of Apple Inc.</p>
+  </footer>
+
+</body>
+</html>

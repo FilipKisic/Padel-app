@@ -138,6 +138,7 @@ extension WatchConnectivityManager: WCSessionDelegate {
   ) {
     let context = session.receivedApplicationContext
     guard !context.isEmpty else { return }
+    guard WatchMessage.messageType(from: context) != .sessionEnded else { return }
     handleMessage(context)
   }
   
@@ -146,6 +147,7 @@ extension WatchConnectivityManager: WCSessionDelegate {
   }
   
   func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+    guard WatchMessage.messageType(from: applicationContext) != .sessionEnded else { return }
     handleMessage(applicationContext)
   }
 }

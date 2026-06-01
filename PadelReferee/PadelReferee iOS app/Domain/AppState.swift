@@ -18,7 +18,7 @@ class AppState: ObservableObject {
   private var healthDataTimeoutTimer: Timer?
   @Published private(set) var totalPlayedSeconds: Double
 
-  let freeTimeLimit: TimeInterval = 3 * 3600 //3 hours
+  let freeTimeLimit: TimeInterval = 15 //3 hours
 
   private static let totalPlayedSecondsKey = "totalPlayedSeconds"
   private let iCloud = NSUbiquitousKeyValueStore.default

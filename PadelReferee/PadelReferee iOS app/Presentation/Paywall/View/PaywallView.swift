@@ -75,7 +75,7 @@ private extension PaywallView {
         .foregroundStyle(.secondary)
       
       HStack(spacing: 4) {
-        Text(formattedUsedTime())
+        Text("3h 00m")
           .font(.title2.bold())
           .foregroundStyle(.red)
         Text("/")
